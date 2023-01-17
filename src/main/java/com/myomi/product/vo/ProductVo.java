@@ -1,9 +1,11 @@
-package com.myomi.product;
+package com.myomi.product.vo;
 
 import java.util.List;
 
-import com.myomi.qna.QnaVo;
-import com.myomi.seller.SellerVo;
+import com.myomi.qna.vo.QnaVo;
+import com.myomi.review.vo.BestReviewVo;
+import com.myomi.review.vo.ReviewVo;
+import com.myomi.seller.vo.SellerVo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +19,6 @@ import lombok.ToString;
 @ToString
 public class ProductVo {
 	private int num;
-	//private String sellerId; //seller_info 도 참조하는 걸로
-	//판매자 입장에서 상품 검색? 상품입장에서 셀러를 검색하는게 많은지
-	//개인적으로는 상품입장에서 셀러!
 	private SellerVo seller;
 	private String category;
 	private String name;
@@ -31,5 +30,7 @@ public class ProductVo {
 	private int reviewCnt;
 	private int stars;
 	private int fee;
-	private List<QnaVo> qnas;
+	private List<QnaVo> qna;
+	private List<ReviewVo> review;
+	private List<BestReviewVo> bestReview;
 }
