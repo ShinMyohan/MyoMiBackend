@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- SQL definition -->
+<mapper namespace="ProdMapper">
+	<select id="getProdList" resultType="prod">
+		SELECT
+ 		num AS num, 
+ 		seller_id AS sellerId, 
+ 		category AS category, 
+ 		name AS name, 
+ 		origin_price AS originPrice, 
+ 		percentage AS percentage,
+ 		week AS week,
+ 		status AS status,
+ 		detail AS detail,
+ 		review_cnt AS reviewCnt,
+ 		stars AS stars,
+ 		fee AS fee
+ 		FROM product
+ 		ORDER BY num;
+	</select>
+</mapper>
