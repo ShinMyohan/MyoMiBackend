@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+	
+<mapper namespace="OrderMapper">
+		<!-- 바로구매, 장바구니에 담긴 주문 불러오기 -->
+		<select id="selectOneOrder" parameterType="int" resultType="java.util.LinkedHashMap">
+			SELECT o.num, u.id, u.name as name, u.tel, u.email, u.addr, od.prod_num, od.prod_cnt FROM orders o
+			right JOIN users u ON o.user_id = u.id
+			right JOIN orders_detail od ON o.num = od.order_num
+			WHERE o.num = #{num} AND pay_created_date is NULL
+		</select>
+		<!-- 오더 디테일 확인(실험용) -->
+		<select id="selectDetailOrder" parameterType="int" resultType="orderDetail">
+			select * from orders_detail where order_num = #{num}
+		</select>
+		
+		<insert id="insertDelivery" parameterType="map"  keyProperty="map">
+			insert into delivery (order_num, name, tel, addr, delivery_msg, receive_date
+			) VALUES (
+					#{num},
+					#{name},
+					#{tel},
+					#{addr},
+					#{delivery_msg},
+					sysdate)
+		</insert>
+		<!--  -->
+		<update id="updateOrder" parameterType="map">
+			UPDATE orders SET 
+			options=#{options}, msg=#{msg}, coupon_num = #{coupon_num},
+ 			used_point=#{used_point}, pay_created_date = sysdate, 
+ 			total_price=#{total_price}, save_point=#{save_point}
+			WHERE num=#{num}
+		</update>
+</mapper>
