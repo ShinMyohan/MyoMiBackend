@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+    <typeAliases>
+    	<typeAlias alias="admin" type="com.myomi.admin.vo.AdminVo"/>
+    	<typeAlias alias="board" type="com.myomi.board.vo.BoardVo"/>
+    	<typeAlias alias="cart" type="com.myomi.cart.vo.CartVo"/>
+    	<typeAlias alias="comment" type="com.myomi.comment.vo.CommentVo"/>
+    	<typeAlias alias="coupon" type="com.myomi.coupon.vo.CouponVo"/>
+    	<typeAlias alias="follow" type="com.myomi.follow.vo.FollowVo"/>
+    	<typeAlias alias="membership" type="com.myomi.membership.vo.MembershipVo"/>
+		<typeAlias alias="notice" type="com.myomi.notice.vo.NoticeVo"/>
+		<typeAlias alias="order" type="com.myomi.order.vo.OrderVo"/>
+		<typeAlias alias="orderDetail" type="com.myomi.order.vo.OrderDetailVo"/>
+		<typeAlias alias="delivery" type="com.myomi.order.vo.DeliveryVo"/>
+		<typeAlias alias="coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="point" type="com.myomi.point.vo.PointVo"/>
+		<typeAlias alias="pointDetail" type="com.myomi.point.vo.PointDetailVo"/>
+		<typeAlias alias="product" type="com.myomi.product.vo.ProductVo"/>
+		<typeAlias alias="qna" type="com.myomi.qna.vo.QnaVo"/>
+		<typeAlias alias="review" type="com.myomi.review.vo.ReviewVo"/>
+		<typeAlias alias="bestReview" type="com.myomi.review.vo.BestReviewVo"/>
+		<typeAlias alias="seller" type="com.myomi.seller.vo.SellerVo"/>
+		<typeAlias alias="user" type="com.myomi.user.vo.UserVo"/>	
+	</typeAliases>
+	
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver"
+					value="oracle.jdbc.driver.OracleDriver" />
+				<property name="url"
+					value="jdbc:oracle:thin:@localhost:1521:xe" />
+				<property name="username" value="myomi" />
+				<property name="password" value="myomi" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/myomi/board/dao/board.xml" />
+		<mapper resource="com/myomi/cart/dao/cart.xml" />
+		<mapper resource="com/myomi/comment/dao/comment.xml" />
+		<mapper resource="com/myomi/coupon/dao/coupon.xml" />
+		<mapper resource="com/myomi/follow/dao/follow.xml" />
+		<mapper resource="com/myomi/membership/dao/membership.xml" />
+		<mapper resource="com/myomi/notice/dao/notice.xml" />
+		<mapper resource="com/myomi/order/dao/order.xml" />
+		<mapper resource="com/myomi/coupon/dao/coupon.xml" />
+		<mapper resource="com/myomi/point/dao/point.xml" />
+		<mapper resource="com/myomi/product/dao/product.xml" />
+		<mapper resource="com/myomi/qna/dao/qna.xml" />
+		<mapper resource="com/myomi/review/dao/review.xml" />
+		<mapper resource="com/myomi/seller/dao/seller.xml" />
+		<mapper resource="com/myomi/user/dao/user.xml" />
+	</mappers>
+</configuration>
