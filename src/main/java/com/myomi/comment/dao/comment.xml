@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- SQL definition -->
+<mapper namespace="com.myomi.comment.dao.CommentDAO">
+ <resultMap type="Comment" id="Comment" >
+		<id property="num" column="num" />
+		<result column="num" property="num" />
+		<result column="board_num" property="boardNum" />
+		<result column="user_id" property="userId" />
+		<result column="content" property="content" />
+		<result column="parent" property="parent" />
+		<result column="created_date" property="createdDate" />
+	</resultMap> 
+	
+	<select id="selectAllComments" resultType="Comment">
+	SELECT
+		num ,
+		board_num,
+		user_id,
+		content,
+		parent,
+		created_date
+		FROM comments
+		
+	</select>
+</mapper>

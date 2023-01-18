@@ -3,7 +3,6 @@ package com.myomi.dto;
 import java.util.List;
 
 import lombok.Getter;
-
 @Getter //값을 설정할 수는 없고 조회만 가능하다.
 public class PageBean<T> { //게시판 공지사항에서만 쓰인다면! -> 14번째줄 -> <T>로 하면
 	//PageBean<Product> pb = new PageBean<>(); or PageBean<Board> pb2 = new PageBean<>();
