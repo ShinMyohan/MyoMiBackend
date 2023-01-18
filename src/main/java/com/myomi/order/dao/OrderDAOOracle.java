@@ -28,7 +28,7 @@ public class OrderDAOOracle implements OrderDAO {
 	@Override
 	public List<Map<String, Object>> selectOneOrder(int num) throws FindException {
 				SqlSession session = sqlSessionFactory.openSession();
-				List<Map<String, Object>> list = session.selectList("orderMapper.selectOneOrder", num);
+				List<Map<String, Object>> list = session.selectList("OrderMapper.selectOneOrder", num);
 				
 
 				if(list == null) {
@@ -47,7 +47,7 @@ public class OrderDAOOracle implements OrderDAO {
 	@Override
 	public List<OrderDetailVo> selectOrderDetail(int num) throws FindException {
 				SqlSession session = sqlSessionFactory.openSession();
-				List<OrderDetailVo> list = session.selectList("orderMapper.selectDetailOrder", num);
+				List<OrderDetailVo> list = session.selectList("OrderMapper.selectDetailOrder", num);
 				
 				if(list == null) {
 					System.out.println("조회결과 없음");
@@ -75,7 +75,7 @@ public class OrderDAOOracle implements OrderDAO {
 		insertDelivery.put("delivery_msg", deliveryMsg);}
 		insertDelivery.put("receive_date", receiveDate);
 		
-		session.insert("orderMapper.insertDelivery", insertDelivery);
+		session.insert("OrderMapper.insertDelivery", insertDelivery);
 		session.commit();
 		
 		if(insertDelivery.isEmpty()) {
@@ -104,7 +104,7 @@ public class OrderDAOOracle implements OrderDAO {
 		updateOrder.put("total_price", totalPrice);
 		updateOrder.put("save_point", savePoint);
 
-		session.update("orderMapper.updateOrder", updateOrder);
+		session.update("OrderMapper.updateOrder", updateOrder);
 		session.commit();
 
 	}

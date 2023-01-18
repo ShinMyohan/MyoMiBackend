@@ -4,30 +4,30 @@
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
 		<setting name="jdbcTypeForNull" value="NULL" />
-    </settings>
-    <typeAliases>
-    	<typeAlias alias="admin" type="com.myomi.admin.vo.AdminVo"/>
-    	<typeAlias alias="board" type="com.myomi.board.vo.BoardVo"/>
-    	<typeAlias alias="cart" type="com.myomi.cart.vo.CartVo"/>
-    	<typeAlias alias="comment" type="com.myomi.comment.vo.CommentVo"/>
-    	<typeAlias alias="coupon" type="com.myomi.coupon.vo.CouponVo"/>
-    	<typeAlias alias="follow" type="com.myomi.follow.vo.FollowVo"/>
-    	<typeAlias alias="membership" type="com.myomi.membership.vo.MembershipVo"/>
-		<typeAlias alias="notice" type="com.myomi.notice.vo.NoticeVo"/>
-		<typeAlias alias="order" type="com.myomi.order.vo.OrderVo"/>
-		<typeAlias alias="orderDetail" type="com.myomi.order.vo.OrderDetailVo"/>
-		<typeAlias alias="delivery" type="com.myomi.order.vo.DeliveryVo"/>
-		<typeAlias alias="coupon" type="com.myomi.coupon.vo.CouponVo"/>
-		<typeAlias alias="point" type="com.myomi.point.vo.PointVo"/>
-		<typeAlias alias="pointDetail" type="com.myomi.point.vo.PointDetailVo"/>
-		<typeAlias alias="product" type="com.myomi.product.vo.ProductVo"/>
-		<typeAlias alias="qna" type="com.myomi.qna.vo.QnaVo"/>
-		<typeAlias alias="review" type="com.myomi.review.vo.ReviewVo"/>
-		<typeAlias alias="bestReview" type="com.myomi.review.vo.BestReviewVo"/>
-		<typeAlias alias="seller" type="com.myomi.seller.vo.SellerVo"/>
-		<typeAlias alias="user" type="com.myomi.user.vo.UserVo"/>	
+    	</settings>
+    	<typeAliases>
+		<typeAlias alias="Admin" type="com.myomi.admin.vo.AdminVo"/>
+		<typeAlias alias="Board" type="com.myomi.board.vo.BoardVo"/>
+		<typeAlias alias="Cart" type="com.myomi.cart.vo.CartVo"/>
+		<typeAlias alias="Comment" type="com.myomi.comment.vo.CommentVo"/>
+		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="Follow" type="com.myomi.follow.vo.FollowVo"/>
+		<typeAlias alias="Membership" type="com.myomi.membership.vo.MembershipVo"/>
+		<typeAlias alias="Notice" type="com.myomi.notice.vo.NoticeVo"/>
+		<typeAlias alias="Order" type="com.myomi.order.vo.OrderVo"/>
+		<typeAlias alias="OrderDetail" type="com.myomi.order.vo.OrderDetailVo"/>
+		<typeAlias alias="Delivery" type="com.myomi.order.vo.DeliveryVo"/>
+		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="Point" type="com.myomi.point.vo.PointVo"/>
+		<typeAlias alias="PointDetail" type="com.myomi.point.vo.PointDetailVo"/>
+		<typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/>
+		<typeAlias alias="Qna" type="com.myomi.qna.vo.QnaVo"/>
+		<typeAlias alias="Review" type="com.myomi.review.vo.ReviewVo"/>
+		<typeAlias alias="BestReview" type="com.myomi.review.vo.BestReviewVo"/>
+		<typeAlias alias="Seller" type="com.myomi.seller.vo.SellerVo"/>
+		<typeAlias alias="User" type="com.myomi.user.vo.UserVo"/>	
 	</typeAliases>
-	
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />
