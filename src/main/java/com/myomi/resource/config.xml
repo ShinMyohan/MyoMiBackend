@@ -9,7 +9,11 @@
     </settings>
     <!-- 2. vo 연결 및 alias 지정 -->
     <typeAliases>
-		<typeAlias alias="Product" type="com.myomi.product.ProductVo"/>
+		<typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/>
+		<!-- <typeAlias alias="Cart" type="com.myomi.cart.CartVo"/> -->
+		<typeAlias alias="Board" type="com.myomi.board.vo.BoardVo"/>
+		<typeAlias alias="Comment" type="com.myomi.comment.vo.CommentVo"/>
+		<typeAlias alias="Membership" type="com.myomi.membership.vo.MembershipVo"/>
 	</typeAliases>
 	<!-- 3. DB 서버 정보 -->
 	<environments default="development">
@@ -26,6 +30,10 @@
 		</environment>
 	</environments>
 	<mappers>
-		<mapper resource="/mybatis/mapper/mybatis-mapper.xml" />
+		<mapper resource="com/myomi/product/dao/product.xml" />
+		<!-- <mapper resource="com.myomi.cart.cart-mapper.xml" /> -->
+		<mapper resource="com/myomi/board/dao/board.xml" />
+		<mapper resource="com/myomi/comment/dao/comment.xml" />
+		<mapper resource="com/myomi/membership/dao/membership.xml" />
 	</mappers>
 </configuration>
