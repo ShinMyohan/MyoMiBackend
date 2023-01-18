@@ -1,69 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.myomi.product.dao.ProductDAO">
-	<resultMap id="Product" type="Product" autoMapping="true">
-			<id property="num" column="num" javaType="int"/>
-			<result property="sellerId" column="seller_id"/>
-			<result property="category" column="category"/>
-			<result property="name" column="name"/>
-			<result property="originPrice" column="origin_price"/>
-			<result property="percentage" column="percentage"/>
-			<result property="week" column="week"/>
-			<result property="status" column="status"/>
-			<result property="detail" column="detail"/>
-			<result property="reviewCnt" column="review_cnt"/>
-			<result property="stars" column="stars"/>
-			<result property="fee" column="fee"/>
-			<!-- 1:1 관계에서는 assocication -->
-			<!-- <collection property="qna" column="num" javaType="java.util.ArrayList" 
-			ofType="com.myomi.qna.QnaVo" select="ProdMapper.getQnaList"/> -->
-	</resultMap>
-	
-	<!-- <resultMap type="Qna" id="Qna">
-		<id property="num" column="num" javaType="int"/>
-		   <result property="userId" column="user_id" />
-		   <result property="prodNum" column="prod_num" />
-		   <result property="queTitle" column="que_title" />
-		   <result property="queContent" column="que_content" />
-		   <result property="queCreatedDate" column="que_created_date" />
-		   <result property="ansContent" column="ans_content" />
-		   <result property="ansCreatedDate" column="ans_created_date" /> 
-	</resultMap> -->
-	
-	<!-- <select id="selectByProdQna" resultMap="Product">
-		 SELECT p.num, p.name, q.num, q.user_id, q.prod_num, q.que_title, que_content
-		 FROM product p, qna q 
-		 WHERE p.num = 2
-	</select> -->
-	
-	<!-- <select id="getQnaList" resultType="qna">
+<mapper namespace="ProductMapper">
+	<!-- 상품목록 조회 -->
+	<select id="selectAllProds" resultType="Map">
 		SELECT
- 		num, 
- 		user_id, 
- 		prod_num, 
- 		que_title, 
- 		que_content, 
- 		que_created_date,
- 		ans_content,
- 		ans_created_date
- 		FROM qna
- 		ORDER BY num;
-	</select> -->
-	<select id="selectAllProds" resultType="Product">
-		SELECT
- 		num, 
- 		seller_id, 
- 		category, 
- 		name, 
- 		origin_price, 
- 		percentage,
- 		week,
- 		status,
- 		detail,
- 		review_cnt,
- 		stars,
- 		fee
- 		FROM product
- 		<!-- ORDER BY num; -->
+		num,seller_id,category,name,origin_price,percentage,
+		week,status,detail,review_cnt,stars,fee
+		FROM product
+		ORDER BY num
 	</select>
+
+	<!-- 상품 카테고리별 목록 조회 -->
+	<select id="selectProdByCategory" resultType="Map">
+		SELECT
+		num, seller_id, category, name, origin_price,
+		percentage,
+		week, status, detail
+		FROM product
+		WHERE category =
+		#{category}
+		ORDER BY week
+	</select>
+
+	<!-- 상품 배송주차별 목록 조회 -->
+	<select id="selectProdByWeek" resultType="Map">
+		SELECT
+		num, seller_id, category, name, origin_price,
+		percentage,
+		week, status, detail
+		FROM product
+		WHERE week = #{week}
+		ORDER
+		BY review_cnt desc
+	</select>
+
+	<!-- 상품 한개 상세조회 + 리뷰 목록 + 베스트리뷰 -->
+	<select id="selectOne" resultType="java.util.LinkedHashMap">
+		SELECT p.num ProdNUM, si.company_name, p.category, p.name,
+		p.origin_price, p.percentage, p.week, p.status,
+		p.detail, p.review_cnt,
+		p.stars, r.user_id, r.sort, r.title, r.content, r.created_date,
+		r.stars,
+		od.order_num, br.created_date
+		FROM seller_info si
+		LEFT JOIN product p ON si.seller_id
+		= p.seller_id
+		FULL OUTER JOIN orders_detail od ON p.num = od.prod_num
+		FULL OUTER join review r ON od.order_num = r.order_num
+		FULL OUTER JOIN
+		best_review br ON r.num = br.review_num
+		where p.num=#{num}
+	</select>
+
+	<!-- 판매자당 상품 수 count -->
+	<select id="selectCntProds" resultType="int">
+		select count(*) from product where
+		seller_id=#{seller.user.id}
+	</select>
+
+
+	<!-- 상품 등록 -->
+	<insert id="insertProd">
+		INSERT INTO product
+		(num, seller_id, category, name, origin_price,
+		percentage, week, status, detail, fee)
+		VALUES
+		(seq_product.nextval,
+		#{seller.user.id}, #{category}, #{name}, #{originPrice},
+		#{percentage}, #{week}, #{status}, #{detail}, 9)
+	</insert>
+
+
+
+	<!-- 상품 정보 업데이트 -->
+	<update id="updateProd">
+		UPDATE product
+		SET
+		name=#{name}, category=#{category}, status=#{status}, detail=#{detail}
+		WHERE num=#{num}
+	</update>
 </mapper>

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
+	<!-- MySQL 접속 정보를 저장한다. -->
+	<properties>
+		<property name="hostname" value="localhost" />
+		<property name="portnumber" value="1521" />
+		<property name="username" value="myomi" />
+		<property name="password" value="myomi" />
+	 </properties>
+
 	<settings>
 	<!-- Camel Case, Snake Case로만 다를 경우 
         	resultMap을 안 써도 이 코드 쓰면 알아서 바꿔줌 -->
@@ -10,30 +18,25 @@
     <!-- 2. vo 연결 및 alias 지정 -->
     <typeAliases>
 		<typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/>
-		<!-- <typeAlias alias="Cart" type="com.myomi.cart.CartVo"/> -->
-		<typeAlias alias="Board" type="com.myomi.board.vo.BoardVo"/>
-		<typeAlias alias="Comment" type="com.myomi.comment.vo.CommentVo"/>
-		<typeAlias alias="Membership" type="com.myomi.membership.vo.MembershipVo"/>
+		<typeAlias alias="Cart" type="com.myomi.cart.vo.CartVo"/>
 	</typeAliases>
 	<!-- 3. DB 서버 정보 -->
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-				<property name="driver"
-					value="oracle.jdbc.driver.OracleDriver" />
-				<property name="url"
-					value="jdbc:oracle:thin:@localhost:1521:xe" />
-				<property name="username" value="myomi" />
-				<property name="password" value="myomi" />
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver" />
+				<property name="url" value="jdbc:oracle:thin:@${hostname}:${portnumber}:xe" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
 			</dataSource>
 		</environment>
 	</environments>
 	<mappers>
 		<mapper resource="com/myomi/product/dao/product.xml" />
-		<!-- <mapper resource="com.myomi.cart.cart-mapper.xml" /> -->
 		<mapper resource="com/myomi/board/dao/board.xml" />
 		<mapper resource="com/myomi/comment/dao/comment.xml" />
 		<mapper resource="com/myomi/membership/dao/membership.xml" />
+		<mapper resource="com/myomi/cart/dao/cart.xml" />
 	</mappers>
 </configuration>
