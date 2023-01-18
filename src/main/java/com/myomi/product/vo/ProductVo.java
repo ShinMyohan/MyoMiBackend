@@ -7,7 +7,6 @@ import com.myomi.review.vo.BestReviewVo;
 import com.myomi.review.vo.ReviewVo;
 import com.myomi.seller.vo.SellerVo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +14,7 @@ import lombok.ToString;
 
 @Setter @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @ToString
 public class ProductVo {
 	private int num;
@@ -33,4 +32,19 @@ public class ProductVo {
 	private List<QnaVo> qna;
 	private List<ReviewVo> review;
 	private List<BestReviewVo> bestReview;
+	
+	public ProductVo(SellerVo seller, String category, String name, int originPrice, int percentage, int week,
+			int status, String detail, int fee) {
+//		super();
+//		this.num = num;
+		this.seller = seller;
+		this.category = category;
+		this.name = name;
+		this.originPrice = originPrice;
+		this.percentage = percentage;
+		this.week = week;
+		this.status = status;
+		this.detail = detail;
+		this.fee = fee;
+	}
 }
