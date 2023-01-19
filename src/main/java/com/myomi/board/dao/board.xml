@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- SQL definition -->
+
+
+<mapper namespace="boardMapper">
+	
+	<!-- 글 전체 목록  -->
+	<select id="selectAll" parameterType="Board" resultType="Board">
+	select * from(select rownum rn,board.*
+	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
+	from board b, users u
+	where b.user_id = u.id
+	order by created_date desc) board)
+	<!-- where rn between #{startRow} and #{endRow} -->
+	</select>
+	
+	
+	<!-- 카테고리로 검색  -->
+	<select id="selectByCategory" parameterType="Board" resultType="Map">
+	select * from (select rownum rn,board.* 
+	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
+	from board b, users u
+	where b.user_id = u.id
+	and category=#{category} and title like #{title}
+	order by created_date desc) board)
+	</select>
+	
+	<!-- 제목으로 검색  -->
+	<select id="selectByTitle" parameterType="Board" resultType="Map">
+	select * from (select rownum rn,board.* 
+	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
+	from board b, users u
+	where b.user_id = u.id
+	and title like #{title} order by created_date desc) board)
+	</select>
+	
+	<!-- 글 내용 조회 -->
+	<select id="selectDetail" parameterType="map" resultType="map">
+	SELECT
+	 u.name, b.title, b.content, b.created_date, b.hits, c.user_id, c.created_date, c.content 
+	from users u, board b, comments c
+	where b.num = c.board_num
+	and u.id = b.user_id
+	and b.num = #{num}
+	</select>
+	
+	
+     <!-- 글 쓰기  -->
+	<insert id="insertBoard" parameterType="map" keyProperty="num">
+	insert into board values (seq_board.nextval, #{user_id}, #{category}, #{title}, #{content}, sysdate, 0)
+	</insert>
+	
+	
+	<!-- 글 수정  -->
+	<update id="updateBoard" parameterType="map">
+	update board set category=#{category}, title=#{title}, content=#{content} where num =#{num}
+	</update>
+
+     
+    <!-- 글 삭제 -->
+    <delete id="deleteBoard" parameterType="Board">
+       delete from board where num=#{num}
+    </delete>
+    
+</mapper>
+

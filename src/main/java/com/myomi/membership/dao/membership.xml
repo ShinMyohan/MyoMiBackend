@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- SQL definition -->
+<mapper namespace="com.myomi.membership.dao.MembershipDAO" > 
+
+<resultMap type="Membership" id="Membership" autoMapping="true">
+<id property="membership_num" column="membership_num" />
+      <result column="membership_num" property="membership_num" />
+	<result column="membership_level" property="membership_level" />
+
+</resultMap>
+	<select id="selectMembershipList" resultType="Membership">
+	SELECT
+		membership_num,
+		membership_level
+		FROM membership
+		
+	</select>
+</mapper>
