@@ -17,6 +17,24 @@
     </settings>
     <!-- 2. vo 연결 및 alias 지정 -->
     <typeAliases>
+<!-- 		<typeAlias alias="Admin" type="com.myomi.admin.vo.AdminVo"/>
+		<typeAlias alias="Board" type="com.myomi.board.vo.BoardVo"/>
+		<typeAlias alias="Comment" type="com.myomi.comment.vo.CommentVo"/>
+		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="Follow" type="com.myomi.follow.vo.FollowVo"/>
+		<typeAlias alias="Membership" type="com.myomi.membership.vo.MembershipVo"/>
+		<typeAlias alias="Notice" type="com.myomi.notice.vo.NoticeVo"/>
+		<typeAlias alias="Order" type="com.myomi.order.vo.OrderVo"/>
+		<typeAlias alias="OrderDetail" type="com.myomi.order.vo.OrderDetailVo"/>
+		<typeAlias alias="Delivery" type="com.myomi.order.vo.DeliveryVo"/>
+		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="Point" type="com.myomi.point.vo.PointVo"/>
+		<typeAlias alias="PointDetail" type="com.myomi.point.vo.PointDetailVo"/>
+		<typeAlias alias="Qna" type="com.myomi.qna.vo.QnaVo"/>
+		<typeAlias alias="Review" type="com.myomi.review.vo.ReviewVo"/>
+		<typeAlias alias="BestReview" type="com.myomi.review.vo.BestReviewVo"/> -->
+		<typeAlias alias="Seller" type="com.myomi.seller.vo.SellerVo"/> 
+		<typeAlias alias="User" type="com.myomi.user.vo.UserVo"/>
 		<typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/>
 		<typeAlias alias="Cart" type="com.myomi.cart.vo.CartVo"/>
 	</typeAliases>
@@ -38,5 +56,7 @@
 		<mapper resource="com/myomi/comment/dao/comment.xml" />
 		<mapper resource="com/myomi/membership/dao/membership.xml" />
 		<mapper resource="com/myomi/cart/dao/cart.xml" />
+		<mapper resource="com/myomi/seller/dao/seller.xml" /> 
+		<mapper resource="com/myomi/user/dao/user.xml" />
 	</mappers>
 </configuration>
