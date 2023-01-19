@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class BestReviewVo {
-	private ReviewVo review;
+	private ReviewVo review; //=reviewNum
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date createdDate;
 }
