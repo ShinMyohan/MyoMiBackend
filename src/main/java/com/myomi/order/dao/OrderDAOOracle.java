@@ -11,7 +11,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import com.myomi.coupon.vo.CouponVo;
 import com.myomi.exception.FindException;
 import com.myomi.order.vo.OrderDetailVo;
-import com.myomi.resources.Factory;
+import com.myomi.resource.Factory;
 import com.myomi.user.vo.UserVo;
 
 /**

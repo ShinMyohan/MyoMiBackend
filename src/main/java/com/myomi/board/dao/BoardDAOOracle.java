@@ -174,7 +174,7 @@ public class BoardDAOOracle implements BoardDAO {
 		BoardDAOOracle dao = new BoardDAOOracle();
 		//dao.delBoard(10);	
 		//dao.updateBoard("베스트 조합","수정테스트","수정테스트",9);
-		//dao.selectDetail(1);
+		dao.selectDetail(1);
 		//dao.insertBoard(0, "user1", "잡담", "글작성 테스트","어이없어@@@@@2",new Date(),0);
 		//dao.selectByCategory("베스트 조합","%보리%");
 		//dao.selectAll();
