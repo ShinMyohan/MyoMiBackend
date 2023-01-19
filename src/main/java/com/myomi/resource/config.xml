@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<settings>
+	<!-- Camel Case, Snake Case로만 다를 경우 
+        	resultMap을 안 써도 이 코드 쓰면 알아서 바꿔줌 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+    <!-- 2. vo 연결 및 alias 지정 -->
+    <typeAliases>
+		<!-- <typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/> -->
+<!-- 		<typeAlias alias="Admin" type="com.myomi.admin.vo.AdminVo"/>
+		<typeAlias alias="Board" type="com.myomi.board.vo.BoardVo"/>
+		<typeAlias alias="Cart" type="com.myomi.cart.vo.CartVo"/>
+		<typeAlias alias="Comment" type="com.myomi.comment.vo.CommentVo"/>
+		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="Follow" type="com.myomi.follow.vo.FollowVo"/>
+		<typeAlias alias="Membership" type="com.myomi.membership.vo.MembershipVo"/>
+		<typeAlias alias="Notice" type="com.myomi.notice.vo.NoticeVo"/>
+		<typeAlias alias="Order" type="com.myomi.order.vo.OrderVo"/>
+		<typeAlias alias="OrderDetail" type="com.myomi.order.vo.OrderDetailVo"/>
+		<typeAlias alias="Delivery" type="com.myomi.order.vo.DeliveryVo"/>
+		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo"/>
+		<typeAlias alias="Point" type="com.myomi.point.vo.PointVo"/>
+		<typeAlias alias="PointDetail" type="com.myomi.point.vo.PointDetailVo"/>
+		<typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/>
+		<typeAlias alias="Qna" type="com.myomi.qna.vo.QnaVo"/>-->
+		<typeAlias alias="Review" type="com.myomi.review.vo.ReviewVo"/>
+		<!--<typeAlias alias="BestReview" type="com.myomi.review.vo.BestReviewVo"/>  -->
+		<typeAlias alias="Seller" type="com.myomi.seller.vo.SellerVo"/> 
+		<typeAlias alias="User" type="com.myomi.user.vo.UserVo"/>
+		
+		
+		<!-- <typeAlias alias="Cart" type="com.myomi.cart.CartVo"/> -->
+	</typeAliases>
+	<!-- 3. DB 서버 정보 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver"
+					value="oracle.jdbc.driver.OracleDriver" />
+				<property name="url"
+					value="jdbc:oracle:thin:@localhost:1521:xe" />
+				<property name="username" value="myomi" />
+				<property name="password" value="myomi" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+	    <!-- <mapper resource="com/myomi/product/dao/product-mapper.xml" /> -->
+<!-- 		<mapper resource="com/myomi/board/dao/board.xml" />
+		<mapper resource="com/myomi/cart/dao/cart.xml" />
+		<mapper resource="com/myomi/comment/dao/comment.xml" />
+		<mapper resource="com/myomi/coupon/dao/coupon.xml" />
+		<mapper resource="com/myomi/follow/dao/follow.xml" />
+		<mapper resource="com/myomi/membership/dao/membership.xml" />
+		<mapper resource="com/myomi/notice/dao/notice.xml" />
+		<mapper resource="com/myomi/order/dao/order.xml" />
+		<mapper resource="com/myomi/coupon/dao/coupon.xml" />
+		<mapper resource="com/myomi/point/dao/point.xml" />
+		<mapper resource="com/myomi/product/dao/product.xml" />
+		<mapper resource="com/myomi/qna/dao/qna.xml" />
+		<mapper resource="com/myomi/review/dao/review.xml" />-->
+		<mapper resource="com/myomi/seller/dao/seller.xml" /> 
+		<mapper resource="com/myomi/user/dao/user.xml" />
+		
+		<!-- <mapper resource="com.myomi.cart.cart-mapper.xml" /> -->
+	</mappers>
+</configuration>

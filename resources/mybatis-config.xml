@@ -10,6 +10,9 @@
     <!-- 2. vo 연결 및 alias 지정 -->
     <typeAliases>
 		<typeAlias alias="Product" type="com.myomi.product.ProductVo"/>
+
+		
+		
 	</typeAliases>
 	<!-- 3. DB 서버 정보 -->
 	<environments default="development">
@@ -27,5 +30,8 @@
 	</environments>
 	<mappers>
 		<mapper resource="/mybatis/mapper/mybatis-mapper.xml" />
+		
+		
+		
 	</mappers>
 </configuration>

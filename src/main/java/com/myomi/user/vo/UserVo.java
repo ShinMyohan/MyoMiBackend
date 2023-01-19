@@ -49,4 +49,3 @@ public class UserVo {
 	private List<ReviewVo> review;
 	private List<CouponVo> coupon;
 }
-
