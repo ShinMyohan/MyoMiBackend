@@ -36,7 +36,7 @@
 		<typeAlias alias="Seller" type="com.myomi.seller.vo.SellerVo"/> 
 		<typeAlias alias="User" type="com.myomi.user.vo.UserVo"/>
 		<typeAlias alias="Product" type="com.myomi.product.vo.ProductVo"/>
-		<typeAlias alias="Cart" type="com.myomi.cart.CartVo"/>
+		<typeAlias alias="Cart" type="com.myomi.cart.vo.CartVo"/>
 	</typeAliases>
 	<!-- 3. DB 서버 정보 -->
 	<environments default="development">
