@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- SQL definition -->
+<mapper namespace="ReviewMapper">
+	<!-- 베스트리뷰 상세조회 -->
+	<select id="selectOneBestReview"  resultType="map">
+	<!--  SELECT
+	 r.*, br.created_date as best_review_date,p.name from best_review br, review r ,orders_detail od ,product p 
+	 where br.review_num = r.num 
+	and r.order_num=od.order_num 
+	and p.num=od.prod_num 
+	and od.prod_num=#{product.num} and br.review_num=#{review.num} -->
+	select r.*, p.name from best_review br
+    right join review r on br.review_num = r.num
+    join orders_detail od on r.order_num = od.order_num
+    join product p on p.num = od.prod_num where r.num=#{review.num} 
+	</select>
+	<!-- 리뷰 상세조회 -->
+	<select id="selectOneReview" parameterType="int" resultType="Map">
+		SELECT
+		title,
+		content
+		from review
+		where num = #{num}
+	</select>
+	<!-- 이번달 베스트 리뷰 목록 조회 -->
+	<select id="selectBestReviewByMonth" parameterType="int" resultType="Map">
+	SELECT
+	 r.*, br.created_date as best_review_date,p.name from best_review br, review r ,orders_detail od ,product p 
+	 where br.review_num = r.num 
+	and r.order_num=od.order_num 
+	and p.num=od.prod_num 
+	and od.prod_num=#{product.num} and 
+	br.created_date 
+	between  (select to_char(sysdate, 'yyyy-mm') || '-01' as 이번달시작일 from dual)
+	and (select to_char(LAST_DAY(sysdate), 'yyyy-mm-dd') as 이번달마지막일 from dual)
+		</select>
+
+	<!-- 리뷰작성 -->
+	<insert id="insertReview" parameterType="map" keyProperty="id">
+		insert into review values(seq_review.nextval, #{order_num},
+		#{user_id}, #{sort}, #{title}, #{content},sysdate,#{stars})
+
+	</insert>
+	
+	<!-- 베스트리뷰 선정 -->
+	<insert id="insertBestReview" parameterType="map" keyProperty="review_num">
+	insert into Best_Review values (#{num}, sysdate)
+	</insert>
+
+	<!-- 리뷰 목록 최신순조회 -->
+	<select id="selectReviewByDate" parameterType="Review"
+		resultType="Map">
+		select
+		r.num,r.order_num,r.user_id,r.sort,r.title,r.content,r.created_date,r.stars,p.name
+		from review r,orders_detail od,product p
+		where r.order_num=od.order_num
+		and
+		od.prod_num=p.num
+		and sort=#{sort}
+		and p.num=#{num}
+		order by
+		created_date desc
+	</select>
+	<!-- 리뷰 목록 별점순 조회 -->
+	<select id="selectReviewByStars" parameterType="Review"
+		resultType="Map">
+		select
+		r.num,r.order_num,r.user_id,r.sort,r.title,r.content,r.created_date,r.stars,p.name
+		from review r,orders_detail od,product p
+		where r.order_num=od.order_num
+		and
+		od.prod_num=p.num
+		and sort=#{sort}
+		and p.num=#{num}
+		order by r.stars
+		desc
+	</select>
+	<!-- 리뷰 수정 -->
+	<update id="updateReview" parameterType="map" keyProperty="id">
+		update
+		review set title=#{title} , content = #{content}
+		where num =#{num}
+	</update>
+
+</mapper>
+
