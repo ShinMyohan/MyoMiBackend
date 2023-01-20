@@ -18,16 +18,16 @@ public class CouponDAOOracle implements CouponDAO {
 	}
 	
 	@Override
-	public List<Map<String,Object>> selectAllByUserId(String userId) throws FindException {
+	public List<Map<String,Object>> selectCouponByUserId(String userId) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
 		List<Map<String, Object>> couponList
-					= session.selectList("couponMapper.selectAllByUserId", userId);
+					= session.selectList("CouponMapper.selectCouponByUserId", userId);
 		
 		if(couponList == null) {
 			System.out.println("조회결과 없음");
 		} else {
 			for(Map<String, Object> coupon : couponList) {
-				System.out.println(coupon);
+				System.out.println("coupon dao" + coupon);
 			}
 		}
 		session.close();
@@ -36,19 +36,18 @@ public class CouponDAOOracle implements CouponDAO {
 	
 	// 쿠폰 사용 또는 만료됐을 경우 status Update
 	@Override
-	public void updateStatus(CouponVo cVo) throws FindException {
+	public void updateCouponStatus(CouponVo cVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		session.update("CouponMapper.updateStatus", cVo);
+		session.update("CouponMapper.updateCouponStatus", cVo);
 		System.out.println(cVo);
 		session.commit();
 		session.close();
 	}
 
 
-
 	public static void main(String[] Args) throws FindException {
 		CouponDAOOracle dao = new CouponDAOOracle();
-//		dao.selectAllByUserId("user2");
+//		dao.selectOrderByUserId("user2");
 
 		// 쿠폰 업데이트
 		CouponVo cVo = new CouponVo();
@@ -57,6 +56,6 @@ public class CouponDAOOracle implements CouponDAO {
 		cVo.setUser(uVo);
 		cVo.setNum(1);
 		cVo.setStatus(2);
-		dao.updateStatus(cVo);
+		dao.updateCouponStatus(cVo);
 	}
 }

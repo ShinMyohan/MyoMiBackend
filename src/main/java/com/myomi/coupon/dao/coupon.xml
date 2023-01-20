@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="CouponMapper">
-	<select id="selectAllByUserId" resultType="java.util.LinkedHashMap">
+	<select id="selectCouponByUserId" resultType="java.util.LinkedHashMap">
 		SELECT * FROM coupon 
 		WHERE user_id = #{userId} 
 		AND status = 0
 	</select>
 
-	<update id="updateStatus">
+	<update id="updateCouponStatus">
 		update coupon set 
 		status = #{status}
 		where user_id = #{user.id}
