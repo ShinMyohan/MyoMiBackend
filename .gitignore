@@ -8,6 +8,7 @@ MANIFEST.MF
 .settings
 .classpath
 .project
+.idea/
 
 # Compiled class file
 *.class

@@ -24,6 +24,7 @@ public class Factory {
 
 			// 만약 sqlSessionFactory가 존재하지 않는다면 새로 만들어주는 로직
 			if (sqlSessionFactory == null) {
+
 				// 사용할 sqlSessionFactory 객체 생성
 				//	Builder :  객체 생성에 필요한 설정이 가능하고, 설정한 내용으로 객체를 생성해줌
 				//	build(): config.xml 의 내용을 설정에 활용하여 설정

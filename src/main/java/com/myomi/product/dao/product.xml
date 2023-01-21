@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="ProductMapper">
-	<!-- 상품목록 조회 -->
-	<select id="selectAllProds" resultType="Map">
+	<!-- 페이징을 위한 totalCnt -->
+	<select id="totalCntProduct" resultType="int">
 		SELECT
-		num,seller_id,category,name,origin_price,percentage,
-		week,status,detail,review_cnt,stars,fee
+		COUNT(*)
+		FROM product
+	</select>
+
+	<!-- 상품목록 조회 -->
+	<select id="selectAllProduct" resultType="java.util.LinkedHashMap">
+		SELECT
+		*
 		FROM product
 		ORDER BY num
+		<!-- select *
+		from (
+		    select rownum rn, a.*
+		    from (select * from product ORDER BY num) a
+		) where rn between #{startRow} and #{endRow} -->
 	</select>
 
 	<!-- 상품 카테고리별 목록 조회 -->
-	<select id="selectProdByCategory" resultType="Map">
+	<select id="selectProductByCategory" resultType="java.util.LinkedHashMap">
 		SELECT
 		num, seller_id, category, name, origin_price,
 		percentage,
@@ -23,7 +34,7 @@
 	</select>
 
 	<!-- 상품 배송주차별 목록 조회 -->
-	<select id="selectProdByWeek" resultType="Map">
+	<select id="selectProductByWeek" resultType="java.util.LinkedHashMap">
 		SELECT
 		num, seller_id, category, name, origin_price,
 		percentage,
@@ -35,7 +46,7 @@
 	</select>
 
 	<!-- 상품 한개 상세조회 + 리뷰 목록 + 베스트리뷰 -->
-	<select id="selectOne" resultType="java.util.LinkedHashMap">
+	<select id="selectOneProduct" resultType="java.util.LinkedHashMap">
 		SELECT p.num ProdNUM, si.company_name, p.category, p.name,
 		p.origin_price, p.percentage, p.week, p.status,
 		p.detail, p.review_cnt,
@@ -53,14 +64,14 @@
 	</select>
 
 	<!-- 판매자당 상품 수 count -->
-	<select id="selectCntProds" resultType="int">
+	<select id="selectCntProductBySeller" resultType="int">
 		select count(*) from product where
 		seller_id=#{seller.user.id}
 	</select>
 
 
 	<!-- 상품 등록 -->
-	<insert id="insertProd">
+	<insert id="insertProduct">
 		INSERT INTO product
 		(num, seller_id, category, name, origin_price,
 		percentage, week, status, detail, fee)
@@ -73,7 +84,7 @@
 
 
 	<!-- 상품 정보 업데이트 -->
-	<update id="updateProd">
+	<update id="updateProduct">
 		UPDATE product
 		SET
 		name=#{name}, category=#{category}, status=#{status}, detail=#{detail}
