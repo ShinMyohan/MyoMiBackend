@@ -3,7 +3,6 @@ package com.myomi.product.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -17,11 +16,21 @@ public class ProductDAOOracle implements ProductDAO {
 	public ProductDAOOracle() {
 		sqlSessionFactory = Factory.getSqlSessionFactory();
 	}
+	
+	@Override
+	public int totalCntProduct() throws FindException {
+		SqlSession session = sqlSessionFactory.openSession();
+		int totalCnt = session.selectOne("ProductMapper,totalCntProduct");
+		
+		System.out.println("총 상품 갯수는 " + totalCnt + "개 입니다.");
+		return totalCnt;
+		
+	}
 
 	@Override
-	public List<Map<String, Object>> selectAll() throws FindException {
+	public List<Map<String, Object>> selectAllProduct() throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		List<Map<String, Object>> list = session.selectList("ProductMapper.selectAllProds", null);
+		List<Map<String, Object>> list = session.selectList("ProductMapper.selectAllProduct", null);
 
 		if (list == null) {
 			System.out.println("조회결과 없음");
@@ -36,9 +45,9 @@ public class ProductDAOOracle implements ProductDAO {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectByCategory(String category) throws FindException {
+	public List<Map<String, Object>> selectProductByCategory(String category) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		List<Map<String, Object>> output = session.selectList("ProductMapper.selectProdByCategory", category);
+		List<Map<String, Object>> output = session.selectList("ProductMapper.selectProductByCategory", category);
 
 		if (output == null) {
 			System.out.println("조회결과 없음");
@@ -53,9 +62,9 @@ public class ProductDAOOracle implements ProductDAO {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectByWeek(int week) throws FindException {
+	public List<Map<String, Object>> selectProductByWeek(int week) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		List<Map<String, Object>> output = session.selectList("ProductMapper.selectProdByWeek", week);
+		List<Map<String, Object>> output = session.selectList("ProductMapper.selectProductByWeek", week);
 
 		if (output == null) {
 			System.out.println("조회결과 없음");
@@ -70,9 +79,10 @@ public class ProductDAOOracle implements ProductDAO {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectOne(@Param("num") int num) throws FindException {
+	public List<Map<String, Object>> selectOneProduct(int num) throws FindException {
+//	public List<Map<String, Object>> selectOneProduct(@Param("num") int num) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		List<Map<String, Object>> output = session.selectList("ProductMapper.selectOne", num);
+		List<Map<String, Object>> output = session.selectList("ProductMapper.selectOneProduct", num);
 
 		if (output == null) {
 			System.out.println("조회결과 없음");
@@ -87,19 +97,21 @@ public class ProductDAOOracle implements ProductDAO {
 	}
 	
 	@Override
-	public int selectCntBySeller(String seller) throws FindException {
+	public int selectCntProductBySeller(String seller) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		int cnt = session.selectOne("ProductMapper.selectCntProds", seller);
+		int cnt = session.selectOne("ProductMapper.selectCntProductBySeller", seller);
 		
 		System.out.println("판매자 " + seller + "님의 상품 갯수는 " + cnt + "개 입니다.");
+		
+		session.close();
 		return cnt;
 	}
 
 	@Override
-	public void insert(ProductVo pVo) throws FindException {
+	public void insertProduct(ProductVo pVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
 		
-		session.insert("ProductMapper.insertProd", pVo);
+		session.insert("ProductMapper.insertProduct", pVo);
 		
 		System.out.println(pVo.toString());
 		session.commit();
@@ -107,48 +119,48 @@ public class ProductDAOOracle implements ProductDAO {
 	}
 	
 	@Override
-	public void update(ProductVo pVo) throws FindException {
+	public void updateProduct(ProductVo pVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
 		
-		session.update("ProductMapper.updateProd", pVo);
+		session.update("ProductMapper.updateProduct", pVo);
 		
 		System.out.println(pVo.toString());
 		session.commit();
 		session.close();
 	}
 
-	public static void main(String[] args) throws FindException {
-		ProductDAOOracle dao = new ProductDAOOracle();
+//	public static void main(String[] args) throws FindException {
+//		ProductDAOOracle dao = new ProductDAOOracle();
 		//필요하신거 하나씩 주석풀고 실행하시면 됩니다.
 		
 		//상품 목록
-		//dao.selectAll();
+//		dao.selectAllProduct();
 		
 		//상품 카테고리별 목록 
-		//dao.selectByCategory("도시락");
+		//dao.selectProductByCategory("도시락");
 
 		//상품 배송주차별 목록 
-		//dao.selectByWeek(1);
+		//dao.selectProductByWeek(1);
 		
 		//상품 상세 조회 + 리뷰 + 베스트리뷰
-		//dao.selectOne(1);
+		//dao.selectOneProduct(1);
 		
 		//insert
 //		ProductVo pVo = new ProductVo();
 //		SellerVo sVo = new SellerVo();
 //		UserVo uVo = new UserVo();
-//		uVo.setId("user1"); //나중에 세션에 들어감
+//		uVo.setId("user3"); //나중에 세션에 들어감
 //		sVo.setUser(uVo);
 //		pVo.setSeller(sVo);
-//		pVo.setCategory("테카테고리3");
-//		pVo.setName("테스트상품명3");
-//		pVo.setOriginPrice(51200);
-//		pVo.setPercentage(20);
-//		pVo.setWeek(2);
+//		pVo.setCategory("샐러드");
+//		pVo.setName("토마토맛 샐러드");
+//		pVo.setOriginPrice(66400);
+//		pVo.setPercentage(32);
+//		pVo.setWeek(6);
 //		pVo.setStatus(0);
 //		pVo.setDetail("");
 //		pVo.setFee(9);
-//		dao.insert(pVo);
+//		dao.insertProduct(pVo);
 		
 		//update
 //		ProductVo pVo = new ProductVo();
@@ -156,8 +168,8 @@ public class ProductDAOOracle implements ProductDAO {
 //		pVo.setName("완전 맛있는 도시락");
 //		pVo.setCategory("도시락");
 //		pVo.setDetail("새우 완전 통통");
-//		dao.update(pVo);
-//		dao.selectCntBySeller("user1");
-	}
-
+//		dao.updateProduct(pVo);
+//		dao.selectCntProductBySeller("user1");
+		//dao.totalCntProduct();
+//	}
 }
