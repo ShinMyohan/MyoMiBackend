@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.myomi.board.vo.BoardVo;
 import com.myomi.exception.FindException;
 import com.myomi.resource.Factory;
+import com.myomi.user.vo.UserVo;
 
 public class BoardDAOOracle implements BoardDAO {
 	private SqlSessionFactory sqlSessionFactory;
@@ -64,9 +66,9 @@ public class BoardDAOOracle implements BoardDAO {
 		Map map = new HashMap();
 		map.put("category",category);
 		map.put("title",title);
-
+		System.out.println(map);
 		List<Map<String, Object>> list = session.selectList("boardMapper.selectByCategory",map);      
-
+		System.out.println(list);
 		if(list == null) {
 			System.out.println("조회결과 없음");
 		} else {
@@ -77,14 +79,15 @@ public class BoardDAOOracle implements BoardDAO {
 		session.close();
 		return list;   
 	}
-
+	
 
 	//---------------글 내용 + 댓글 조회 --------------
 	@Override
 	public List<Map<String, Object>> selectDetail(int num) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
+		
 		List<Map<String, Object>> list = session.selectList("boardMapper.selectDetail", num);      
-
+		
 		if(list == null) {
 			System.out.println("조회결과 없음");
 		} else {
@@ -92,6 +95,7 @@ public class BoardDAOOracle implements BoardDAO {
 				System.out.println(board.toString());
 			}
 		}
+		
 		session.close();
 		return list;   
 	}
@@ -99,94 +103,77 @@ public class BoardDAOOracle implements BoardDAO {
 
 	//------------------글 작성-------------------
 	@Override
-	public void insertBoard(int num, String userId, String category, String title, String content, Date createdDate,int hits) throws FindException {
+	public void insertBoard(BoardVo bVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, Object> insertBoard = new HashMap<>();
-		insertBoard.put("num", num);
-		insertBoard.put("user_id", userId);
-		insertBoard.put("category", category);
-		insertBoard.put("title", title);
-		insertBoard.put("content", content);
-		insertBoard.put("created_date", createdDate);
-		insertBoard.put("hits", 0);
-
-		session.insert("boardMapper.insertBoard", insertBoard);
+		
+		
+		session.insert("boardMapper.insertBoard", bVo);
+	
+		System.out.println(bVo.toString());
 		session.commit();
-
-		if(insertBoard.isEmpty()) {
-			System.out.println("조회결과 없음");
-		} else {
-			System.out.println(insertBoard);
-		}
+	    session.close();
 
 	}
 
 	//---------------글 수정----------------
 	@Override	
-	public void updateBoard(String category, String title ,String content, int num) throws FindException {
+	public void updateBoard(BoardVo bVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, Object> edit = new HashMap<>();
-		edit.put("category", category);
-		edit.put("title", title);
-		edit.put("content", content);
-		edit.put("num", num);
-
-		session.insert("boardMapper.updateBoard",edit);
+	
+		session.update("boardMapper.updateBoard",bVo);
 		session.commit();
-
-		if(edit.isEmpty()) {
-			System.out.println("조회결과 없음");
-		} else {
-			System.out.println(edit);
-		}
-
+       
+		System.out.println(bVo.toString());
+		
 	}
 
 	//--------------글 삭제-----------------
-	public void delBoard (int num)throws FindException {
+	public void deleteBoard (int num)throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
 		session.delete("boardMapper.deleteBoard",num);
 		session.commit();
 	}
-
-	//		public void insertBoard(BoardVo vo) throws FindException {
-	//			SqlSession session = sqlSessionFactory.openSession();
-	//			session.insert("boardMapper.insertBoard", vo);
-	//			session.commit();
-	//			
-	//			if(vo == null) {
-	//				System.out.println("조회결과 없음");
-	//			} else {
-	//					System.out.println(vo);
-	//			}
-	//		}
-	//		
-	//		ProductVo vo = session.selectOne("com.relo.mybatis.orders.OrdersDao.selectOrdersDetail", oNum);
-
-	//	session.insert("com.relo.mybatis.orders.OrdersDao.insertOrders", map);
-	//
-	//	session.update("com.relo.mybatis.product.ProductDao.update8", aNum);
-	//
-	//	session.delete("com.relo.mybatis.catch.CatchDao.deleteCatch", aNum);
-
-	//	
+	
 	public static void main(String[] args) throws FindException{
 		BoardDAOOracle dao = new BoardDAOOracle();
+		
+		//---글 삭제---
 		//dao.delBoard(10);	
-		//dao.updateBoard("베스트 조합","수정테스트","수정테스트",9);
-		dao.selectDetail(1);
-		//dao.insertBoard(0, "user1", "잡담", "글작성 테스트","어이없어@@@@@2",new Date(),0);
+		
+		//---글 수정---
+//      BoardVo bVo = new BoardVo ();
+//		bVo.setNum(4);
+//		bVo.setCategory("오늘의 식단");
+//		bVo.setTitle("수정테스트 최종");
+//		bVo.setContent("수정수정");
+//	    dao.updateBoard(bVo);
+		
+		//---글 번호로 검색---
+        //dao.selectDetail(10);
+		
+	    //---카테고리+제목 키워드 검색 ---
 		//dao.selectByCategory("베스트 조합","%보리%");
+		
+		//---전체검색---
 		//dao.selectAll();
+		
+        //---제목으로 검색 ---
+		//dao.selectByTitle("%최종%");
+
+		//---글쓰기---
+//		BoardVo bVo = new BoardVo();
+//		UserVo uVo = new UserVo();
+//		bVo.setNum(0);
+//	    bVo.setUser(uVo);
+//	    uVo.setId("user1");
+//		bVo.setCategory("잡담");
+//		bVo.setTitle("123123");
+//     	bVo.setContent("123123");
+//      bVo.setCreatedDate(new Date());
+//      bVo.setHits(0);
+//      dao.insertBoard(bVo);
 
 	}
 
-
-
-
-
-
-
 }
-//	
 

@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 public class CommentVo {
 	private int num;
-	private BoardVo board;
+	private int boardNum;
 	private UserVo user;
 	private String content;
 	private int parent;
