@@ -35,21 +35,6 @@ public class ListController implements Controller {
 			String jsonStr = mapper.writeValueAsString(map);
 			return jsonStr;
 		}
-//		String category = request.getParameter("category");
-//		
-//		ObjectMapper mapper = new ObjectMapper();
-//		ProductService pService = new ProductService();
-//		try {
-//			List<Map<String, Object>> list = pService.findProductByCategory(category);
-//			String jsonStr = mapper.writeValueAsString(list);
-//			return jsonStr;
-//		} catch (FindException e) {
-//			e.printStackTrace();
-//			Map<String, String> map = new HashMap<>();
-//			map.put("msg", e.getMessage());
-//			String jsonStr = mapper.writeValueAsString(map);
-//			return jsonStr;
-//		}
 	}
 
 }
