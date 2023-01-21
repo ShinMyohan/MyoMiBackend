@@ -64,8 +64,8 @@
 		<mapper resource="com/myomi/review/dao/review.xml" />
 		<mapper resource="com/myomi/user/dao/user.xml" />
 		<mapper resource="com/myomi/cart/dao/cart.xml" />
+		<mapper resource="com/myomi/seller/dao/seller.xml" />
  		<!-- <mapper resource="com/myomi/qna/dao/qna.xml" /> -->
-		<!-- <mapper resource="com/myomi/seller/dao/seller.xml" /> -->
 		<!-- <mapper resource="com/myomi/notice/dao/notice.xml" /> -->
 		<!-- <mapper resource="com/myomi/follow/dao/follow.xml" /> -->
 	</mappers>

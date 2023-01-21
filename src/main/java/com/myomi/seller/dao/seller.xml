@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SellerMapping">
+	<!-- 판매자로 신청할 경우 정보 입력 -->
+	<insert id="insertSellerInfo">
+		insert into seller_info (seller_id, company_name, company_num, internet_num, addr, manager, status) 
+		values (
+		#{user.id}, #{companyName}, #{companyNum}, #{internetNum}, #{addr}, #{manager}, 0)
+	</insert>
+	
+	<!-- 판매자 상태 변경 -->
+	<delete id="updateSellerStatus">
+		update seller_info set status = #{status} where seller_id = #{user.id}
+	</delete>
+</mapper>
