@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
+
 	<!-- MySQL 접속 정보를 저장한다. -->
 	<properties>
 		<property name="hostname" value="localhost" />
@@ -38,7 +39,7 @@
 		<!-- <typeAlias alias="Follow" type="com.myomi.follow.vo.FollowVo"/> -->
 		<!-- <typeAlias alias="Notice" type="com.myomi.notice.vo.NoticeVo"/> -->
 	</typeAliases>
-	<!-- 3. DB 서버 정보 -->
+
 	<environments default="development">
 		<environment id="development">
 			<transactionManager type="JDBC" />
@@ -46,9 +47,11 @@
 				<property name="driver"
 					value="oracle.jdbc.driver.OracleDriver" />
 				<property name="url"
+
 					value="jdbc:oracle:thin:@${hostname}:${portnumber}:xe" />
 				<property name="username" value="${username}" />
 				<property name="password" value="${password}" />
+
 			</dataSource>
 		</environment>
 	</environments>

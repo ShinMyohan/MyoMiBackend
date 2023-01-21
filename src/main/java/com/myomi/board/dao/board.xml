@@ -2,23 +2,44 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!-- SQL definition -->
 
-
 <mapper namespace="boardMapper">
+
+<!-- <resultMap type="Board" id="BoardDetail" autoMapping="true">
+   <result property="num" column="employee_id"/>
+   <result property="category" column="category" />
+   <result property="createdDate" column="created_date" />
+   <result property="hits" column="hits" />
+    <association property="user" javaType="User" autoMapping="true" >
+	   <id column="id" property="id" ></id></association>
+   <collection property="comment" javaType="Comment" autoMapping="true" >
+	   <id column="num" property="num" ></id></collection>
+ </resultMap> -->
+
+
+<resultMap type="Board" id="AllBoard" autoMapping="true">
+	 <id column="num" property="num" />
+	   <association property="user" javaType="User" autoMapping="true">
+	    <id column="id" property="id" ></id>
+	    <result column="name" property="name" /> 
+	  </association>
+</resultMap>
+	
+	
 	
 	<!-- 글 전체 목록  -->
-	<select id="selectAll" parameterType="Board" resultType="Board">
-	select * from(select rownum rn,board.*
+	<select id="selectAll" resultMap="AllBoard">
+	SELECT * FROM (select rownum rn,board.*
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
-	order by created_date desc) board)
+	order by created_date desc) board) 
 	<!-- where rn between #{startRow} and #{endRow} -->
 	</select>
 	
 	
 	<!-- 카테고리로 검색  -->
 	<select id="selectByCategory" parameterType="Board" resultType="Map">
-	select * from (select rownum rn,board.* 
+	SELECT * FROM (select rownum rn,board.* 
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
@@ -26,41 +47,43 @@
 	order by created_date desc) board)
 	</select>
 	
+	
 	<!-- 제목으로 검색  -->
 	<select id="selectByTitle" parameterType="Board" resultType="Map">
-	select * from (select rownum rn,board.* 
+	SELECT * FROM (select rownum rn,board.* 
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
 	and title like #{title} order by created_date desc) board)
 	</select>
 	
-	<!-- 글 내용 조회 -->
-	<select id="selectDetail" parameterType="map" resultType="map">
+	
+<!--  글 내용 조회  -->
+	<select id="selectDetail" parameterType="Board" resultType="Map">
 	SELECT
-	 u.name, b.title, b.content, b.created_date, b.hits, c.user_id, c.created_date, c.content 
-	from users u, board b, comments c
+    u.name, b.title, b.content, b.created_date, b.hits, c.user_id, c.created_date "댓글 작성일", c.content "댓글내용"
+	FROM  board b, users u, comments c
 	where b.num = c.board_num
 	and u.id = b.user_id
 	and b.num = #{num}
 	</select>
-	
+
 	
      <!-- 글 쓰기  -->
-	<insert id="insertBoard" parameterType="map" keyProperty="num">
-	insert into board values (seq_board.nextval, #{user_id}, #{category}, #{title}, #{content}, sysdate, 0)
+	<insert id="insertBoard" parameterType="Board" keyProperty="id">
+	INSERT into board values (seq_board.nextval, #{user.id}, #{category}, #{title}, #{content}, sysdate, 0)
 	</insert>
 	
 	
 	<!-- 글 수정  -->
 	<update id="updateBoard" parameterType="map">
-	update board set category=#{category}, title=#{title}, content=#{content} where num =#{num}
+	UPDATE board SET category=#{category}, title=#{title}, content=#{content} where num =#{num}
 	</update>
 
      
     <!-- 글 삭제 -->
     <delete id="deleteBoard" parameterType="Board">
-       delete from board where num=#{num}
+       DELETE FROM board where num=#{num}
     </delete>
     
 </mapper>
