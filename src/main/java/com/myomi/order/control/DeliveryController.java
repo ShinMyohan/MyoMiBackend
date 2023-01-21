@@ -18,9 +18,6 @@ import com.myomi.control.Controller;
 import com.myomi.order.service.OrderService;
 import com.myomi.order.vo.DeliveryVo;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class DeliveryController implements Controller {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
