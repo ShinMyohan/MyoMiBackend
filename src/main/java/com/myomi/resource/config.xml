@@ -16,7 +16,6 @@
 	</settings>
 	<!-- 2. vo 연결 및 alias 지정 -->
 	<typeAliases>
-
 		<typeAlias alias="Board" type="com.myomi.board.vo.BoardVo" />
 		<typeAlias alias="Comment" type="com.myomi.comment.vo.CommentVo" />
 		<typeAlias alias="Coupon" type="com.myomi.coupon.vo.CouponVo" />

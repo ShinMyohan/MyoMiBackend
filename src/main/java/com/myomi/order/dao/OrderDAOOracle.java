@@ -51,6 +51,8 @@ public class OrderDAOOracle implements OrderDAO {
 
 	// 주문정보에 주문정보 업데이트하기
 	public void updateOrder(OrderVo oVo) {
+		System.out.println("oVo : "+ oVo);
+		
 		SqlSession session = sqlSessionFactory.openSession();
 
 		session.update("OrderMapper.updateOrder", oVo);
@@ -58,20 +60,5 @@ public class OrderDAOOracle implements OrderDAO {
 		session.close();
 
 	}
-
-//	public static void main(String Args[]) throws FindException {
-//		OrderDAOOracle dao = new OrderDAOOracle();
-//		dao.selectOneOrder(1);
-//		dao.selectOrderDetail(1);
-//					dVo.setOrderNum(orderNum);
-//		DeliveryVo dVo = new DeliveryVo();
-//		dVo.setOrderNum(3);
-//		dVo.setName("name33");
-//		dVo.setTel("010-222-2222");
-//		dVo.setAddr("addrrr");
-//		dVo.setDeliveryMsg("mmmsssg");
-//		dao.insertDelivery(dVo);
-//		dao.updateOrder(1, "user1", 0, "msg", 0, 0, new Date(), 24800, 248);
-//	}
-//}
 }
+

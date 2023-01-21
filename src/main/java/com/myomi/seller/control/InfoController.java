@@ -2,7 +2,6 @@ package com.myomi.seller.control;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,8 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myomi.control.Controller;
 import com.myomi.exception.AddException;
 import com.myomi.seller.service.SellerService;
-import com.myomi.seller.vo.SellerVo;
-import com.myomi.user.vo.UserVo;
 
 public class InfoController implements Controller {
 	@Override
