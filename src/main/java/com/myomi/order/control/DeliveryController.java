@@ -16,7 +16,6 @@ import org.json.simple.parser.ParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myomi.control.Controller;
 import com.myomi.order.service.OrderService;
-import com.myomi.order.vo.DeliveryVo;
 
 public class DeliveryController implements Controller {
 	@Override
@@ -29,7 +28,6 @@ public class DeliveryController implements Controller {
 		// json 한글깨짐 현상
 		request.setCharacterEncoding("UTF-8");
 
-		DeliveryVo dVo = new DeliveryVo();
 		OrderService service = new OrderService();
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -41,14 +39,8 @@ public class DeliveryController implements Controller {
 			JSONParser parser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) parser.parse(collect);
 
-			dVo.setOrderNum(Integer.parseInt(jsonObject.get("num").toString()));
-			dVo.setName(jsonObject.get("name").toString());
-			dVo.setTel(jsonObject.get("tel").toString());
-			dVo.setAddr(jsonObject.get("addr").toString());
-			dVo.setDeliveryMsg(jsonObject.get("deliveryMsg").toString());
-
 			// service 메서드 호출
-			service.addDelivery(dVo);
+			service.addDelivery(jsonObject);
 			String jsonStr = mapper.writeValueAsString(jsonObject);
 			return jsonStr;
 		} catch (ParseException e) {

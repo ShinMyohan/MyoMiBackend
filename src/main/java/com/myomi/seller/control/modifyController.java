@@ -1,4 +1,4 @@
-package com.myomi.order.control;
+package com.myomi.seller.control;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,32 +15,32 @@ import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myomi.control.Controller;
-import com.myomi.order.service.OrderService;
+import com.myomi.exception.AddException;
+import com.myomi.seller.service.SellerService;
 
-public class PaymentController implements Controller {
+public class modifyController implements Controller{
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// 기본 설정
 		response.setContentType("application/json;charset=UTF-8");
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		// json 한글깨짐 현상
 		request.setCharacterEncoding("UTF-8");
 
-		OrderService service = new OrderService();
+		SellerService service = new SellerService();
 		ObjectMapper mapper = new ObjectMapper();
 
-		// request를 읽어서 Json 형태로 받아옴
 		String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
 		try {
-			// Json형식을 웹이나 다른곳에서 받아왔을 때 parse하는 코드
 			JSONParser parser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) parser.parse(collect);
 
-			// service 메서드 호출
-			service.modifyOrder(jsonObject);
+			try {
+				service.modifySellerStatus(jsonObject);
+			} catch (AddException e) {
+				e.printStackTrace();
+			}
 			String jsonStr = mapper.writeValueAsString(jsonObject);
 			return jsonStr;
 		} catch (ParseException e) {
