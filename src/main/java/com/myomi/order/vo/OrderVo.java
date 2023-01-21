@@ -14,12 +14,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter @Getter
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class OrderVo {
-	private int num; 
+	private int num;
 	private UserVo user;
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date createdDate;
@@ -33,7 +34,7 @@ public class OrderVo {
 	private Date canceledDate;
 	private int totalPrice;
 	private int savePoint;
-	//하나의 주문에, 여러 주문상세가 있으므로 List로!
+	// 하나의 주문에, 여러 주문상세가 있으므로 List로!
 	private PointVo point;
 	private List<OrderDetailVo> orderDetail;
 	private DeliveryVo delivery;
