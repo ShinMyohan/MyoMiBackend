@@ -14,7 +14,7 @@ import com.myomi.control.Controller;
 import com.myomi.exception.FindException;
 import com.myomi.review.service.ReviewService;
 
-public class ListByStarsController implements Controller {
+public class ListByDateController implements Controller {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -27,7 +27,7 @@ public class ListByStarsController implements Controller {
 		int sort = Integer.parseInt(request.getParameter("sort"));
 		int num = Integer.parseInt(request.getParameter("num"));
 		try {
-			List<Map<String, Object>> list = service.findReviewByStars(sort, num);
+			List<Map<String, Object>> list = service.findReviewByDate(sort, num);
 			String jsonStr = mapper.writeValueAsString(list);
 			return jsonStr;
 		} catch (FindException e) {

@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!-- SQL definition -->
 <mapper namespace="PointMapper">
-<!-- 회원당 포인트 적립 조회 -->
-<select id="selectPoint" parameterType="String" resultType="Map">
-select u.name,m.membership_num ,pd.*,p.total_point
-from point_detail pd, membership m ,users u, point p 
-where u.membership_num=m.membership_num 
-and p.user_id=pd.user_id 
-and u.id=p.user_id 
-and pd.user_id=#{userId}
-</select>
+	<!-- 회원당 포인트 적립 조회 -->
+	<select id="selectPoint" parameterType="String" resultType="Map">
+		SELECT u.name,m.membership_num ,pd.*,p.total_point
+		FROM point_detail pd, membership m ,users u, point p
+		WHERE u.membership_num=m.membership_num
+		AND p.user_id=pd.user_id
+		AND u.id=p.user_id
+		AND pd.user_id=#{userId}
+	</select>
 </mapper>

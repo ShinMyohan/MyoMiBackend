@@ -14,20 +14,18 @@ import com.myomi.control.Controller;
 import com.myomi.exception.FindException;
 import com.myomi.review.service.ReviewService;
 
-public class ListByStarsController implements Controller {
+public class BestReviewListController implements Controller {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("application/json;charset=UTF-8");
 		response.addHeader("Access-Control-Allow-Origin", "*");
-
 		ObjectMapper mapper = new ObjectMapper();
 		ReviewService service = new ReviewService();
-		int sort = Integer.parseInt(request.getParameter("sort"));
 		int num = Integer.parseInt(request.getParameter("num"));
 		try {
-			List<Map<String, Object>> list = service.findReviewByStars(sort, num);
+			List<Map<String, Object>> list = service.findBestReviewByMonth(num);
 			String jsonStr = mapper.writeValueAsString(list);
 			return jsonStr;
 		} catch (FindException e) {
@@ -37,6 +35,8 @@ public class ListByStarsController implements Controller {
 			String jsonStr = mapper.writeValueAsString(map);
 			return jsonStr;
 		}
+		
+		
 	}
 
 }

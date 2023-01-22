@@ -2,7 +2,6 @@ package com.myomi.review.control;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -14,7 +13,7 @@ import com.myomi.control.Controller;
 import com.myomi.exception.FindException;
 import com.myomi.review.service.ReviewService;
 
-public class ListByStarsController implements Controller {
+public class DetailBestReviewController implements Controller {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -24,11 +23,10 @@ public class ListByStarsController implements Controller {
 
 		ObjectMapper mapper = new ObjectMapper();
 		ReviewService service = new ReviewService();
-		int sort = Integer.parseInt(request.getParameter("sort"));
 		int num = Integer.parseInt(request.getParameter("num"));
 		try {
-			List<Map<String, Object>> list = service.findReviewByStars(sort, num);
-			String jsonStr = mapper.writeValueAsString(list);
+			Map<String, Object> bestReview = service.selectOneBestReview(num);
+			String jsonStr = mapper.writeValueAsString(bestReview);
 			return jsonStr;
 		} catch (FindException e) {
 			e.printStackTrace();
@@ -37,6 +35,7 @@ public class ListByStarsController implements Controller {
 			String jsonStr = mapper.writeValueAsString(map);
 			return jsonStr;
 		}
+
 	}
 
 }

@@ -5,6 +5,6 @@ import java.util.Map;
 
 import com.myomi.exception.FindException;
 
-public interface PointDao {
+public interface PointDAO {
 	public List<Map<String, Object>> selectPoint(String userId) throws FindException;
 }

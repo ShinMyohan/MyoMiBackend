@@ -1,6 +1,5 @@
 package com.myomi.review.dao;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +8,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.myomi.exception.FindException;
+import com.myomi.order.vo.OrderVo;
 import com.myomi.resource.Factory;
+import com.myomi.review.vo.BestReviewVo;
 import com.myomi.review.vo.ReviewVo;
+import com.myomi.user.vo.UserVo;
 
 public class ReviewDAOOracle implements ReviewDAO {
 	private SqlSessionFactory sqlSessionFactory;
@@ -18,52 +20,36 @@ public class ReviewDAOOracle implements ReviewDAO {
 		sqlSessionFactory = Factory.getSqlSessionFactory();
 	}
 	@Override
-	public ReviewVo selectOneReview(int num) throws FindException {
-		// 1. 데이터 베이스 접속
+	public Map<String, Object> selectOneReview(int num) throws FindException {
+	
 		SqlSession session = sqlSessionFactory.openSession();
-		//selectList() 안에 들어가는주소(?)는 namespace="com.myomi.product.dao.ProductDAO" 와동일해야합니다!
-		//namespace 주소.<select> 에서 부여한 id   namespace.id
-		
-		// 2. 조회할 데이터 (null로 사용할 값은 설정하지 않는다.)
-//		ProductVo input = new ProductVo();
-//		input.setNum(1);
-		
-		// 3. 데이터 조회
-		ReviewVo output = session.selectOne("ReviewMapper.selectOneReview", num);      
-		
-		
-		// 4. 결과 판별
-		if(output == null) {
+		Map<String, Object> review= session.selectOne("ReviewMapper.selectOneReview",num);
+		if(review == null) {
 			System.out.println("조회결과 없음");
-		} else {
-			System.out.println(output.toString());
+		}else {
+			System.out.println(review);
 		}
-		
-		// 4. DB 접속 해제
 		session.close();
-		return output;  
+		return review;
 	}
 	@Override
-	public void insertReview (int num, int order_num, String user_id, int sort, String title, String content,Date created_date,int stars) throws FindException{
+	public Map<String, Object> selectOneReviewByOrder(int num) throws FindException{
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, Object> insertReview = new HashMap<>();
-		insertReview.put("num", num);
-		insertReview.put("order_num", order_num);
-		insertReview.put("user_id", user_id);
-		insertReview.put("sort", sort);
-		insertReview.put("title", title);
-		insertReview.put("content", content);
-		insertReview.put("created_date", created_date);
-		insertReview.put("stars", stars);
-		
-		session.insert("ReviewMapper.insertReview", insertReview);
-		session.commit();
-		
-		if(insertReview.isEmpty()) {
+		Map<String, Object> review= session.selectOne("ReviewMapper.selectOneReviewByOrder",num);
+		if(review == null) {
 			System.out.println("조회결과 없음");
-		} else {
-				System.out.println(insertReview);
-			}
+		}else {
+			System.out.println(review);
+		}
+		session.close();
+		return review;
+	}
+	@Override
+	public void insertReview (ReviewVo rVo) throws FindException{
+		SqlSession session = sqlSessionFactory.openSession();
+		session.insert("ReviewMapper.insertReview", rVo);
+		session.commit();
+		session.close();
 		
 
 	}
@@ -108,23 +94,14 @@ public class ReviewDAOOracle implements ReviewDAO {
 		return list;  
 	}
 	@Override
-	public void updateReview(String title,String content, int num) throws FindException{
+	public void updateReview(ReviewVo rVo) throws FindException{
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, Object> updateReview = new HashMap<>();
 		
-		updateReview.put("title", title);
-		updateReview.put("content", content);
-		updateReview.put("num", num);
-		
-		
-		session.insert("ReviewMapper.updateReview", updateReview);
+		session.update("ReviewMapper.updateReview",rVo);
 		session.commit();
+		session.close();
 		
-		if(updateReview.isEmpty()) {
-			System.out.println("조회결과 없음");
-		} else {
-				System.out.println(updateReview);
-			}
+		
 		
 	}
 	@Override
@@ -164,35 +141,70 @@ public class ReviewDAOOracle implements ReviewDAO {
 				return bestReview;
 	}
 	@Override
-	public void insertBestReview (int num,Date created_date) throws FindException{
+	public void insertBestReview (BestReviewVo bVo) throws FindException{
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, Object> insertBestReview = new HashMap<>();
-		insertBestReview.put("num", num);
-		insertBestReview.put("created_date", created_date);
-		session.insert("ReviewMapper.insertBestReview", insertBestReview);
-		session.commit();
 		
-		if(insertBestReview.isEmpty()) {
-			System.out.println("조회결과 없음");
-		} else {
-				System.out.println(insertBestReview+"잘 됩니다!");
-			}
+		session.insert("ReviewMapper.insertBestReview", bVo);
+		session.commit();
+		session.close();
+		
 		
 		
 	}
+	@Override
+	public List<Map<String, Object>> selectAll(int num) throws FindException{
+		SqlSession session = sqlSessionFactory.openSession();
+		List<Map<String, Object>> reviewList = session.selectList("ReviewMapper.selectAll", num);
+		if(reviewList == null) {
+			System.out.println("조회결과 없음");
+		} else {
+			for(Map<String, Object> review : reviewList) {
+				System.out.println(review.toString());
+			}
+		}
+		
+		// 4. DB 접속 해제
+		session.close();
+		return reviewList;
+	}
+	@Override
+	public List<Map<String, Object>> selectAllByDate(int num) throws FindException{
+		SqlSession session = sqlSessionFactory.openSession();
+		List<Map<String, Object>> reviewList = session.selectList("ReviewMapper.selectAllByDate", num);
+		if(reviewList == null) {
+			System.out.println("조회결과 없음");
+		} else {
+			for(Map<String, Object> review : reviewList) {
+				System.out.println(review.toString());
+			}
+		}
+		
+		// 4. DB 접속 해제
+		session.close();
+		return reviewList;
+	}
+	@Override
+	public List<Map<String, Object>> selectAllByStars(int num) throws FindException{
+		SqlSession session = sqlSessionFactory.openSession();
+		List<Map<String, Object>> reviewList = session.selectList("ReviewMapper.selectAllByStars", num);
+		if(reviewList == null) {
+			System.out.println("조회결과 없음");
+		} else {
+			for(Map<String, Object> review : reviewList) {
+				System.out.println(review.toString());
+			}
+		}
+		
+		// 4. DB 접속 해제
+		session.close();
+		return reviewList;
+	}
+	
 	public static void main(String[] args) throws FindException{
 		ReviewDAOOracle dao = new ReviewDAOOracle();
-		//dao.selectOneReview(1);
-		//dao.insertReview(0, 6, "user3", 3, "이게맞나2", "이게 맞아2", new Date(), 3);
-		//ReviewVo rVo = new ReviewVo();
-		//BestReviewVo bVo = new BestReviewVo();
+	
 		
-		//rVo.setNum(1);
-		//bVo.setReview(rVo);
-		//dao.selectOneBestReview(bVo);
-		//dao.insertBestReview(5,new Date());
-		//dao.selectOneBestReview(5);
-		dao.selectReviewByDate(3, 3);
+		
 		
 	}
 }
