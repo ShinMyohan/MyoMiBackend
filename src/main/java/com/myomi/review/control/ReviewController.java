@@ -25,7 +25,6 @@ public class ReviewController extends HttpServlet {
      */
     public ReviewController() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -58,7 +57,7 @@ public class ReviewController extends HttpServlet {
 			Class clazz = Class.forName(className);
 			//이름에 해당하는 클래스를 찾아서 jvm 메모리 위쪽으로 올려줌
 			
-			//Object obj = clazz.newInstance();
+			
 			//getDeclaredConstructor 메소드는 public, protected, private, default 상관없이 class 안의 모든 생성자에 접근 가능하다.
 			Object obj = clazz.getDeclaredConstructor().newInstance();
 			//요청시마다 새로운 객체가 생겨남. 메모리 위험
@@ -68,73 +67,33 @@ public class ReviewController extends HttpServlet {
 			response.getWriter().print(result);
 			
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
-//		if("list".equals(subPath)) {
-//			list(request, response);
-//		}else if("info".equals(subPath)) {
-//			info(request,response);
-//		}
+
  catch (InstantiationException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
-//	private void info(HttpServletRequest request, HttpServletResponse response)
-//			throws IOException, ServletException{
-//		response.getWriter().print("상품상세정보입니다");
-//	}
-//		private void list(HttpServletRequest request, HttpServletResponse response)
-//			throws IOException, ServletException{
-//			response.setContentType("application/json;charset=UTF-8");
-//			response.addHeader("Access-Control-Allow-Origin", "*");
-//			PrintWriter out = response.getWriter();
-//			String cp = request.getParameter("currentPage");
-//			//http://localhost:8888/myback/productlist
-//			//http://localhost:8888/myback/productlist?currentpage=
-//			int currentPage = 1;
-//			if(cp != null && !"".equals(cp)) {
-//				currentPage = Integer.parseInt(cp);
-//			}
-//			
-//			ObjectMapper mapper = new ObjectMapper();
-//			ProductService service = new ProductService();
-//			try {
-//				//List<Product> list = service.findAll(currentPage);
-//				//String jsonStr = mapper.writeValueAsString(list);
-//				//Map<String,Object> map = service.findAll(currentPage);
-//				//String jsonStr = mapper.writeValueAsString(map);
-//				PageBean<Product> pb = service.findAll(currentPage);
-//				//map을 json 문자열형태로 한번에 바꿔줌. 잭슨에서 나온거임. 
-//				String jsonStr = mapper.writeValueAsString(pb);
-//				out.print(jsonStr);
-//			} catch (FindException e) {
-//				e.printStackTrace();
-//				Map<String,String> map = new HashMap<>();
-//				map.put("msg", e.getMessage());
-//				String jsonStr = mapper.writeValueAsString(map);
-//				out.print(jsonStr);
-//			}
-//		}
+
 		}
-//		
-		
+	
 		
 		
 
