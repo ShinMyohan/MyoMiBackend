@@ -5,10 +5,12 @@
 	<!-- 바로구매, 장바구니에 담긴 주문 불러오기 -->
 	<select id="selectOneOrder" parameterType="int"
 		resultType="java.util.LinkedHashMap">
-		SELECT o.num, u.id, u.name as name, u.tel, u.email, u.addr, od.prod_num,
-		od.prod_cnt FROM orders o
-		right JOIN users u ON o.user_id = u.id
-		right JOIN orders_detail od ON o.num = od.order_num
+		SELECT o.num, u.id, u.name as name, u.tel, u.email, u.addr, od.prod_num, od.prod_cnt,
+		 p.name as prod_name, p.origin_price, p.percentage, p.week
+		FROM orders o
+		FULL OUTER JOIN users u ON o.user_id = u.id
+		FULL OUTER JOIN orders_detail od ON o.num = od.order_num
+		FULL OUTER JOIN product p ON p.num = od.prod_num
 		WHERE o.num = #{num} AND pay_created_date is NULL
 	</select>
 	<!-- 배송정보 입력 -->
@@ -22,7 +24,7 @@
 		#{deliveryMsg},
 		#{receiveDate})
 	</insert>
-	<!-- -->
+	<!-- 결제 시 주문 정보 업데이트 -->
 	<update id="updateOrder">
 		UPDATE orders SET
 		msg=#{msg}, coupon_num = #{coupon.num},

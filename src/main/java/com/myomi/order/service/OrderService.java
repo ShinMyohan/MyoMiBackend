@@ -22,7 +22,9 @@ public class OrderService {
 	DeliveryVo dVo = new DeliveryVo();
 
 	public List<Map<String, Object>> findMyOrder(int num) throws FindException {
+		System.out.println("dao select : " + dao.selectMyOrder(num));
 		return dao.selectMyOrder(num);
+
 	}
 
 	// 배송정보 입력
@@ -33,7 +35,7 @@ public class OrderService {
 		dVo.setAddr(jsonObject.get("addr").toString());
 		dVo.setDeliveryMsg(jsonObject.get("deliveryMsg").toString());
 		dVo.setReceiveDate(jsonObject.get("receiveDate").toString());
-System.out.println(dVo);
+		System.out.println(dVo);
 		dao.insertDelivery(dVo);
 	}
 

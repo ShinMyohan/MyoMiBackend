@@ -60,5 +60,10 @@ public class OrderDAOOracle implements OrderDAO {
 		session.close();
 
 	}
+	
+	public static void main(String args[]) throws FindException {
+		OrderDAOOracle dao = new OrderDAOOracle();
+		dao.selectMyOrder(1);
+	}
 }
 
