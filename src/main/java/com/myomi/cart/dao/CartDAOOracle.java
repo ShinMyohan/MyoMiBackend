@@ -71,8 +71,8 @@ public class CartDAOOracle implements CartDAO{
 		session.close();
 	}
 	
-//	public static void main(String[] args) throws FindException {
-//		CartDAOOracle dao = new CartDAOOracle();
+	public static void main(String[] args) throws FindException {
+		CartDAOOracle dao = new CartDAOOracle();
 //		
 		//------insert
 //		CartVo cVo = new CartVo();
@@ -90,7 +90,7 @@ public class CartDAOOracle implements CartDAO{
 //		dao.insertCart(cVo);
 		
 		//------selectAllCart
-//		dao.selectAllCart("user2");
+		dao.selectAllCart("user4");
 		
 		//------updateCart
 //		CartVo cVo = new CartVo();
@@ -108,5 +108,5 @@ public class CartDAOOracle implements CartDAO{
 //			numbers.add(d);
 //		}
 //		dao.deleteCart(numbers); 
-//	}
+	}
 }
