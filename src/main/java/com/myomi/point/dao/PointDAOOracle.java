@@ -8,7 +8,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.myomi.exception.FindException;
 import com.myomi.resource.Factory;
-import com.myomi.review.dao.ReviewDAOOracle;
 
 public class PointDAOOracle implements PointDAO {
 	private SqlSessionFactory sqlSessionFactory;
