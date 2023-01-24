@@ -9,10 +9,14 @@
 	
 	<!-- 장바구니에 담긴 상품 목록 조회 -->
 	<select id="selectAllCart" resultType="java.util.LinkedHashMap">
-		SELECT * 
+		<!-- SELECT * 
 		FROM cart 
 		WHERE user_id = #{user.id}
-		ORDER BY NUM
+		ORDER BY NUM -->
+		SELECT c.*, p.name, p.num prodNum, p.percentage, p.origin_price
+		FROM cart c
+		LEFT JOIN product p ON c.prod_num = p.num
+		WHERE c.user_id = #{user.id}
 	</select>
 	
 	<!-- 장바구니에 담긴 상품 수량 수정 -->
