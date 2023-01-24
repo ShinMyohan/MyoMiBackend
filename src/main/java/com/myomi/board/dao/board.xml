@@ -4,30 +4,19 @@
 
 <mapper namespace="boardMapper">
 
-<!-- <resultMap type="Board" id="BoardDetail" autoMapping="true">
-   <result property="num" column="employee_id"/>
-   <result property="category" column="category" />
-   <result property="createdDate" column="created_date" />
-   <result property="hits" column="hits" />
-    <association property="user" javaType="User" autoMapping="true" >
-	   <id column="id" property="id" ></id></association>
-   <collection property="comment" javaType="Comment" autoMapping="true" >
-	   <id column="num" property="num" ></id></collection>
- </resultMap> -->
-
-
 <resultMap type="Board" id="AllBoard" autoMapping="true">
 	 <id column="num" property="num" />
 	   <association property="user" javaType="User" autoMapping="true">
 	    <id column="id" property="id" ></id>
 	  </association>
 </resultMap> 
-	
-	
-	
+
 	<!-- 글 전체 목록  -->
 	<select id="selectAll" resultType="map">
-	SELECT num, category, title, created_date, user_id, hits from board
+	SELECT b.num, u.name, b.title, b.content, b.created_date, b.category, b.hits
+	FROM  board b, users u
+    WHERE u.id = b.user_id
+    ORDER BY created_date desc
 <!-- 	SELECT * FROM (select rownum rn,board.*
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
@@ -39,15 +28,17 @@
 	
 	<!-- 카테고리로 검색  -->
 	<select id="selectByCategory" parameterType="Board" resultType="Map">
+	SELECT b.num, u.name, b.title, b.content, b.created_date, b.category, b.hits
+	FROM  board b, users u
+    WHERE u.id = b.user_id
+    AND category=#{category} and title like #{title}
+    ORDER BY created_date desc
 	<!-- SELECT * FROM (select rownum rn,board.* 
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
 	and category=#{category} and title like #{title}
 	order by created_date desc) board) -->
-    
-    SELECT num, category, title, created_date, user_id, hits from board 
-    WHERE category=#{category} and title like #{title}
 	</select>
 	
 	
@@ -71,7 +62,7 @@
 	where b.num = c.board_num
 	and u.id = b.user_id
 	and b.num = #{num} -->
-	SELECT b.num, u.name, b.title, b.content, b.created_date, b.hits
+	SELECT b.num, u.name, b.title, b.content, b.created_date, b.category, b.hits
 	FROM  board b, users u
     where u.id = b.user_id
 	and b.num = #{num}
