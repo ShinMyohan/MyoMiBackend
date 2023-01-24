@@ -30,7 +30,7 @@ public class ListController implements Controller {
 		BoardService service = new BoardService();
 		
 		try {
-		     List<BoardVo> list = service.findAllBoard();
+			List<Map<String, Object>> list = service.findAllBoard();
 		     String jsonStr = mapper.writeValueAsString(list);
 				return jsonStr;
 

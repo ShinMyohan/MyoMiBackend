@@ -20,51 +20,60 @@
 	 <id column="num" property="num" />
 	   <association property="user" javaType="User" autoMapping="true">
 	    <id column="id" property="id" ></id>
-	    <result column="name" property="name" /> 
 	  </association>
-</resultMap>
+</resultMap> 
 	
 	
 	
 	<!-- 글 전체 목록  -->
-	<select id="selectAll" resultMap="AllBoard">
-	SELECT * FROM (select rownum rn,board.*
+	<select id="selectAll" resultType="map">
+	SELECT num, category, title, created_date, user_id, hits from board
+<!-- 	SELECT * FROM (select rownum rn,board.*
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
-	order by created_date desc) board) 
+	order by created_date desc) board)  -->
 	<!-- where rn between #{startRow} and #{endRow} -->
 	</select>
 	
 	
 	<!-- 카테고리로 검색  -->
 	<select id="selectByCategory" parameterType="Board" resultType="Map">
-	SELECT * FROM (select rownum rn,board.* 
+	<!-- SELECT * FROM (select rownum rn,board.* 
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
 	and category=#{category} and title like #{title}
-	order by created_date desc) board)
+	order by created_date desc) board) -->
+    
+    SELECT num, category, title, created_date, user_id, hits from board 
+    WHERE category=#{category} and title like #{title}
 	</select>
 	
 	
 	<!-- 제목으로 검색  -->
 	<select id="selectByTitle" parameterType="Board" resultType="Map">
-	SELECT * FROM (select rownum rn,board.* 
+	<!-- SELECT * FROM (select rownum rn,board.* 
 	from(select b.num, b.category, b.title,b.created_date,u.name, b.hits 
 	from board b, users u
 	where b.user_id = u.id
-	and title like #{title} order by created_date desc) board)
+	and title like #{title} order by created_date desc) board) -->
+	SELECT num, category, title, created_date, user_id, hits from board 
+    WHERE title like #{title}
 	</select>
 	
 	
 <!--  글 내용 조회  -->
 	<select id="selectDetail" parameterType="Board" resultType="Map">
-	SELECT
+	<!-- SELECT
     u.name, b.title, b.content, b.created_date, b.hits, c.user_id, c.created_date "댓글 작성일", c.content "댓글내용"
 	FROM  board b, users u, comments c
 	where b.num = c.board_num
 	and u.id = b.user_id
+	and b.num = #{num} -->
+	SELECT b.num, u.name, b.title, b.content, b.created_date, b.hits
+	FROM  board b, users u
+    where u.id = b.user_id
 	and b.num = #{num}
 	</select>
 
