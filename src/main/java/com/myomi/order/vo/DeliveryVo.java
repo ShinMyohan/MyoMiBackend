@@ -21,6 +21,5 @@ public class DeliveryVo {
 	private String tel;
 	private String addr;
 	private String deliveryMsg;
-	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
-	private Date receiveDate;
+	private String receiveDate;
 }

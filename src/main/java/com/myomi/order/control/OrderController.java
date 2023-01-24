@@ -22,6 +22,11 @@ public class OrderController extends HttpServlet {
 
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		response.setContentType("application/json;charset=UTF-8");
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		// 프론트에서 header로 content-type을 보내주기 때문에 설정
+//		response.addHeader("Access-Control-Allow-Headers", "Content-type");
+		
 		String contextPath = request.getContextPath(); // MyoMiBackend
 		String servletPath = request.getServletPath(); // order
 		String uri = request.getRequestURI(); // MyoMiBackend/order

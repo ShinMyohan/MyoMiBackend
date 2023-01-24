@@ -20,12 +20,12 @@
 		#{tel},
 		#{addr},
 		#{deliveryMsg},
-		sysdate)
+		#{receiveDate})
 	</insert>
 	<!-- -->
 	<update id="updateOrder">
 		UPDATE orders SET
-		options=#{options}, msg=#{msg}, coupon_num = #{coupon.num},
+		msg=#{msg}, coupon_num = #{coupon.num},
 		used_point=#{usedPoint}, pay_created_date = sysdate,
 		total_price=#{totalPrice}, save_point=#{savePoint}
 		WHERE num=#{num}
