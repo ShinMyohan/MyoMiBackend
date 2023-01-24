@@ -22,16 +22,16 @@ public class BoardDAOOracle implements BoardDAO {
 
 	//------------리스트 전체 출력 selectAll ------------
 	@Override
-	public List<BoardVo> selectAll() throws FindException {
+	public List<Map<String, Object>> selectAll() throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
 		//selectList() 안에 들어가는주소(?)는 namespace="com.myomi.product.dao.ProductDAO" 와동일해야합니다!
 		//namespace 주소.<select> 에서 부여한 id   namespace.id
-		List<BoardVo> list = session.selectList("boardMapper.selectAll",null);
+		List<Map<String, Object>> list = session.selectList("boardMapper.selectAll",null);
 
 		if(list == null) {
 			System.out.println("조회결과 없음");
 		} else {
-			for(BoardVo board : list) {
+			for(Map<String, Object> board : list) {
 				System.out.println(board.toString());
 			}
 		}
@@ -149,13 +149,13 @@ public class BoardDAOOracle implements BoardDAO {
 //	    dao.updateBoard(bVo);
 		
 		//---글 번호로 검색---
-        //dao.selectDetail(10);
+       dao.selectDetail(22);
 		
 	    //---카테고리+제목 키워드 검색 ---
-		//dao.selectByCategory("베스트 조합","%보리%");
+		//dao.selectByCategory("잡담","%최종%");
 		
 		//---전체검색---
-		//dao.selectAll();
+	//dao.selectAll();
 		
         //---제목으로 검색 ---
 		//dao.selectByTitle("%최종%");
@@ -165,13 +165,13 @@ public class BoardDAOOracle implements BoardDAO {
 //		UserVo uVo = new UserVo();
 //		bVo.setNum(0);
 //	    bVo.setUser(uVo);
-//	    uVo.setId("user1");
+//	    uVo.setId("user3");
 //		bVo.setCategory("잡담");
-//		bVo.setTitle("123123");
-//     	bVo.setContent("123123");
-//      bVo.setCreatedDate(new Date());
-//      bVo.setHits(0);
-//      dao.insertBoard(bVo);
+//		bVo.setTitle("제이슨");
+//     	bVo.setContent("제이슨");
+//        bVo.setCreatedDate(new Date());
+//        bVo.setHits(0);
+//        dao.insertBoard(bVo);
 
 	}
 

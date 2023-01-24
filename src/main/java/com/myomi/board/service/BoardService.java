@@ -1,19 +1,24 @@
 package com.myomi.board.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
+import org.json.simple.JSONObject;
 
 import com.myomi.board.dao.BoardDAO;
 import com.myomi.board.dao.BoardDAOOracle;
 import com.myomi.board.vo.BoardVo;
 import com.myomi.exception.FindException;
+import com.myomi.user.vo.UserVo;
 
 public class BoardService {
-    
+	BoardDAO dao = new BoardDAOOracle();
+	BoardVo bVo = new BoardVo();
+	UserVo uVo = new UserVo();
+	
     //확인
-	public List<BoardVo> findAllBoard() throws FindException{
+	public List<Map<String, Object>> findAllBoard() throws FindException{
 		BoardDAO dao = new BoardDAOOracle(); //다형성 
 		return dao.selectAll();
 	}
@@ -37,14 +42,24 @@ public class BoardService {
     }
     
     //확인
-    public void addBoard(BoardVo bVo) throws FindException {
+    public void addBoard(JSONObject jsonObject) throws FindException {
     	BoardDAO dao = new BoardDAOOracle();
+    	uVo.setId(jsonObject.get("id").toString());
+    	bVo.setUser(uVo);
+    	bVo.setCategory(jsonObject.get("category").toString());
+    	bVo.setTitle(jsonObject.get("title").toString());
+    	bVo.setContent(jsonObject.get("content").toString());
+    	
         dao.insertBoard(bVo);
     }
     
     //확인
-    public void modifyBoard(BoardVo bVo) throws FindException{
+    public void modifyBoard(JSONObject jsonObject) throws FindException{
     	BoardDAO dao = new BoardDAOOracle();
+    	bVo.setCategory(jsonObject.get("category").toString());
+    	bVo.setTitle(jsonObject.get("title").toString());
+    	bVo.setContent(jsonObject.get("content").toString());
+      	bVo.setNum(Integer.parseInt(jsonObject.get("num").toString()));
     	dao.updateBoard(bVo);
     }
     
@@ -62,8 +77,19 @@ public class BoardService {
 		//dao.selectDetail(1);
 		//dao.insertBoard(0, "user1", "잡담", "글작성 테스트","어이없어@@@@@2",new Date(),0);
 		//dao.selectByCategory("잡담","%더미%");
-		//dao.selectAll();
+	dao.selectAll();
 	  // dao.selectByTitle("%최종%");
+//		BoardVo bVo = new BoardVo();
+//		UserVo uVo = new UserVo();
+//		bVo.setNum(0);
+//	    bVo.setUser(uVo);
+//	    uVo.setId("user3");
+//		bVo.setCategory("잡담");
+//		bVo.setTitle("하이");
+//     	bVo.setContent("제이슨");
+//        bVo.setCreatedDate(new Date());
+//        bVo.setHits(0);
+//        dao.insertBoard(bVo);
 
 	}
 }

@@ -23,7 +23,7 @@ public class BoardVo {
 	private String category;
 	private String title;
 	private String content;
-	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yy-MM-dd")
 	private Date createdDate;
 	private int hits;
 	private List<CommentVo> comment;

@@ -10,7 +10,7 @@ import com.myomi.exception.FindException;
 
 public interface BoardDAO {
 	//리스트 전체 출력 
-	public List<BoardVo> selectAll() throws FindException; 
+	public List<Map<String, Object>> selectAll() throws FindException; 
 	//사용자 정의 익셉션을 사용하자!
 	//만약 throws SQL익셉션이나 최상위 익셉션을 쓰는 경우 바람직하지 않다.
 
