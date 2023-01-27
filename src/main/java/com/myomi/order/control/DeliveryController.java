@@ -24,7 +24,7 @@ public class DeliveryController implements Controller {
 
 		// 기본 설정
 		response.setContentType("application/json;charset=UTF-8");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+//		response.addHeader("Access-Control-Allow-Origin", "*");
 		// json 한글깨짐 현상
 		request.setCharacterEncoding("UTF-8");
 

@@ -7,10 +7,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.myomi.exception.FindException;
-
 import com.myomi.order.vo.DeliveryVo;
 import com.myomi.order.vo.OrderVo;
 import com.myomi.resource.Factory;
+
 /**
  * @author seli
  *
@@ -59,6 +59,11 @@ public class OrderDAOOracle implements OrderDAO {
 		session.commit();
 		session.close();
 
+	}
+	
+	public static void main(String args[]) throws FindException {
+		OrderDAOOracle dao = new OrderDAOOracle();
+		dao.selectMyOrder(1);
 	}
 }
 

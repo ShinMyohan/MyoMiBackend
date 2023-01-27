@@ -24,7 +24,7 @@ public class OrderVo {
 	private UserVo user;
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date createdDate;
-	private int options;
+//	private int options;
 	private String msg;
 	private CouponVo coupon;
 	private int usedPoint;

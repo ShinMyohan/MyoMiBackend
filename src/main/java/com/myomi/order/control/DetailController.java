@@ -22,7 +22,7 @@ public class DetailController implements Controller {
 		
 		// 기본 설정
 		response.setContentType("application/json;charset=UTF-8");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+//		response.addHeader("Access-Control-Allow-Origin", "*");
 		
 		int orderNum = Integer.parseInt(request.getParameter("orderNum"));
 		OrderService service = new OrderService();

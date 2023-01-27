@@ -24,7 +24,7 @@ public class PaymentController implements Controller {
 
 		// 기본 설정
 		response.setContentType("application/json;charset=UTF-8");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+//		response.addHeader("Access-Control-Allow-Origin", "*");
 		// json 한글깨짐 현상
 		request.setCharacterEncoding("UTF-8");
 
@@ -33,12 +33,12 @@ public class PaymentController implements Controller {
 
 		// request를 읽어서 Json 형태로 받아옴
 		String collect = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-
 		try {
 			// Json형식을 웹이나 다른곳에서 받아왔을 때 parse하는 코드
 			JSONParser parser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) parser.parse(collect);
-
+			
+			System.out.println(jsonObject);
 			// service 메서드 호출
 			service.modifyOrder(jsonObject);
 			String jsonStr = mapper.writeValueAsString(jsonObject);

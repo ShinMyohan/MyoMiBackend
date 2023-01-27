@@ -22,7 +22,9 @@ public class OrderService {
 	DeliveryVo dVo = new DeliveryVo();
 
 	public List<Map<String, Object>> findMyOrder(int num) throws FindException {
+		System.out.println("dao select : " + dao.selectMyOrder(num));
 		return dao.selectMyOrder(num);
+
 	}
 
 	// 배송정보 입력
@@ -32,15 +34,17 @@ public class OrderService {
 		dVo.setTel(jsonObject.get("tel").toString());
 		dVo.setAddr(jsonObject.get("addr").toString());
 		dVo.setDeliveryMsg(jsonObject.get("deliveryMsg").toString());
-
+		dVo.setReceiveDate(jsonObject.get("receiveDate").toString());
+		System.out.println(dVo);
 		dao.insertDelivery(dVo);
 	}
 
 	// 결제버튼 누를 시 업데이트
 	public void modifyOrder(JSONObject jsonObject) {
+		// 배송정보 먼저 인서트
 		oVo.setNum(Integer.parseInt(jsonObject.get("num").toString()));
-		oVo.setOptions(Integer.parseInt(jsonObject.get("options").toString()));
 		oVo.setMsg(jsonObject.get("msg").toString());
+//		oVo.setOptions(Integer.parseInt(jsonObject.get("options").toString()));
 		// 쿠폰을 사용하지 않으면 프론트에서 0으로 받아옴
 		int couponNum = Integer.parseInt(jsonObject.get("couponNum").toString());
 		if (couponNum != 0) {
@@ -53,6 +57,7 @@ public class OrderService {
 		oVo.setTotalPrice(Integer.parseInt(jsonObject.get("totalPrice").toString()));
 		oVo.setSavePoint(Integer.parseInt(jsonObject.get("savePoint").toString()));
 		
+		System.out.println(oVo);
 		dao.updateOrder(oVo);
 	}
 }
