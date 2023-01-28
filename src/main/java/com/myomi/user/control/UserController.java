@@ -32,6 +32,7 @@ public class UserController extends HttpServlet {
 		String []arr = uri.split("/");
 		String subPath = arr[arr.length-1];  //
 		
+		System.out.println(subPath);
 		//결합도를 떨어뜨리기 위해 외부파일을 이용.
 		//다른 클래스 불러옴
 		String envFileName = "user.properties";
@@ -66,56 +67,14 @@ public class UserController extends HttpServlet {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-//		if("list".equals(subPath)) {
-//			list(request, response);
-//		}else if("info".equals(subPath)) {
-//			info(request, response);
-//		}
 		
 	}
-//	private void info(HttpServletRequest request, HttpServletResponse response)
-//		    throws IOException, ServletException{
-//		response.getWriter().print("상품상세정보입니다");
-//	}
-//	private void list(HttpServletRequest request, HttpServletResponse response)
-//	    throws IOException, ServletException{
-//		response.setContentType("application/json;charset=UTF-8");
-//		response.addHeader("Access-Control-Allow-Origin", "*");
-//		PrintWriter out = response.getWriter();
-//		String cp = request.getParameter("currentPage");
-//		//http://localhost:8888/myback/productlist
-//		//http://localhost:8888/myback/productlist?currentPage=
-//		int currentPage = 1;
-//		if(cp != null && !"".equals(cp)) {
-//			currentPage = Integer.parseInt(cp);
-//		}		
-//		ObjectMapper mapper = new ObjectMapper();
-//		ProductService service = new ProductService();
-//		try {
-//			//List<Product> list = service.findAll(currentPage);
-//			//String jsonStr = mapper.writeValueAsString(list);
-//			//Map<String, Object> map = service.findAll(currentPage);
-//			//String jsonStr = mapper.writeValueAsString(map);
-//			
-//			PageBean<Product> pb = service.findAll(currentPage);
-//			String jsonStr = mapper.writeValueAsString(pb);
-//			out.print(jsonStr);
-//		} catch (FindException e) {
-//			e.printStackTrace();
-//			Map<String, String> map = new HashMap<>();
-//			map.put("msg", e.getMessage());
-//			String jsonStr = mapper.writeValueAsString(map);
-//			out.print(jsonStr);
-//		}
-//	}
+
 }

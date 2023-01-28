@@ -26,6 +26,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserVo {
+
 	private String id;
 	private String pwd;
 	private String name;
@@ -48,4 +49,20 @@ public class UserVo {
 	private List<FollowVo> follow; 
 	private List<ReviewVo> review;
 	private List<CouponVo> coupon;
+		
+	
+	public UserVo(String id, String pwd, String name, String tel, String email, 
+			String addr,int role, int membership, Date createdDate, Date signoutDate) {
+		
+	}
+	
+	public UserVo(String id, String pwd) {
+		
+	}
+
+	public UserVo(String id, String pwd, String email, String tel) {
+		
+	}
+
+	
 }

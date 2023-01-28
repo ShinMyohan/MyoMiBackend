@@ -1,6 +1,5 @@
 package com.myomi.user.dao;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ public class UserDAOOracle implements UserDAO {
 		sqlSessionFactory = Factory.getSqlSessionFactory();
 	}
 
+	//회원전체 조회
 	@Override
 	public List<UserVo> selectAllUser() throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
@@ -38,34 +38,39 @@ public class UserDAOOracle implements UserDAO {
 		return list;   
 	}
 
-	@Override
-	public void insertUser (String id, String pwd, String name, String tel, String email, String addr, int role, int membership, Date createdDate, Date signoutDate)throws AddException {
+	//회원가입
+//	@Override
+//	public void insertUser (String id, String pwd, String name, String tel, String email, 
+//			String addr)throws AddException {
+//		SqlSession session = sqlSessionFactory.openSession();
+//		Map<String, Object> insertUser = new HashMap<>();
+//		insertUser.put("id",id);
+//		insertUser.put("pwd",pwd);
+//		insertUser.put("name",name);
+//		insertUser.put("tel",tel);
+//		insertUser.put("email",email);
+//		insertUser.put("addr",addr);
+//		session.insert("UserMapper.insertUser", insertUser);
+//		session.commit();
+//
+//		if(insertUser.isEmpty()) {
+//			System.out.println("조회결과 없음");
+//		}else {
+//			System.out.println(insertUser);
+//		}
+//		session.close();
+//	}
+//	
+	//회원가입
+	public void insertUser (UserVo uVo)throws FindException{
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, Object> insertUser = new HashMap<>();
-		insertUser.put("id", id);
-		insertUser.put("pwd", pwd);
-		insertUser.put("name", name);
-		insertUser.put("tel", tel);
-		insertUser.put("email", email);
-		insertUser.put("addr", addr);
-		insertUser.put("role", role);
-		insertUser.put("membership_num", membership);
-		insertUser.put("created_date", createdDate);
-		insertUser.put("signout_date", signoutDate);
-
-		session.insert("UserMapper.insertUser", insertUser);
-		session.commit();
-
-		if(insertUser.isEmpty()) {
-			System.out.println("조회결과 없음");
-		}else {
-			System.out.println(insertUser);
-		}
+		session.insert("UserMapper.insertUser",uVo);
 		session.commit();
 		session.close();
+
 	}
-	
-	
+		
+	//아이디 찾기
 	@Override
 	public String selectFindIdUser(String email) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
@@ -81,24 +86,26 @@ public class UserDAOOracle implements UserDAO {
 		return id;
 	}
 	
-
+	
+	//비밀번호 찾기
 	@Override
-	public Map<String, String> selectFindPwdUser(String id, String email) throws FindException {
+	public String selectFindPwdUser(UserVo uVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		Map<String, String> map = new HashMap<>();
-		map.put("id",id);
-		map.put("email", email);
 		
-		Map<String, String> pwd = session.selectOne("UserMapper.selectFindPwdUser",map); 
-		
-		System.out.println(pwd);
+		String pwd = session.selectOne("UserMapper.selectFindPwdUser",uVo);
 
+		if(pwd == "") {
+			System.out.println("조회결과 없음");
+		} else {
+			System.out.println("비밀번호는 " + pwd + " 입니다");
+		}
+		
 		session.close();
 		return pwd;
 		
 	}
 	
-	
+	//회원탈퇴
 	@Override
 	public void updateSignoutUser(String id) throws AddException {
 		SqlSession session = sqlSessionFactory.openSession();
@@ -112,25 +119,28 @@ public class UserDAOOracle implements UserDAO {
 		
 	}
 	
+	
+	//회원 로그인
 	@Override
-	public UserVo selectLoginUser(UserVo uVo) throws FindException {
+	public UserVo selectLoginUser(UserVo vo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
 		
-		UserVo vo = session.selectOne("UserMapper.selectLoginUser", uVo);
-		System.out.println(vo.toString());
-		
+		UserVo uVo = session.selectOne("UserMapper.selectLoginUser", vo);
+		if(uVo == null) {
+			System.out.println("조회결과 없음");
+		} else {
+			System.out.println("조회됨");
+		}
 		session.close();
 		
-		
-		return vo;
+		return uVo;
 	}
 	
+	//회원 정보수정
 	@Override
-	public void updateEditUser(UserVo uVo) throws AddException {
+	public void updateEditUser(UserVo uVo) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		session.update("UserMapper.updateEditUser", uVo);
-
-		System.out.println(uVo.toString());
+		session.insert("UserMapper.updateEditUser",uVo);
 		session.commit();
 		session.close();
 		
@@ -157,11 +167,10 @@ public class UserDAOOracle implements UserDAO {
 	@Override
 	public List<Map<String, Object>> selectReviewFindTitleUser(String title, String id) throws FindException {
 		SqlSession session = sqlSessionFactory.openSession();
-		Map map = new HashMap();
+		Map<String, String> map = new HashMap<>();
 		map.put("title", title);
 		map.put("id", id);
-		System.out.println(map);
-		List<Map<String, Object>> list = session.selectList("UserMapper.selectReviewFindTitleUser",map);
+		List<Map<String, Object>> list = session.selectList("UserMapper.selectReviewFindTitleUser", map);
 		
 		System.out.println(list);
 		if(list == null) {
@@ -176,48 +185,59 @@ public class UserDAOOracle implements UserDAO {
 		return list;
 
 	}
+	
+	//마이페이지 상단정보, 주문목록, 주문상세
+	@Override
+	public List<Map<String, Object>> selectMypageOrderInfoByUser(String id) throws FindException {
+		SqlSession session = sqlSessionFactory.openSession();
+		List<Map<String, Object>> list = session.selectList("UserMapper.selectMypageOrderInfoByUser",id);
+		if(list == null) {
+			System.out.println("조회된 목록 없음");
+		} else {
+			for(Map<String, Object> review : list ) {
+				System.out.println(review.toString());
+			}
+		}
+		session.close();
+		return list;
+
+	}
 
 	
-
 	
-//	@Override
-//	public void joinUser(UserVo uservo) throws AddException {
-//		// TODO Auto-generated method stub
-//		SqlSession session = sqlSessionFactory.openSession();
-//		session.insert("com.myomi.user.dao.UserDAO.insertUser", uservo);
-//		session.commit();
-//
-//	}
-	
+	//테스트
 	public static void main(String[] args) throws FindException, AddException{
 		UserDAOOracle dao = new UserDAOOracle();
 		//회원전체 조회
 //  	dao.selectAllUser();
 		
 		//회원가입
-//  	dao.insertUser("user11","user11","user11", "1313-1313-1212", "user11@email.com", "부산광역시 해운대구", 0, 0, new Date(), null);
-//		UserVo uservo = new UserVo();
-//		uservo.setId("user10");
-//		uservo.setPwd("100");
-//		uservo.setName("유성");
-//		uservo.setTel("101-101-1010");
-		
-//		dao.joinUser(uservo);
+//		UserVo vo = new UserVo();
+//		vo.setId("heeyoung");
+//		vo.setPwd("hee");
+//		vo.setName("희영");
+//		vo.setTel("010-1000-2000");
+//		vo.setEmail("hee@email.com");
+//		vo.setAddr("서울 강남구 논현동");
+//		dao.insertUser("toto","111","미지","011-2222-3333","mizi@email.com","광주광역시 봉선동");
 		
 		//아이디 찾기
 		//dao.selectFindIdUser("user10@email.com");
 		
 		//비밀번호 찾기
-		//dao.selectFindPwdUser("user1", "user1@email.com");
+//		UserVo vo = new UserVo();
+//		vo.setId("apple");
+//		vo.setEmail("apple@email.com");
+//		dao.selectFindPwdUser("apple", "apple@email.com");
 		
 		//회원 탈퇴
-		//dao.updateSignoutUser("user10");
+//		dao.updateSignoutUser("user10");
 		
 		//회로그인 (로그인시 내정보 보기)
 //		UserVo vo = new UserVo();
-//		vo.setId("user1");
-//		vo.setPwd("user1");
-//		dao.selectLoginUser(vo);
+//		vo.setId("user12");
+//		vo.setPwd("user13");
+//		dao.selectLoginUser("user12","user13");
 		
 		//내정보 변경
 //		UserVo uVo = new UserVo();
@@ -228,31 +248,16 @@ public class UserDAOOracle implements UserDAO {
 //		dao.updateEditUser(uVo);
 		
 		//내가쓴 리뷰 목록 조회하기
-//		dao.selectReviewByUser("user2");
+//		dao.selectReviewByUser("user1");
 		
 		//내가쓴 리뷰 제목으로 검색
-		dao.selectReviewFindTitleUser("%1%","user1");
+//		dao.selectReviewFindTitleUser("맛있다1.", "user1");
 		
-		
+		//마이페이지 상단정보, 주문목록, 주문상세
+//		dao.selectMypageOrderInfoByUser("user1");
 	
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		
 
 }
 
