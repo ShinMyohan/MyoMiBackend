@@ -2,6 +2,7 @@ package com.myomi.review.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class BestReview {
 	private Long rNum;
 	
 	@MapsId
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "review_num")
 	private Review review;
 	

@@ -15,6 +15,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
 
@@ -30,6 +33,8 @@ import lombok.Setter;
 		 name = "REVIEW_SEQ_GENERATOR",
 		 sequenceName = "REVIEW_SEQ", //매핑할 데이터베이스 시퀀스 이름
 		 initialValue = 1, allocationSize = 1)
+@DynamicInsert
+@DynamicUpdate
 public class Review {
 	@Id
 	@JoinColumn(name = "num")

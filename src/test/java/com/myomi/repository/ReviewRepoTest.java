@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.entity.OrderDetailEmbedded;
-import com.myomi.order.repository.OrderRepository;
 import com.myomi.review.entity.BestReview;
 import com.myomi.review.entity.Review;
 import com.myomi.review.repository.BestReviewRepository;
@@ -32,8 +31,8 @@ class ReviewRepoTest {
 	@Autowired
 	private BestReviewRepository brr;
 	
-	@Autowired
-	private OrderRepository or;
+//	@Autowired
+//	private OrderRepository or;
 	
 	
 //	@Test
@@ -98,11 +97,10 @@ class ReviewRepoTest {
 	@Test
 	void testBestReviewSave() {
 		Optional<Review> optR = rr.findById(1L);
-//		Review r = new Review();
 		
 		BestReview br = new BestReview();
-		br.setRNum(1L);
-		br.setReview(optR.get()); //****
+		br.setRNum(optR.get().getRNum());
+		br.setReview(optR.get());
 		LocalDateTime date = LocalDateTime.now();
 		br.setCreatedDate(date);
 		
