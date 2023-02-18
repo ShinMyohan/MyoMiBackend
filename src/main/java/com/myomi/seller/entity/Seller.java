@@ -1,4 +1,6 @@
-package com.myomi.user.entity;
+package com.myomi.seller.entity;
+
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -6,11 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.myomi.product.entity.Product;
+import com.myomi.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,4 +58,7 @@ public class Seller {
 	
 	@Column(name = "follow_cnt")
 	private Integer followCnt;
+	
+	@OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
+	private List<Product> products;
 }

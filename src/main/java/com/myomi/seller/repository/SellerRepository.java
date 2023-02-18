@@ -1,8 +1,8 @@
-package com.myomi.user.repository;
+package com.myomi.seller.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.myomi.user.entity.Seller;
+import com.myomi.seller.entity.Seller;
 
 public interface SellerRepository extends CrudRepository<Seller, String>{
 

@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,7 +20,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.board.entity.Board;
 import com.myomi.comment.entity.Comment;
+import com.myomi.order.entity.Order;
 import com.myomi.review.entity.Review;
+import com.myomi.seller.entity.Seller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -74,17 +76,17 @@ public class User {
 	@OneToOne(mappedBy = "sellerId")
 	private Seller seller;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Board> boards;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Comment> comments;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Review> reviews;
 	
-//	@OneToMany(ma)
-//	private List<Order> orders;
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	private List<Order> orders;
 	
 //	@OneToMany(fetch = FetchType.EAGER)
 //	@JoinColumn(name = "cart_num")

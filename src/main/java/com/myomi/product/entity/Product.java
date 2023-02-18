@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -12,6 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.myomi.order.entity.OrderDetail;
+import com.myomi.seller.entity.Seller;
 
 //import com.myomi.user.entity.Cart;
 
@@ -28,7 +32,10 @@ public class Product {
 	@Id
 	@Column(name = "num")
 	private Long pNum;
-//	private Seller seller;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "seller_id")
+	private Seller seller;
 	
 	@Column(name = "category")
 	private String category;
@@ -55,7 +62,7 @@ public class Product {
 	private Long reviewCnt;
 	
 	@Column(name = "stars")
-	private int stars;
+	private int stars; //테스트 끝나고 float로 바꾸기..ㅠㅠ.까먹음
 	
 	@Column(name = "fee")
 	@ColumnDefault("9") //default 9

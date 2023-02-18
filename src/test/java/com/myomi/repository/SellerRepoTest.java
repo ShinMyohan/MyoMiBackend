@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.myomi.user.entity.Seller;
+import com.myomi.seller.entity.Seller;
+import com.myomi.seller.repository.SellerRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.repository.SellerRepository;
 import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
@@ -32,6 +32,7 @@ class SellerRepoTest {
 		seller.setCompanyName("미미네 도시락");
 		seller.setCompanyNum("03호38572");
 		seller.setInternetNum("29허하485너");
+		seller.setAddr("강원도 어딘가");
 		seller.setManager("장세리");
 		seller.setStatus(1);
 		

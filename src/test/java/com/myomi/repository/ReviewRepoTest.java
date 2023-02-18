@@ -31,46 +31,6 @@ class ReviewRepoTest {
 	@Autowired
 	private BestReviewRepository brr;
 	
-//	@Autowired
-//	private OrderRepository or;
-	
-	
-//	@Test
-//	void testReviewSave() {
-//		for(int i=1; i<=2; i++) {
-//			Optional<User> optU = ur.findById("id"+i);
-//			
-//			Review review = new Review();
-//			review.setRNum(i*1L);
-//			review.setUser(optU.get());
-//			review.setSort(0);
-//			review.setTitle(i+"후후후후 "+i);
-//			review.setContent(i+"제발"+i);
-//			LocalDateTime date = LocalDateTime.now();
-//			review.setCreatedDate(date);
-//			review.setStars(i);
-//			review.setPNum(2L);
-//			
-//			rr.save(review);
-//		}
-//	}
-	
-//	@Test
-//	void testBestReview() {
-//		Optional<Review> optR = rr.findById(2L);
-//		
-//		BestReview br = new BestReview();
-////		BestReviewId bri = new BestReviewId();
-//		br.setRNum(optR.get().getRNum());
-//		br.setPNum(optR.get().getPNum());
-//		LocalDateTime date = LocalDateTime.now();
-//		br.setCreatedDate(date);
-////		bri.setRNum(br.getReview().getRNum());
-////		bri.setPNum(br.getReview().getPNum());
-//		
-//		brr.save(br);
-//	}
-	
 	@Test
 	void testSaveReview() {
 		Optional<User> optU = ur.findById("id7");
