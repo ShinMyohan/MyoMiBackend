@@ -1,0 +1,7 @@
+2023-02-17 02:44:37.074  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=30m51s435ms).
+2023-02-17 03:26:05.335  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=38m28s244ms).
+2023-02-17 04:02:32.732  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=35m57s387ms).
+2023-02-17 05:17:54.009  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h12m21s267ms).
+2023-02-17 05:18:23.747  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Retrograde clock change detected (housekeeper delta=29s737ms), soft-evicting connections from pool.
+2023-02-17 05:18:23.751  INFO 882 --- [HikariPool-1 connection closer] jdbc.connection                          : 10. Connection closed
+2023-02-17 05:18:23.752  INFO 882 --- [HikariPool-1 connection closer] jdbc.audit                               : 10. Connection.close() returned 

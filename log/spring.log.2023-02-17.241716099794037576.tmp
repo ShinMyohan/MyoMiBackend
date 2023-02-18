@@ -1,0 +1,8 @@
+2023-02-17 17:29:47.940  INFO 70253 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-02-17 17:29:47.946  INFO 70253 --- [HikariPool-1 connection closer] jdbc.connection                          : 1. Connection closed
+2023-02-17 17:29:47.946  INFO 70253 --- [HikariPool-1 connection closer] jdbc.audit                               : 1. Connection.close() returned 
+2023-02-17 17:29:47.948  INFO 70253 --- [HikariPool-1 connection closer] jdbc.connection                          : 2. Connection closed
+2023-02-17 17:29:47.949  INFO 70253 --- [HikariPool-1 connection closer] jdbc.audit                               : 2. Connection.close() returned 
+2023-02-17 17:29:47.952  INFO 70253 --- [HikariPool-1 connection closer] jdbc.connection                          : 3. Connection closed
+2023-02-17 17:29:47.952  INFO 70253 --- [HikariPool-1 connection closer] jdbc.audit                               : 3. Connection.close() returned 
+2023-02-17 17:29:47.952  INFO 70253 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

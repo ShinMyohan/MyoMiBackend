@@ -1,0 +1,5 @@
+2023-02-15 23:34:42.184  INFO 2777 --- [HikariPool-1 connection adder] jdbc.connection                          : 6. Connection opened
+2023-02-15 23:34:42.185  INFO 2777 --- [HikariPool-1 connection adder] jdbc.audit                               : 6. Connection.new Connection returned 
+2023-02-15 23:34:42.185  INFO 2777 --- [HikariPool-1 connection adder] jdbc.audit                               : 6. Connection.isReadOnly() returned false
+2023-02-15 23:34:42.186  INFO 2777 --- [HikariPool-1 connection adder] jdbc.audit                               : 6. Connection.getAutoCommit() returned true
+2023-02-15 23:50:30.761  WARN 2777 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m42s443ms).

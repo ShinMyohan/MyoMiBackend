@@ -1,0 +1,8 @@
+2023-02-17 17:30:31.322  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 9. Connection.isReadOnly() returned false
+2023-02-17 17:30:31.322  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 9. Connection.getAutoCommit() returned true
+2023-02-17 17:59:40.205  INFO 63409 --- [HikariPool-1 connection closer] jdbc.connection                          : 7. Connection closed
+2023-02-17 17:59:40.207  INFO 63409 --- [HikariPool-1 connection closer] jdbc.audit                               : 7. Connection.close() returned 
+2023-02-17 17:59:40.238  INFO 63409 --- [HikariPool-1 connection adder] jdbc.connection                          : 10. Connection opened
+2023-02-17 17:59:40.238  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 10. Connection.new Connection returned 
+2023-02-17 17:59:40.238  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 10. Connection.isReadOnly() returned false
+2023-02-17 17:59:40.238  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 10. Connection.getAutoCommit() returned true

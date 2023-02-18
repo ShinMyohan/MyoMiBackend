@@ -1,0 +1,31 @@
+2023-02-15 20:15:50.433  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.setString(6, "비밀번호5") returned 
+2023-02-15 20:15:50.434  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.setInt(7, 1) returned 
+2023-02-15 20:15:50.434  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.setNull(8, 93) returned 
+2023-02-15 20:15:50.434  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.setString(9, "010-5555-5555") returned 
+2023-02-15 20:15:50.434  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.setString(10, "id5") returned 
+2023-02-15 20:15:50.434  INFO 89865 --- [main] jdbc.sqlonly                             : insert into users (addr, created_date, email, membership_num, name, pwd, role, signout_date, 
+tel, id) values ('한국 어딘가5', NULL, '이메일5@myomi.com', 1, '유저이름5', '비밀번호5', 1, NULL, '010-5555-5555', 
+'id5') 
+
+2023-02-15 20:15:50.436  INFO 89865 --- [main] jdbc.sqltiming                           : insert into users (addr, created_date, email, membership_num, name, pwd, role, signout_date, 
+tel, id) values ('한국 어딘가5', NULL, '이메일5@myomi.com', 1, '유저이름5', '비밀번호5', 1, NULL, '010-5555-5555', 
+'id5') 
+ {executed in 2 msec}
+2023-02-15 20:15:50.436  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.executeUpdate() returned 1
+2023-02-15 20:15:50.436  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.getMaxRows() returned 0
+2023-02-15 20:15:50.436  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.getQueryTimeout() returned 0
+2023-02-15 20:15:50.436  INFO 89865 --- [main] jdbc.audit                               : 1. PreparedStatement.close() returned 
+2023-02-15 20:15:50.439  INFO 89865 --- [main] jdbc.audit                               : 1. Connection.commit() returned 
+2023-02-15 20:15:50.439  INFO 89865 --- [main] jdbc.audit                               : 1. Connection.setAutoCommit(true) returned 
+2023-02-15 20:15:50.439  INFO 89865 --- [main] jdbc.audit                               : 1. Connection.getWarnings() returned null
+2023-02-15 20:15:50.439  INFO 89865 --- [main] jdbc.audit                               : 1. Connection.clearWarnings() returned 
+2023-02-15 20:15:50.439  INFO 89865 --- [main] jdbc.audit                               : 1. Connection.clearWarnings() returned 
+2023-02-15 20:15:50.456  INFO 89865 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-02-15 20:15:50.458  INFO 89865 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-02-15 20:15:50.463  INFO 89865 --- [HikariPool-1 connection closer] jdbc.connection                          : 1. Connection closed
+2023-02-15 20:15:50.463  INFO 89865 --- [HikariPool-1 connection closer] jdbc.audit                               : 1. Connection.close() returned 
+2023-02-15 20:15:50.465  INFO 89865 --- [HikariPool-1 connection closer] jdbc.connection                          : 2. Connection closed
+2023-02-15 20:15:50.465  INFO 89865 --- [HikariPool-1 connection closer] jdbc.audit                               : 2. Connection.close() returned 
+2023-02-15 20:15:50.469  INFO 89865 --- [HikariPool-1 connection closer] jdbc.connection                          : 3. Connection closed
+2023-02-15 20:15:50.469  INFO 89865 --- [HikariPool-1 connection closer] jdbc.audit                               : 3. Connection.close() returned 
+2023-02-15 20:15:50.469  INFO 89865 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

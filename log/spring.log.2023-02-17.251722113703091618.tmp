@@ -1,0 +1,8 @@
+2023-02-17 19:47:14.694  INFO 63409 --- [HikariPool-1 connection closer] jdbc.connection                          : 15. Connection closed
+2023-02-17 19:47:14.697  INFO 63409 --- [HikariPool-1 connection closer] jdbc.audit                               : 15. Connection.close() returned 
+2023-02-17 19:47:14.728  INFO 63409 --- [HikariPool-1 connection adder] jdbc.connection                          : 18. Connection opened
+2023-02-17 19:47:14.728  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 18. Connection.new Connection returned 
+2023-02-17 19:47:14.728  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 18. Connection.isReadOnly() returned false
+2023-02-17 19:47:14.728  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 18. Connection.getAutoCommit() returned true
+2023-02-17 19:58:04.880  INFO 63409 --- [RMI TCP Connection(170)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2023-02-17 19:58:04.905  INFO 63409 --- [RMI TCP Connection(170)-127.0.0.1] o.apache.catalina.core.StandardService   : 서비스 [Tomcat]을(를) 중지시킵니다.
