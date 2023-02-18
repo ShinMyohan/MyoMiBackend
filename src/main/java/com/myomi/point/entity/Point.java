@@ -1,4 +1,4 @@
-package com.myomi.user.entity;
+package com.myomi.point.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.myomi.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

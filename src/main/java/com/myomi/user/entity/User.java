@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.board.entity.Board;
 import com.myomi.comment.entity.Comment;
 import com.myomi.order.entity.Order;
+import com.myomi.point.entity.Point;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 

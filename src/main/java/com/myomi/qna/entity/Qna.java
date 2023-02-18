@@ -1,3 +1,4 @@
+package com.myomi.qna.entity;
 //package com.myomi.user.entity;
 //
 //import java.util.Date;

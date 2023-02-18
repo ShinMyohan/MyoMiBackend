@@ -1,4 +1,4 @@
-//package com.myomi.user.entity;
+package com.myomi.coupon.entity;
 //
 //import java.util.Date;
 //

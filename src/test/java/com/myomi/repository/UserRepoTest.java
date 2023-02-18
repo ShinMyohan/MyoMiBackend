@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.myomi.point.entity.Point;
 import com.myomi.user.entity.Membership;
-import com.myomi.user.entity.Point;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.PointRepository;
 import com.myomi.user.repository.UserRepository;

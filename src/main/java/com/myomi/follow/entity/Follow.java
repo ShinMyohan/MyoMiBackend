@@ -1,3 +1,4 @@
+package com.myomi.follow.entity;
 //package com.myomi.user.entity;
 //
 //import javax.persistence.Entity;

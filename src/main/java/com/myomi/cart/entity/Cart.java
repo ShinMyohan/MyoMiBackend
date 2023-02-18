@@ -1,4 +1,4 @@
-//package com.myomi.user.entity;
+package com.myomi.cart.entity;
 //
 //import javax.persistence.Entity;
 //
