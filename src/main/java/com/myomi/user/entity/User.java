@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.board.entity.Board;
 import com.myomi.cart.entity.Cart;
 import com.myomi.comment.entity.Comment;
+import com.myomi.coupon.entity.Coupon;
 import com.myomi.follow.entity.Follow;
 import com.myomi.order.entity.Order;
 import com.myomi.point.entity.Point;
@@ -102,6 +103,6 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
 	
-//	@OneToMany
-//	private List<Coupon> coupons;
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Coupon> coupons;
 }

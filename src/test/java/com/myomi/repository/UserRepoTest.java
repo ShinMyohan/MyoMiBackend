@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.myomi.coupon.entity.Coupon;
+import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.point.entity.Point;
 import com.myomi.user.entity.Membership;
 import com.myomi.user.entity.User;
@@ -25,6 +27,9 @@ class UserRepoTest {
 	
 	@Autowired
 	private PointRepository pr;
+	
+	@Autowired
+	private CouponRepository cr;
 	
 	@Test //성공
 	@DisplayName("회원가입")
@@ -54,6 +59,16 @@ class UserRepoTest {
 			point.setUserId(user); //중요! point 쪽에서도, user 객체 넣어준뒤 setter => 왜냐하면 양방향이니까!
 			
 			pr.save(point);
+			
+			Coupon coupon = new Coupon();
+			coupon.setCpNum(i);
+			coupon.setUser(user);
+			coupon.setSort(0);
+			coupon.setPercentage(5);
+			coupon.setCreatedDate(date);
+			coupon.setStatus(0);
+			
+			cr.save(coupon);
 			
 			user.setPoint(point); //중요! user 쪽에서도, point 객체 넣어준뒤 setter => 왜냐하면 양방향이니까!
 			
