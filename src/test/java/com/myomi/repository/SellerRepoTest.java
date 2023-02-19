@@ -24,16 +24,17 @@ class SellerRepoTest {
 	
 	@Test
 	void testSellerSave() {
-		Optional<User> optU = ur.findById("id1");
+		Optional<User> optU = ur.findById("id3");
 
 		Seller seller = new Seller();
-		seller.setId("id1");
+		seller.setId("id3");
 		seller.setSellerId(optU.get());
-		seller.setCompanyName("미미네 도시락");
-		seller.setCompanyNum("03호38572");
-		seller.setInternetNum("29허하485너");
-		seller.setAddr("강원도 어딘가");
-		seller.setManager("장세리");
+		seller.setCompanyName("성언네 도시락");
+		seller.setCompanyNum("01호38572");
+		seller.setInternetNum("21허하485너");
+		seller.setFollowCnt(0);
+		seller.setAddr("부산 어딘가");
+		seller.setManager("임성언");
 		seller.setStatus(1);
 		
 		sr.save(seller);

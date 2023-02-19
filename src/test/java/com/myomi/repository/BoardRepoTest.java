@@ -16,7 +16,7 @@ import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
 class BoardRepoTest {
-	Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private BoardRepository br;

@@ -15,6 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.myomi.order.entity.OrderDetail;
+import com.myomi.qna.entity.Qna;
 import com.myomi.seller.entity.Seller;
 
 //import com.myomi.user.entity.Cart;
@@ -68,13 +69,14 @@ public class Product {
 	@ColumnDefault("9") //default 9
 	private int fee;
 
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 	
+	@OneToMany(mappedBy = "prodNum", fetch = FetchType.LAZY)
+	private List<Qna> qnas;
 	
 //	private List<Cart> cart;
 //	
 
-//
-//	private List<Qna> qnas;
+
 }

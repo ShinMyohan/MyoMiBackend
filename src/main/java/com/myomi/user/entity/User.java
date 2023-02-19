@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,8 +21,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.board.entity.Board;
 import com.myomi.comment.entity.Comment;
+import com.myomi.follow.entity.Follow;
 import com.myomi.order.entity.Order;
 import com.myomi.point.entity.Point;
+import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 
@@ -89,6 +92,12 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Order> orders;
 	
+	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY)
+	private List<Qna> qnas;
+	
+	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Follow> follows;
+	
 //	@OneToMany(fetch = FetchType.EAGER)
 //	@JoinColumn(name = "cart_num")
 //	private List<Cart> cart;
@@ -97,12 +106,8 @@ public class User {
 	
 
 	
-//	@OneToMany(fetch = FetchType.EAGER)
-//	private List<Qna> qnas;
-	
-//	@OneToMany(fetch = FetchType.EAGER)
-//	private List<Follow> follows;
-	
+
+
 
 	
 //	@OneToMany(fetch = FetchType.EAGER)

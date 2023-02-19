@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.myomi.follow.entity.Follow;
 import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 
@@ -61,4 +63,8 @@ public class Seller {
 	
 	@OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
 	private List<Product> products;
+	
+	@OneToMany(mappedBy = "sellerId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Follow> follows;
+	
 }
