@@ -28,15 +28,15 @@ class ProductRepoTest {
 	@Test
 	@DisplayName("셀러가 상품추가") //성공
 	void testProductSave() {
-		Optional<Seller> optS = sr.findById("id1"); //셀러 아이디
-		for(int i=1; i<=3; i++) {
+		Optional<Seller> optS = sr.findById("id3"); //셀러 아이디
+		for(int i=1; i<=2; i++) {
 			Product prod = new Product();
-			prod.setPNum(i*1L);
+			prod.setPNum((i*1L)+3L);
 			prod.setSeller(optS.get());
-			prod.setCategory("샐러드");
-			prod.setName("미미네 샐러드");
-			prod.setOriginPrice(i*12000L);
-			prod.setPercentage(i*10);
+			prod.setCategory("도시락");
+			prod.setName("성언이네 도시락");
+			prod.setOriginPrice(i*13000L);
+			prod.setPercentage(i*11);
 			prod.setWeek(i);
 			prod.setStatus(0);
 			prod.setDetail(i+"개의 재료소진으로 인해 재료 대체");

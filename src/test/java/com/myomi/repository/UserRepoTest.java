@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,8 @@ class UserRepoTest {
 	@Autowired
 	private PointRepository pr;
 	
-	@Test
+	@Test //성공
+	@DisplayName("회원가입")
 	void testUserSave() {
 		for(int i=1; i<=7; i++) {
 			User user = new User();

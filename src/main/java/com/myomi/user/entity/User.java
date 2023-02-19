@@ -20,6 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.board.entity.Board;
+import com.myomi.cart.entity.Cart;
 import com.myomi.comment.entity.Comment;
 import com.myomi.follow.entity.Follow;
 import com.myomi.order.entity.Order;
@@ -98,18 +99,9 @@ public class User {
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Follow> follows;
 	
-//	@OneToMany(fetch = FetchType.EAGER)
-//	@JoinColumn(name = "cart_num")
-//	private List<Cart> cart;
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Cart> cart;
 	
-
-	
-
-	
-
-
-
-	
-//	@OneToMany(fetch = FetchType.EAGER)
+//	@OneToMany
 //	private List<Coupon> coupons;
 }

@@ -2,6 +2,7 @@ package com.myomi.product.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.myomi.cart.entity.Cart;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.qna.entity.Qna;
 import com.myomi.seller.entity.Seller;
@@ -72,11 +74,9 @@ public class Product {
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 	
-	@OneToMany(mappedBy = "prodNum", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "prodNum", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Qna> qnas;
 	
-//	private List<Cart> cart;
-//	
-
-
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Cart> cart;
 }
