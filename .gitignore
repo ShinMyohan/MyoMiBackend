@@ -11,6 +11,8 @@ target
 .project
 .idea/
 
+
+
 # Java annotation processor (APT)
 .factorypath
 
@@ -20,7 +22,8 @@ target
 *.class
 
 # Log file
-*.log
+*.log/
+log/
 
 # BlueJ files
 *.ctxt
