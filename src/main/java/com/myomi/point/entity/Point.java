@@ -1,5 +1,6 @@
 package com.myomi.point.entity;
 
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -7,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -22,26 +23,21 @@ import lombok.Setter;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Table(name="point")
 @DynamicInsert
 @DynamicUpdate
 public class Point {
 	@Id
-	@JoinColumn(name = "user_id")
+	@Column(name = "user_id")
 	private String id;
 	
 	@MapsId
-	@OneToOne
-	@JoinColumn(name ="user_id", insertable = false)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", insertable = false)
 	private User userId;
-
-	@Column(name="total_point")
+	
+	@Column(name = "total_point")
 	private Integer totalPoint;
 	
-//	@OneToMany(fetch = FetchType.EAGER,
-//			   cascade = CascadeType.ALL,
-//			   mappedBy="")
-//	private List<PointDetail> pointDetail;
-
-	
+	@OneToMany(mappedBy = "point")
+	private List<PointDetail> pointDetails;
 }
