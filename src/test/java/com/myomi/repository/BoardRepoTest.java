@@ -49,7 +49,7 @@ class BoardRepoTest {
 //	void BoardTestFindAll() {
 //		Iterable<Board> boards = br.findAll();
 //		boards.forEach(board->{
-//			logger.board("게시글 제목:"+board.getTitle()+"글쓴이:"+board.getUser().getId());
+//			logger.info("게시글 제목:"+board.getTitle()+"글쓴이:"+board.getUser().getId());
 //		});
 //	}
 }

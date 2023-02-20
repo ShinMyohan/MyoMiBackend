@@ -1,11 +1,14 @@
 package com.myomi.point.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -34,4 +37,7 @@ public class Point {
 	
 	@Column(name = "total_point")
 	private Integer totalPoint;
+	
+	@OneToMany(mappedBy = "point")
+	private List<PointDetail> pointDetails;
 }

@@ -51,7 +51,7 @@ class FollowRepoTest {
 //	void testFollowsByUser() {
 //		Iterable<Follow> follows = fr.findByUserId("id2");
 //		follows.forEach(follow -> { 
-//			logger.follow("회원 : "+ follow.getUserId().getId(), "팔로우한 셀러: " + follow.getSellerId().getId());
+//			logger.info("회원 : "+ follow.getUserId().getId(), "팔로우한 셀러: " + follow.getSellerId().getId());
 //		});
 //	}
 }

@@ -1,4 +1,4 @@
-package com.myomi.user.repository;
+package com.myomi.point.repository;
 
 import org.springframework.data.repository.CrudRepository;
 

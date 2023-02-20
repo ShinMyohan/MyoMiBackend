@@ -14,9 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.point.entity.Point;
+import com.myomi.point.repository.PointRepository;
 import com.myomi.user.entity.Membership;
 import com.myomi.user.entity.User;
-import com.myomi.user.repository.PointRepository;
 import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
