@@ -7,11 +7,17 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
@@ -24,21 +30,22 @@ import lombok.Setter;
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name="board")
-//@SequenceGenerator(
-//name = "board_seq",
-//sequenceName = "board_seq", 
-//initialValue = 1, allocationSize = 1 )
+@SequenceGenerator(
+name = "BOARD_SEQ_GENERATOR",
+sequenceName = "BOARD_SEQ", 
+initialValue = 1, allocationSize = 1 )
 
+@DynamicUpdate
 public class Board {
    @Id
-   @Column(name="num")
-//   @GeneratedValue(
-//			strategy = GenerationType.SEQUENCE,
-//			generator = "board_seq") 
+   @Column(name="num", updatable =  false)
+   @GeneratedValue(strategy = GenerationType.SEQUENCE,
+   generator = "BOARD_SEQ_GENERATOR")
    private Integer bNum;
    
    @ManyToOne
-   @JoinColumn(name="user_id", nullable = false)
+   @JoinColumn(name="user_id", nullable = false,
+                               updatable =  false)
    private User user;
    
    @Column(name = "category")
@@ -50,14 +57,14 @@ public class Board {
    @Column(name = "content")
    private String content;
    
-   @Column(name = "created_date")
+   @Column(name = "created_date", updatable =  false)
    private LocalDateTime createdDate;
    
-   @Column(name = "hits")
+   @Column(name = "hits", updatable =  false)
    private Integer hits;
    
    @OneToMany(fetch = FetchType.EAGER ,
-		      cascade = CascadeType.ALL, 
+		      cascade = CascadeType.REMOVE, 
 		      mappedBy = "board")
    private List<Comment> comments;
    
