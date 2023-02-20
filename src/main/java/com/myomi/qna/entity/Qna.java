@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -33,14 +36,17 @@ import lombok.Setter;
 @Table(name= "qna") //어떤 테이블과 영속성을 유지할지 
 @DynamicInsert
 @DynamicUpdate
-
+@SequenceGenerator(
+		 name = "QNA_SEQ_GENERATOR",
+		 sequenceName = "QNA_SEQ", //매핑할 데이터베이스 시퀀스 이름
+		 initialValue = 1, allocationSize = 1)
 public class Qna {
 	@Id
 	@Column(name = "num")
-//	@GeneratedValue(
-//			strategy = GenerationType.SEQUENCE,
-//			generator = 
-//			"qna_SEQ_GENERATOR") // 위의 sequence 이름
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = 
+			"QNA_SEQ_GENERATOR") // 위의 sequence 이름
 	private Integer qNum;
 	
 	@ManyToOne

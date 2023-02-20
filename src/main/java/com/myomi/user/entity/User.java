@@ -72,14 +72,14 @@ public class User {
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date signoutDate;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "membership_num")
 	private Membership membership;
 	
-	@OneToOne(mappedBy = "userId")
+	@OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Point point;
 	
-	@OneToOne(mappedBy = "sellerId")
+	@OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
 	private Seller seller;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -94,7 +94,7 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Order> orders;
 	
-	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Qna> qnas;
 	
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

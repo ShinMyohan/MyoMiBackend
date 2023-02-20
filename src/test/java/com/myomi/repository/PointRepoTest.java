@@ -36,19 +36,21 @@ class PointRepoTest {
 		
 		PointDetail pd = new PointDetail();
 		PointDetailEmbedded pde = new PointDetailEmbedded();
-		pde.setUId(optU.get().getId());
-		LocalDateTime date = LocalDateTime.now();
-		pde.setCreatedDate(date);
-		pd.setPointEmbedded(pde);
-		pd.setSort(2);
-		pd.setAmount(148);
-		Integer amt = pd.getAmount();
-		point.setTotalPoint(point.getTotalPoint()+amt);
-		point.setUserId(optU.get());
-		pd.setPoint(point);
+		pde.setUId(optU.get().getId()); // id7
+		LocalDateTime date = LocalDateTime.now(); //현재시간가져와서 date에 담아줌
+		pde.setCreatedDate(date); //pde 설정 끝난거
 		
-		pr.save(point);
-		pdr.save(pd);
+		pd.setPointEmbedded(pde);
+		pd.setSort(1);
+		pd.setAmount(5000); 
+		Integer amt = pd.getAmount(); //1200
+
+		point.setTotalPoint(point.getTotalPoint()+amt);
+		point.setUserId(optU.get()); //id7 객체를 넣어줌
+		pd.setPoint(point); 
+		
+		pr.save(point); // select후 달라진게 있으면 update .  없으면 insert
+		pdr.save(pd); // insert가 됩니다.
 	}
 
 	

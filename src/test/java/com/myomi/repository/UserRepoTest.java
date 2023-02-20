@@ -85,22 +85,55 @@ class UserRepoTest {
 		assertEquals(expectedName, optU.get().getName());
 	}
 	
-//	@Test
-//	void testUserUpdate() {
-//		//회원 이메일, 이름, 비밀번호, 주소, 멤버십
-//		Optional<User> optU = ur.findById("id1");
-//		assertTrue(optU.isPresent());
-//		Membership membership = new Membership();
-//		membership.setMembershipNum(2);
-//		membership.setMembershipLevel("실버");
-//		
-//		User user = new User();
-//		user.setEmail("songeon@email.com");
-//		user.setName("임성언");
-//		user.setPwd("songsongsong");
-//		user.setAddr("경기도 군포시 산본동");
-//		user.setMembership(membership);
-//		
-//		ur.save(user);
-//	}
+	@Test //성공
+	@DisplayName("회원가입 트리거 테스트")
+	void testUserTrgSave() {
+		User user = new User();
+		user.setId("id1");
+		user.setPwd("비밀번호1");
+		user.setName("유저이름1");
+		user.setTel("010-1111-1111");
+		user.setEmail("이메일1@myomi.com");
+		user.setAddr("한국 어딘가1");
+		user.setRole(0);
+		
+		LocalDateTime date = LocalDateTime.now();
+		user.setCreatedDate(date);
+		
+		Membership membership = new Membership();
+		membership.setMembershipNum(1);
+		membership.setMembershipLevel("브론즈");
+		
+		user.setMembership(membership);
+		
+//		Point point = new Point();
+//		point.setTotalPoint(2000);
+//		point.setId("id1");
+//		point.setUserId(user);
+		
+		ur.save(user);
+	}
+	
+	@Test
+	void testUserUpdate() {
+		//회원 이메일, 이름, 비밀번호, 주소, 멤버십
+		Optional<User> optU = ur.findById("id1");
+		assertTrue(optU.isPresent());
+		Membership membership = new Membership();
+		membership.setMembershipNum(1);
+		membership.setMembershipLevel("골드");
+		
+		User user = optU.get();
+		user.setMembership(membership);
+		user.setRole(1);
+		
+		ur.save(user);
+	}
+	
+	@Test
+	void testDelUser() {
+		Optional<User> optU = ur.findById("id1");
+		
+		ur.delete(optU.get());
+	}
 }
