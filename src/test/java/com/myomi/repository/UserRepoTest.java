@@ -106,11 +106,6 @@ class UserRepoTest {
 		
 		user.setMembership(membership);
 		
-//		Point point = new Point();
-//		point.setTotalPoint(2000);
-//		point.setId("id1");
-//		point.setUserId(user);
-		
 		ur.save(user);
 	}
 	

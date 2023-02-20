@@ -1,11 +1,15 @@
 package com.myomi.user.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -14,9 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.board.entity.Board;
@@ -31,22 +37,67 @@ import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor
+@Builder
 @Entity
 @Table(name="users")
-@DynamicInsert
-@DynamicUpdate
-public class User {
+//@DynamicInsert
+//@DynamicUpdate
+public class User implements UserDetails {
 	@Id
-	@Column(name = "id")
+	@NotNull
+	@Column(name = "id", updatable = false, unique = true)
 	private String id;
 	
+	@NotNull
 	@Column(name = "pwd")
 	private String pwd;
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+ 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+ 
+    @Override
+    public String getUsername() {
+        return id;
+    }
+ 
+    @Override
+    public String getPassword() {
+        return pwd;
+    }
+ 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+ 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+ 
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+ 
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 	
 	@Column(name = "name")
 	private String name;

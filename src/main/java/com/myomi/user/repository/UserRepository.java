@@ -1,9 +1,11 @@
 package com.myomi.user.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.myomi.user.entity.User;
 
-public interface UserRepository extends CrudRepository<User, String>{
-//	Optional<User> findById(String id);
+public interface UserRepository extends JpaRepository<User, Long> {
+	Optional<User> findById(String username);
 }
