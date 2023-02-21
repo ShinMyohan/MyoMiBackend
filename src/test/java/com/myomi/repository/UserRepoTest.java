@@ -23,7 +23,7 @@ class UserRepoTest {
 	
 	@Test
 	void testUserSave() {
-		for(int i=6; i<=9; i++) {
+		for(int i=1; i<=2; i++) {
 			User user = new User();
 			user.setId("id"+i);
 			user.setPwd("비밀번호"+i);
@@ -31,7 +31,7 @@ class UserRepoTest {
 			user.setTel("010-"+(i*1000+i*100+i*10+i)+"-"+(i*1000+i*100+i*10+i));
 			user.setEmail("이메일"+i+"@myomi.com");
 			user.setAddr("한국 어딘가"+i);
-			user.setRole(1);
+			user.setRole(0);
 			
 			LocalDateTime date = LocalDateTime.now();
 			user.setCreatedDate(date);
