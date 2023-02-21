@@ -1,8 +1,0 @@
-2023-02-17 18:29:38.969  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 15. Connection.isReadOnly() returned false
-2023-02-17 18:29:38.970  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 15. Connection.getAutoCommit() returned true
-2023-02-17 19:19:38.573  WARN 63409 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=47m26s397ms).
-2023-02-17 19:37:50.498  WARN 63409 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m11s842ms).
-2023-02-17 19:46:44.737  INFO 63409 --- [HikariPool-1 connection closer] jdbc.connection                          : 13. Connection closed
-2023-02-17 19:46:44.738  INFO 63409 --- [HikariPool-1 connection closer] jdbc.audit                               : 13. Connection.close() returned 
-2023-02-17 19:46:44.772  INFO 63409 --- [HikariPool-1 connection adder] jdbc.connection                          : 16. Connection opened
-2023-02-17 19:46:44.772  INFO 63409 --- [HikariPool-1 connection adder] jdbc.audit                               : 16. Connection.new Connection returned 

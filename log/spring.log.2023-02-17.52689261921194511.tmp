@@ -1,9 +1,0 @@
-2023-02-17 08:14:42.768  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h8m6s589ms).
-2023-02-17 08:58:52.552  WARN 882 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=44m9s784ms).
-2023-02-17 09:22:24.438  INFO 882 --- [RMI TCP Connection(147)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
-2023-02-17 09:22:24.452  INFO 882 --- [RMI TCP Connection(147)-127.0.0.1] o.apache.catalina.core.StandardService   : 서비스 [Tomcat]을(를) 중지시킵니다.
-2023-02-17 09:22:24.470  INFO 882 --- [RMI TCP Connection(147)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-02-17 09:22:24.474  INFO 882 --- [RMI TCP Connection(147)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2023-02-17 09:22:24.477  INFO 882 --- [HikariPool-1 connection closer] jdbc.connection                          : 13. Connection closed
-2023-02-17 09:22:24.478  INFO 882 --- [HikariPool-1 connection closer] jdbc.audit                               : 13. Connection.close() returned 
-2023-02-17 09:22:24.479  INFO 882 --- [HikariPool-1 connection closer] jdbc.connection                          : 14. Connection closed
