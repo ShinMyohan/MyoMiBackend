@@ -49,7 +49,7 @@ public class Order {
     private Date payCreatedDate;
 
     @Column(name = "canceled_date")
-    private Date canceldDate;
+    private Date canceledDate;
 
     @Column(name = "total_price")
     private Long totalPrice;
@@ -57,7 +57,7 @@ public class Order {
     @Column(name = "save_point")
     private Long savePoint;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderDetail> orderDetail; // 양방향
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
