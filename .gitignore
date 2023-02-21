@@ -11,6 +11,8 @@ target
 .project
 .idea/
 
+
+
 # Java annotation processor (APT)
 .factorypath
 
@@ -20,7 +22,8 @@ target
 *.class
 
 # Log file
-*.log
+*.log/
+log/
 
 # BlueJ files
 *.ctxt
@@ -36,6 +39,11 @@ target
 *.zip
 *.tar.gz
 *.rar
+
+##applicaton.properties
+#src/main/resources/application.properties
+
+application-security.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
