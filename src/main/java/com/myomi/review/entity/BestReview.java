@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -37,10 +38,11 @@ public class BestReview implements Serializable {
 
 	@MapsId
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(nullable = false, name = "review_num")
+	@JoinColumn( name = "review_num")
+	@NotNull
 	private Review review;
 
-	@Column(nullable = false, name = "created_date")
+	@Column(name = "created_date",updatable = false)
 	@JsonFormat(pattern = "yy/MM/dd", timezone = "Asia/Seoul")
 	private LocalDateTime createdDate;
 }

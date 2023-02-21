@@ -14,6 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
@@ -29,41 +33,40 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "review")
+@DynamicInsert
+@DynamicUpdate
 @SequenceGenerator(name = "REVIEW_SEQ_GENERATOR", sequenceName = "REVIEW_SEQ", // 매핑할 데이터베이스 시퀀스 이름
 		initialValue = 1, allocationSize = 1)
 public class Review {
 	@Id
-	@JoinColumn(name = "num")
+	@Column(name = "num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REVIEW_SEQ_GENERATOR")
 	private Long rNum;
 
 	@ManyToOne
-//	(
-//			cascade = {
-//					CascadeType.PERSIST,
-//					CascadeType.MERGE //머지쓰면 update된다. 즉 유저 한명당 리뷰 하나만...가능..!
-//					})
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id",updatable = false)
 	private User user;
 
-	@Column(name = "sort")
+	@Column(name = "sort",updatable = false)
 	private int sort;
 
 	@Column(name = "title")
+	@NotNull
 	private String title;
 
 	@Column(name = "content")
+	@NotNull
 	private String content;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date",updatable = false)
 	private LocalDateTime createdDate;
 
-	@Column(name = "stars")
+	@Column(name = "stars",updatable = false)
 	private float stars;
 
 	@OneToOne
-	@JoinColumns({ @JoinColumn(name = "order_num"), 
-	@JoinColumn(name = "prod_num") })
+	@JoinColumns({ @JoinColumn(name = "order_num",updatable = false), 
+	@JoinColumn(name = "prod_num",updatable = false) })
 	private OrderDetail orderDetail;
 
 	@OneToOne(mappedBy = "review")

@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.myomi.notice.entity.Notice;
 
-public interface NoticeRepository extends CrudRepository<Notice, Integer> {
+public interface NoticeRepository extends CrudRepository<Notice, Long> {
 
 }
