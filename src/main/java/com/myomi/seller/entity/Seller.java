@@ -59,7 +59,7 @@ public class Seller {
 	private int status;
 	
 	@Column(name = "follow_cnt")
-	private Integer followCnt;
+	private Long followCnt;
 	
 	@OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
 	private List<Product> products;

@@ -42,7 +42,7 @@ class UserRepoTest {
 			user.setTel("010-"+(i*1000+i*100+i*10+i)+"-"+(i*1000+i*100+i*10+i));
 			user.setEmail("이메일"+i+"@myomi.com");
 			user.setAddr("한국 어딘가"+i);
-			user.setRole(1);
+			user.setRole(0);
 			
 			LocalDateTime date = LocalDateTime.now();
 			user.setCreatedDate(date);
@@ -95,7 +95,7 @@ class UserRepoTest {
 		user.setTel("010-1111-1111");
 		user.setEmail("이메일1@myomi.com");
 		user.setAddr("한국 어딘가1");
-		user.setRole(0);
+//		user.setRole(0);
 		
 		LocalDateTime date = LocalDateTime.now();
 		user.setCreatedDate(date);
@@ -120,7 +120,7 @@ class UserRepoTest {
 		
 		User user = optU.get();
 		user.setMembership(membership);
-		user.setRole(1);
+//		user.setRole(1);
 		
 		ur.save(user);
 	}

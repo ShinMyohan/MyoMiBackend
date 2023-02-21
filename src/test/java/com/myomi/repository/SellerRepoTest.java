@@ -34,7 +34,7 @@ class SellerRepoTest {
 		seller.setCompanyName("미미네 도시락");
 		seller.setCompanyNum("02호38572");
 		seller.setInternetNum("29허하485너");
-		seller.setFollowCnt(0);
+		seller.setFollowCnt(0L);
 		seller.setAddr("강원도 어딘가");
 		seller.setManager("장세리");
 		seller.setStatus(1);

@@ -74,7 +74,7 @@ public class Product {
 	private Long reviewCnt;
 	
 	@Column(name = "stars")
-	private int stars; //테스트 끝나고 float로 바꾸기..ㅠㅠ.까먹음
+	private float stars; //테스트 끝나고 float로 바꾸기..ㅠㅠ.까먹음
 	
 	@Column(name = "fee")
 	@ColumnDefault("9") //default 9

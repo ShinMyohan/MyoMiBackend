@@ -69,6 +69,10 @@ public class User implements UserDetails {
                 .collect(Collectors.toList());
     }
  
+    @Column(name = "role")
+//	@Enumerated(EnumType.STRING)
+	private int role;
+    
     @Override
     public String getUsername() {
         return id;
@@ -111,8 +115,7 @@ public class User implements UserDetails {
 	@Column(name = "addr")
 	private String addr;
 	
-	@Column(name = "role")
-	private Integer role; //시큐리티 추가 후 UserRole enum 클래스 생성하면 빠질 예정
+	
 	
 	@Column(name = "created_date")
 //	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
