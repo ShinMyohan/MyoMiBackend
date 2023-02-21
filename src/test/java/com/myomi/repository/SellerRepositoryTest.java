@@ -29,17 +29,18 @@ class SellerRepositoryTest {
 	
 	@Test
 	void testSellerSave() {
-		Optional<User> optU = ur.findById("id6");
+		Optional<User> optU = ur.findById("id2");
 
 		Seller seller = new Seller();
-		seller.setId("id6");
+		User user = optU.get();
+		seller.setId(user.getId());
 		seller.setSellerId(optU.get());
-		seller.setCompanyName("미미네 도시락");
-		seller.setCompanyNum("03호38572");
-		seller.setInternetNum("29허하485너");
-		seller.setManager("장세리");
-		seller.setStatus(1);
-		
+		seller.setCompanyName("태리네 붕어빵");
+		seller.setCompanyNum("90호38512");
+		seller.setInternetNum("30허하889너");
+		seller.setAddr("경기도 용인시 보정동");
+		seller.setManager("호호호");
+		seller.setBank_account("국민 234235-23523");
 		sr.save(seller);
 	}
 	
@@ -52,5 +53,33 @@ class SellerRepositoryTest {
 		
 	}
 	
+	//셀러 승인완료시 회원role업데이트(트리거)
+	@Test
+	void testUpdate() {
+		Optional<Seller> optS = sr.findById("id1");
+		Seller seller = optS.get();
+		seller.setStatus(1);
+		sr.save(seller);
+	}
+	
+
+	//셀러 탈퇴시 회원탈퇴일 업데이트(트리거)
+	@Test
+	void testSellOutUpdate() {
+		Optional<Seller> optS = sr.findById("id2");
+		Seller seller = optS.get();
+		seller.setStatus(9);
+		sr.save(seller);
+	}
+	
+	
+	@Test
+	void testDelete() {
+		Optional<Seller> optS = sr.findById("id7");
+		assertTrue(optS.isPresent());
+		Seller s = optS.get();
+		sr.delete(s);
+		
+	}
 	
 }

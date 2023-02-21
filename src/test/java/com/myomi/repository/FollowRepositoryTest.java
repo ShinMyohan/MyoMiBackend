@@ -1,6 +1,5 @@
 package com.myomi.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.myomi.follow.entity.Follow;
+import com.myomi.follow.entity.FollowEmbedded;
 import com.myomi.follow.repository.FollowRepository;
 import com.myomi.seller.entity.Seller;
 import com.myomi.seller.repository.SellerRepository;
@@ -29,22 +29,34 @@ class FollowRepositoryTest {
 	@Autowired
 	private UserRepository ur;
 	
-
+	//트리거 사용
 	@Test
 	void testFollowSave() {
-		Optional<User> optU = ur.findById("id9");
-		Optional<Seller> optS = sr.findById("id6");
+		Optional<User> optU = ur.findById("id8");
+		Optional<Seller> optS = sr.findById("id7");
 		Follow follow = new Follow();
 		follow.setUserId(optU.get());
 		follow.setSellerId(optS.get());
+		
 		fr.save(follow);
+		
 	}
-//	
-//	@Test
-//	void testFindTest1() {
-//		List<Follow> list = fr.FindTest();
-//		logger.error("팔로우리스트:" + list);
-//	}
+	
+	
+	
+	@Test
+	void testDelete() {
+		Optional<User> optU = ur.findById("id8");
+		Optional<Seller> optS = sr.findById("id7");
+		
+		FollowEmbedded fe = new FollowEmbedded();
+		fe.setUId(optU.get().getId());
+		fe.setSId(optS.get().getId());
+
+		fr.deleteById(fe);
+	}
+	
+	
 	
 	@Test
 	void testFindAll() {
