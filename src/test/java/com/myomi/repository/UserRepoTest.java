@@ -6,16 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+<<<<<<< HEAD
+=======
 import org.junit.jupiter.api.DisplayName;
+>>>>>>> develop
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+<<<<<<< HEAD
+import com.myomi.user.entity.Membership;
+//import com.myomi.user.entity.Point;
+=======
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.point.entity.Point;
 import com.myomi.point.repository.PointRepository;
 import com.myomi.user.entity.Membership;
+>>>>>>> develop
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 
@@ -25,6 +33,9 @@ class UserRepoTest {
 	@Autowired
 	private UserRepository ur;
 	
+	@Test
+	void testUserSave() {
+		for(int i=1; i<=2; i++) {
 	@Autowired
 	private PointRepository pr;
 	
@@ -79,6 +90,31 @@ class UserRepoTest {
 	
 	@Test
 	void testUserFindById() {
+		Optional<User> optU = ur.findById("id6");
+		assertTrue(optU.isPresent());
+		String expectedName = "유저이름6";
+		assertEquals(expectedName, optU.get().getName());
+	}
+	
+//	@Test
+//	void testUserUpdate() {
+//		//회원 이메일, 이름, 비밀번호, 주소, 멤버십
+//		Optional<User> optU = ur.findById("id1");
+//		assertTrue(optU.isPresent());
+//		Membership membership = new Membership();
+//		membership.setMembershipNum(2);
+//		membership.setMembershipLevel("실버");
+//		
+//		User user = new User();
+//		user.setEmail("songeon@email.com");
+//		user.setName("임성언");
+//		user.setPwd("songsongsong");
+//		user.setAddr("경기도 군포시 산본동");
+//		user.setMembership(membership);
+//		
+//		ur.save(user);
+//	}
+
 		Optional<User> optU = ur.findById("id1");
 		assertTrue(optU.isPresent());
 		String expectedName = "유저이름1";
