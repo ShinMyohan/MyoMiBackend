@@ -18,59 +18,65 @@ import com.myomi.user.entity.UserRepository;
 class BoardRepositoryTest {
 	@Autowired
 	private BoardRepository br;
-	
+
 	@Autowired
 	private UserRepository ur;
-	
+
 	@Test  //통과 
 	void BoardTestSave() {
-		
+
 		Optional<User> optU = ur.findById("id1");
 		for (int i=1; i<=5; i++) {
 			Board board = new Board();                                             
-		//	board.setBNum();
+			//	board.setBNum();
 			board.setUser(optU.get());
 			board.setCategory("잡담"+i);
 			board.setTitle("제목" + i);
 			board.setContent("내용" + i);
 			LocalDateTime date = LocalDateTime.now();
 			board.setCreatedDate(date);
-			board.setHits(i);
+			//board.setHits(i);
 			br.save(board);
 		} 
 	}
-	
+
 	@Test
 	void saveTest() {
 		Optional<User> optU = ur.findById("id1");
 		assertTrue(optU.isPresent());
 	}
-	
-	
+
+
+
 	@Test  
 	void BoardUpdateTest() {
-		
 		Optional<Board> optB = br.findById(1);
-		
-			Board board = new Board();                                             
-		    board.setBNum(optB.get().getBNum());
-			board.setCategory("수정테스트");
-			board.setTitle("제목수정");
-			board.setContent("내용수정");
-		
-			br.save(board);
-		
+        
+		Board board = new Board();                                             
+		board.setBNum(optB.get().getBNum());
+		board.setCategory("수정테스트");
+		board.setTitle("제목수정");
+		board.setContent("내용수정");
+		br.save(board);
+
 	}
-	
+
+	@Test
+	void boardFindTest() {
+		//		Iterable<Board> optB = br.findAll();
+		Optional<Board> optB = br.findById(5);
+		assertTrue(optB.isPresent());
+	}
+
 	@Test
 	void deleteTest() {
-	Optional<Board> optB = br.findById(1);
-	assertTrue(optB.isPresent());
-	String userId = optB.get().getUser().getId();
-    assertEquals("id1", userId);
-    Board board = optB.get();
-    br.delete(board);
-}
+		Optional<Board> optB = br.findById(10);
+		assertTrue(optB.isPresent());
+		String userId = optB.get().getUser().getId();
+		assertEquals("id1", userId);
+		Board board = optB.get();
+		br.delete(board);
 	}
-	
+}
+
 

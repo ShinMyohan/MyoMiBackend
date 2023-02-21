@@ -54,7 +54,7 @@ class PointRepoTest {
 		pde.setCreatedDate(date);
 		pd.setPointEmbedded(pde);
 		pd.setSort(0);
-		pd.setAmount(-500); //포인트 사용했다는 가정하에 그냥 음수넣으면 db에 토탈포인트 -됨
+		pd.setAmount(-1000); //포인트 사용했다는 가정하에 그냥 음수넣으면 db에 토탈포인트 -됨
 		Integer amt = pd.getAmount();
 		point.setTotalPoint(point.getTotalPoint()+amt);
 		point.setUserId(optU.get());

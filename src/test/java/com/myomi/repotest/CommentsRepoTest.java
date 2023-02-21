@@ -31,7 +31,7 @@ class CommentsRepoTest {
 	@Test
 	void CommentsTestSave() {
 		Optional<User> optU = ur.findById("id1");
-		Optional<Board> optB = br.findById(9);
+		Optional<Board> optB = br.findById(1);
 		for(int i=1; i<=3; i++ ) {
         LocalDateTime date = LocalDateTime.now();
 		Comment cm = new Comment();
@@ -51,8 +51,8 @@ class CommentsRepoTest {
 	
 	@Test
 	void testReCommentSave() {
-		Optional<Board> optB = br.findById(9);
-		Optional<User> optU = ur.findById("id2");
+		Optional<Board> optB = br.findById(1);
+		Optional<User> optU = ur.findById("id1");
 		
 		Comment comment = new Comment();
 		comment.setUser(optU.get());
@@ -66,8 +66,8 @@ class CommentsRepoTest {
 	
 	@Test
 	void cmtUpdateTest() {
-		Optional<Comment> optC = cr.findById(13);
-		Optional<Board> optB = br.findById(9);
+		Optional<Comment> optC = cr.findById(1);
+		Optional<Board> optB = br.findById(1);
 		Optional<User> optU = ur.findById("id1");
 		
 		Comment cmt = new Comment();

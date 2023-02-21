@@ -15,7 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -34,14 +36,14 @@ import lombok.Setter;
 name = "BOARD_SEQ_GENERATOR",
 sequenceName = "BOARD_SEQ", 
 initialValue = 1, allocationSize = 1 )
-
+@DynamicInsert
 @DynamicUpdate
 public class Board {
    @Id
    @Column(name="num", updatable =  false)
    @GeneratedValue(strategy = GenerationType.SEQUENCE,
    generator = "BOARD_SEQ_GENERATOR")
-   private Integer bNum;
+   private Long bNum;
    
    @ManyToOne
    @JoinColumn(name="user_id", nullable = false,
@@ -49,19 +51,23 @@ public class Board {
    private User user;
    
    @Column(name = "category")
+   @NotNull
    private String category;
    
    @Column(name = "title")
+   @NotNull
    private String title;
    
    @Column(name = "content")
+   @NotNull
    private String content;
    
    @Column(name = "created_date", updatable =  false)
    private LocalDateTime createdDate;
    
    @Column(name = "hits", updatable =  false)
-   private Integer hits;
+   @ColumnDefault("'0'")
+   private Long hits;
    
    @OneToMany(fetch = FetchType.EAGER ,
 		      cascade = CascadeType.REMOVE, 

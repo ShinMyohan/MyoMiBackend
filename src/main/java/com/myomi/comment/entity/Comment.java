@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -38,7 +39,7 @@ public class Comment {
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COMMENTS_SEQ_GENERATOR") 
-	private Integer cNum;
+	private Long cNum;
 	
     @ManyToOne
     @JoinColumn(name="board_num", nullable = false ,
@@ -52,12 +53,13 @@ public class Comment {
 	private User user;
 	
 	@Column(name = "content")
+	@NotNull
 	private String content;
 	
 	@Column(name = "parent", updatable =  false)
-	private Integer parent;
+	private int parent;
 	//부모 댓글 번호 
 	
 	@Column(name = "created_date", updatable =  false)
-	private LocalDateTime createdDate;
+	 private LocalDateTime createdDate;
 }

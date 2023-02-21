@@ -32,6 +32,7 @@ class CouponRepoTest {
 		Coupon cp = new Coupon();
 		cp.setUser(user);
 		cp.setSort(0);
+		
 		cp.setPercentage(10);
 		cp.setCreatedDate(date);
         //cp.setStatus(0);

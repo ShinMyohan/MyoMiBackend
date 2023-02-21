@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -40,7 +41,7 @@ public class Coupon {
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COUPON_SEQ_GENERATOR") 
-	private Integer CpNum;
+	private Long CpNum;
 	
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false
@@ -49,15 +50,18 @@ public class Coupon {
 	
 	@Column(name="sort"
 			, updatable =  false)
-	private Integer sort;
+	//@NotNull
+	private int sort;
 	
 	@Column(name="percentage"
 			, updatable =  false)
-	private Integer percentage;
+	//@NotNull
+	private int percentage;
 	
 	@Column(name="created_date"
 			, updatable =  false)
 	@JsonFormat(timezone="Asia/Seoul", pattern ="yyyy-MM-dd")
+	//@NotNull
 	private LocalDateTime createdDate;
 	
 	@Column(name="used_date")
@@ -66,6 +70,6 @@ public class Coupon {
 	
 	@Column(name="status")
 	@ColumnDefault("'0'")
-	private Integer status;
+	private int status;
 	//status:0 -> 사용 전 
 }
