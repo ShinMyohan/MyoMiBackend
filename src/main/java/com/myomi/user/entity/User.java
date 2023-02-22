@@ -1,46 +1,31 @@
 package com.myomi.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myomi.board.entity.Board;
+import com.myomi.cart.entity.Cart;
+import com.myomi.comment.entity.Comment;
+import com.myomi.coupon.entity.Coupon;
+import com.myomi.follow.entity.Follow;
+import com.myomi.membership.entity.Membership;
+import com.myomi.order.entity.Order;
+import com.myomi.point.entity.Point;
+import com.myomi.qna.entity.Qna;
+import com.myomi.review.entity.Review;
+import com.myomi.seller.entity.Seller;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.myomi.board.entity.Board;
-import com.myomi.cart.entity.Cart;
-import com.myomi.comment.entity.Comment;
-import com.myomi.coupon.entity.Coupon;
-import com.myomi.follow.entity.Follow;
-import com.myomi.order.entity.Order;
-import com.myomi.point.entity.Point;
-import com.myomi.qna.entity.Qna;
-import com.myomi.review.entity.Review;
-import com.myomi.seller.entity.Seller;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor
 @Builder
@@ -126,37 +111,45 @@ public class User implements UserDetails {
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date signoutDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "membership_num")
 	private Membership membership;
-	
+
 	@OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private Point point;
-	
+
 	@OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
 	private Seller seller;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Board> boards;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Comment> comments;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Review> reviews;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Order> orders;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Qna> qnas;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Follow> follows;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Coupon> coupons;
 }

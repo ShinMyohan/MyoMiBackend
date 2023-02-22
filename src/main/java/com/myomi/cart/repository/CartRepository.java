@@ -3,16 +3,22 @@ package com.myomi.cart.repository;
 import com.myomi.cart.entity.Cart;
 import com.myomi.cart.entity.CartEmbedded;
 import com.myomi.product.entity.Product;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CartRepository extends CrudRepository<Cart, CartEmbedded> {
 //    @EntityGraph(attributePaths = {"user"})
-//@Query("select u from Users u join fetch u.")
-    public List<Cart> findByUserId(String userId);
+    public List<Cart> findListByUserId(String userId);
 
-//    @Query("SELECT c.user FROM Cart c WHERE c.id.userId = user_id")
     public Optional<Cart> findByUserIdAndProduct(String UserId, Product product);
+
+    @Modifying
+    @Query("DELETE FROM Cart c WHERE c.id.userId = :userId AND c.product.pNum = :pNum")
+    public void deleteCartByUserIdAndProduct(@Param("userId")String UserId, @Param("pNum") Long pNum);
+
 }

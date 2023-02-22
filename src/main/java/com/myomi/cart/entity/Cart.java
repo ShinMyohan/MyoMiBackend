@@ -35,7 +35,7 @@ public class Cart {
         this.prodCnt = prodCnt;
     }
 
-    public void changeProdCnt(int prodCnt) { // 더티체킹
+    public void updateProdCnt(int prodCnt) { // 더티체킹
         this.prodCnt = prodCnt;
     }
 }
