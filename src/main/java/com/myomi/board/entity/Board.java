@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
@@ -46,7 +47,8 @@ public class Board {
                    generator = "BOARD_SEQ_GENERATOR")
    private Long bNum;
    
-   @ManyToOne //(fetch=FetchType.LAZY)
+   @JsonIgnore
+   @ManyToOne //(fetch = FetchType.LAZY)
    @JoinColumn(name="user_id", nullable = false,
                                updatable =  false)
    private User user;
@@ -70,7 +72,8 @@ public class Board {
  //  @ColumnDefault("'0'")
    private Long hits;
    
-   @OneToMany(fetch = FetchType.EAGER ,
+   @JsonIgnore
+   @OneToMany(
 		      cascade = CascadeType.REMOVE, 
 		      mappedBy = "board")
    private List<Comment> comments;
@@ -88,7 +91,14 @@ public class Board {
 	this.hits = hits;
 	//this.comments = comments;
 }
+    
+    public void update(String category, String title, String content) {
+		this.category = category;
+		this.title = title;
+		this.content = content;
    
+    }
+    
     @PrePersist
     public void prePersist() {
         this.hits = this.hits == null ? 0 : this.hits;

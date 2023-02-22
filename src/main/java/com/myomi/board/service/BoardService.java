@@ -1,6 +1,8 @@
 package com.myomi.board.service;
 
 
+//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myomi.board.dto.BoardAddRequestDto;
+import com.myomi.board.dto.BoardEditRequestDto;
+import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
@@ -32,20 +36,15 @@ public class BoardService {
 	private final BoardRepository br;
 	private final UserRepository ur;
 
-	// 임시 회원정보
-	//    User user = User.builder()
-	//            .id("id1").build();
-
 	@Transactional
 	public List<BoardReadResponseDto> findBoard(Pageable pageable) {
 		//  Sort sort = sort.by(Direction.DESC,"createdDate");
 		List<Board> list = br.findAll(pageable);
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
-
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
 					.bNum(board.getBNum())
-					//  .user(board.getUser())
+				  //  .user(board.getUser())
 					.category(board.getCategory())
 					.title(board.getTitle())
 					.content(board.getContent())
@@ -57,6 +56,14 @@ public class BoardService {
 		return boardList;
 
 	}
+
+	
+	@Transactional
+	public BoardDetailResponseDto detailBoard(Long bNum) {
+		Board board = br.findById(bNum).get();
+		return new BoardDetailResponseDto(board);
+	}
+	
 
 	@Transactional
 	public void addBoard (BoardAddRequestDto addDto) {
@@ -77,5 +84,18 @@ public class BoardService {
 
 	}
 
+	@Transactional
+	public BoardDetailResponseDto modifyBoard(BoardEditRequestDto editDto, Long bNum) {
+		Board board = br.findById(bNum).get();
+		board.update(editDto.getCategory(), editDto.getContent(), editDto.getTitle());
+		return new BoardDetailResponseDto(board);
+
+	}
+	
+	@Transactional
+	public void deleteBoard(Long bNum) {
+		Board board = br.findById(bNum).get();
+		br.delete(board);
+	}
 
 }
