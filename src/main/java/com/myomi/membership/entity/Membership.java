@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Membership {
     @Id
     @Column(name = "membership_num")
-    private Long mNum;
+    private int mNum;
 
     @Column(name = "membership_level", nullable = false)
     private String mLevel;

@@ -1,19 +1,18 @@
 package com.myomi.repotest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.myomi.coupon.entity.Coupon;
+import com.myomi.coupon.repository.CouponRepository;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.myomi.coupon.entity.Coupon;
-import com.myomi.coupon.repository.CouponRepository;
-import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class CouponRepoTest {
@@ -42,7 +41,7 @@ class CouponRepoTest {
 	
 	@Test
 	void deleteTest() {
-	Optional<Coupon> optC = cr.findById(3);
+	Optional<Coupon> optC = cr.findById(3L);
 	assertTrue(optC.isPresent());
 	String userId = optC.get().getUser().getId();
     assertEquals("id1", userId);
@@ -52,7 +51,7 @@ class CouponRepoTest {
 	
 	@Test
 	void couponUpdateTest () {
-		Optional<Coupon> optC = cr.findById(1);
+		Optional<Coupon> optC = cr.findById(1L);
 		Optional<User> optU = ur.findById("id1");
 		
 		Coupon cp = new Coupon();

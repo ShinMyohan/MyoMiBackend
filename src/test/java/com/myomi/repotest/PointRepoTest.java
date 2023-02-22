@@ -1,21 +1,20 @@
 package com.myomi.repotest;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.myomi.point.entity.Point;
 import com.myomi.point.entity.PointDetail;
 import com.myomi.point.entity.PointDetailEmbedded;
 import com.myomi.point.repository.PointDetailRepository;
 import com.myomi.point.repository.PointRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import com.myomi.user.repository.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @SpringBootTest
 class PointRepoTest {

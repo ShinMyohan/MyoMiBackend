@@ -1,6 +1,6 @@
 package com.myomi.order.entity;
 
-import com.myomi.user.User;
+import com.myomi.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

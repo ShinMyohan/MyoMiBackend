@@ -14,5 +14,5 @@ public class CartEmbedded implements Serializable{
 	// 회원 아이디
 	private String userId;
 	// 상품번호
-	private Long num;
+	private Long pNum;
 }

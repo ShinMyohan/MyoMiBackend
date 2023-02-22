@@ -1,18 +1,19 @@
 
 package com.myomi.repotest;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.myomi.board.entity.Board;
+import com.myomi.board.repository.BoardRepository;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.myomi.board.entity.Board;
-import com.myomi.board.repository.BoardRepository;
-import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class BoardRepositoryTest {
@@ -50,7 +51,7 @@ class BoardRepositoryTest {
 
 	@Test  
 	void BoardUpdateTest() {
-		Optional<Board> optB = br.findById(1);
+		Optional<Board> optB = br.findById(1L);
         
 		Board board = new Board();                                             
 		board.setBNum(optB.get().getBNum());
@@ -64,13 +65,13 @@ class BoardRepositoryTest {
 	@Test
 	void boardFindTest() {
 		//		Iterable<Board> optB = br.findAll();
-		Optional<Board> optB = br.findById(5);
+		Optional<Board> optB = br.findById(5L);
 		assertTrue(optB.isPresent());
 	}
 
 	@Test
 	void deleteTest() {
-		Optional<Board> optB = br.findById(10);
+		Optional<Board> optB = br.findById(10L);
 		assertTrue(optB.isPresent());
 		String userId = optB.get().getUser().getId();
 		assertEquals("id1", userId);

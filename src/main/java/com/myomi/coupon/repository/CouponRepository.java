@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.myomi.coupon.entity.Coupon;
 
-public interface CouponRepository extends CrudRepository<Coupon, Integer> {
+public interface CouponRepository extends CrudRepository<Coupon, Long> {
 
 }

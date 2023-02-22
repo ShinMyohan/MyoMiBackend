@@ -1,21 +1,20 @@
 package com.myomi.repotest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import com.myomi.user.repository.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class CommentsRepoTest {
@@ -31,7 +30,7 @@ class CommentsRepoTest {
 	@Test
 	void CommentsTestSave() {
 		Optional<User> optU = ur.findById("id1");
-		Optional<Board> optB = br.findById(1);
+		Optional<Board> optB = br.findById(1L);
 		for(int i=1; i<=3; i++ ) {
         LocalDateTime date = LocalDateTime.now();
 		Comment cm = new Comment();
@@ -51,7 +50,7 @@ class CommentsRepoTest {
 	
 	@Test
 	void testReCommentSave() {
-		Optional<Board> optB = br.findById(1);
+		Optional<Board> optB = br.findById(1L);
 		Optional<User> optU = ur.findById("id1");
 		
 		Comment comment = new Comment();
@@ -66,8 +65,8 @@ class CommentsRepoTest {
 	
 	@Test
 	void cmtUpdateTest() {
-		Optional<Comment> optC = cr.findById(1);
-		Optional<Board> optB = br.findById(1);
+		Optional<Comment> optC = cr.findById(1L);
+		Optional<Board> optB = br.findById(1L);
 		Optional<User> optU = ur.findById("id1");
 		
 		Comment cmt = new Comment();
@@ -81,7 +80,7 @@ class CommentsRepoTest {
 	
 	@Test
 	void deleteTest() {
-    Optional<Comment> optC = cr.findById(13);
+    Optional<Comment> optC = cr.findById(13L);
     assertTrue(optC.isPresent());
     String userId = optC.get().getUser().getId();
     assertEquals("id1", userId);

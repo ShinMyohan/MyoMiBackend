@@ -1,25 +1,22 @@
 package com.myomi.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
+import com.myomi.product.entity.Product;
+import com.myomi.product.repository.ProductRepository;
+import com.myomi.qna.entity.Qna;
+import com.myomi.qna.repository.QnaRepository;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.myomi.qna.entity.Qna;
-import com.myomi.qna.repository.QnaRepository;
-import com.myomi.user.entity.Product;
-import com.myomi.user.entity.User;
-import com.myomi.user.repository.ProductRepository;
-import com.myomi.user.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class QnaRepositoryTest {
@@ -36,7 +33,7 @@ class QnaRepositoryTest {
 	@Test
 	void testQnaSave() {
 		Optional<User> optU = ur.findById("id7");
-		Optional<Product> optP = pr.findById(1);
+		Optional<Product> optP = pr.findById(1L);
 		
 		Qna qna = new Qna();
 		
@@ -76,7 +73,7 @@ class QnaRepositoryTest {
 	@Test
 	void testUpdate() {
 		Optional<Qna> optQ = qr.findById(8L);
-		Optional<Product> optP = pr.findById(1);
+		Optional<Product> optP = pr.findById(1L);
 		Optional<User> optU = ur.findById("id7");
 		
 		assertTrue(optQ.isPresent());
