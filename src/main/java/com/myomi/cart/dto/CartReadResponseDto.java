@@ -13,7 +13,6 @@ public class CartReadResponseDto {
 
     @Builder
     public CartReadResponseDto(Product product, int prodCnt) {
-//        this.user = user;
         this.product = product;
         this.prodCnt = prodCnt;
     }

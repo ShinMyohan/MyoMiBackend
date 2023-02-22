@@ -16,12 +16,12 @@ public class Cart {
     private CartEmbedded id = new CartEmbedded();
 
     @MapsId("userId") // PK, 회원 아이디
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @MapsId("pNum") // PK, 상품 번호
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prod_num")
     private Product product;
 
@@ -35,7 +35,11 @@ public class Cart {
         this.prodCnt = prodCnt;
     }
 
-    public void updateProdCnt(int prodCnt) { // 더티체킹
-        this.prodCnt = prodCnt;
-    }
+//    public void updateProdCnt(Cart cart) { // 더티체킹
+//        this.user = cart.getUser();
+//        this.product = cart.getProduct();
+//        this.prodCnt = cart.getProdCnt();
+//    }
+
+    // 연관관계 편의 메서드
 }
