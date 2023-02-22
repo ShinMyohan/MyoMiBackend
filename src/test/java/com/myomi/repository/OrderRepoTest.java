@@ -1,11 +1,13 @@
 package com.myomi.repository;
 
-import com.myomi.order.entity.Delivery;
-import com.myomi.order.entity.Order;
-import com.myomi.order.entity.OrderDetail;
-import com.myomi.order.repository.OrderRepository;
-import com.myomi.user.Product;
-import com.myomi.user.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -14,13 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.myomi.order.entity.Delivery;
+import com.myomi.order.entity.Order;
+import com.myomi.order.entity.OrderDetail;
+import com.myomi.order.repository.OrderRepository;
+import com.myomi.product.entity.Product;
+import com.myomi.user.entity.User;
 
 @SpringBootTest
 public class OrderRepoTest {
@@ -49,7 +50,7 @@ public class OrderRepoTest {
             OrderDetail detail = new OrderDetail();
             detail.setOrder(o);
             Product p = new Product();
-            p.setNum(i);
+            p.setPNum(1L);
             detail.setProduct(p);
             detail.setProdCnt(3L);
             logger.error("상세 hashCode=" + detail.hashCode());
@@ -76,7 +77,7 @@ public class OrderRepoTest {
         Iterable<Order> o = or.findAll();
         o.forEach(order -> {
             logger.info("주문 번호 : " + order.getONum()
-                    + ", 상품 번호 : " + order.getOrderDetail().get(1).getProduct().getNum()
+                    + ", 상품 번호 : " + order.getOrderDetail().get(1).getProduct().getPNum()
                     + ", 배송 정보: " + order.getDelivery().getName());
         });
     }
@@ -89,7 +90,7 @@ public class OrderRepoTest {
             logger.info("주문번호 : " + order.getONum());
             List<OrderDetail> od = order.getOrderDetail();
             od.forEach(detail -> {
-                logger.info("상품번호 : " + detail.getProduct().getNum()
+                logger.info("상품번호 : " + detail.getProduct().getPNum()
                         + ", 상품수량" + detail.getProdCnt());
             });
 
@@ -99,7 +100,7 @@ public class OrderRepoTest {
     @Test
     @Transactional
     void testDeleteByNum() {
-        Optional<Order> o = or.findById(2L); //optA라는 엔티티객체와 매핑
+        Optional<Order> o = or.findById(1L); //optA라는 엔티티객체와 매핑
         assertTrue(o.isPresent()); // 지우기전에 진짜 있는지 확인하기
         String userId = o.get().getUser().getId();
         assertEquals("id6", userId);

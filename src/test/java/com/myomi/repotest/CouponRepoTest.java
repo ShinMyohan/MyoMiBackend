@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
 class CouponRepoTest {

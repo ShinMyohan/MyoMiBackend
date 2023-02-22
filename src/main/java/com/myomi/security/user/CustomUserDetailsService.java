@@ -19,6 +19,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException { 
+//		Optional<com.myomi.user.entity.User> optU = userRepository.findById(userid);
+//		if(optU.isEmpty()) {
+//			return null;
+//		}
+//		com.myomi.user.entity.User user = optU.get()
+		
 		return userRepository.findById(userid)
 				.map(this::createUserDetails)
 				.orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));

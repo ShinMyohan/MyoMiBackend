@@ -1,11 +1,19 @@
 package com.myomi.cart.entity;
 
-import com.myomi.user.Product;
-import com.myomi.user.User;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import com.myomi.product.entity.Product;
+import com.myomi.user.entity.User;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter

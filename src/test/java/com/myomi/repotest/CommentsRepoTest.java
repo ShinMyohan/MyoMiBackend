@@ -15,7 +15,7 @@ import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
 class CommentsRepoTest {

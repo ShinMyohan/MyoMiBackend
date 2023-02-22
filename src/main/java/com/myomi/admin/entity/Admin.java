@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.myomi.chat.entity.ChatRoom;
 import com.myomi.notice.entity.Notice;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +38,6 @@ public class Admin {
 	@OneToMany(mappedBy = "admin")
 	private List<Notice> notices;
 	
-	@OneToMany(mappedBy = "admin")
-	private List<ChatRoom> rooms;
+//	@OneToMany(mappedBy = "admin")
+//	private List<ChatRoom> rooms;
 }

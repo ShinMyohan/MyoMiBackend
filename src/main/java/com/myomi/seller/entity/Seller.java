@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.myomi.follow.entity.Follow;
-import com.myomi.user.entity.Product;
+import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 
 import lombok.AllArgsConstructor;

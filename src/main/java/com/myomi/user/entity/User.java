@@ -30,20 +30,19 @@ import com.myomi.cart.entity.Cart;
 import com.myomi.comment.entity.Comment;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.follow.entity.Follow;
+import com.myomi.membership.entity.Membership;
 import com.myomi.order.entity.Order;
 import com.myomi.point.entity.Point;
 import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
-@Builder
+@Getter 
+@NoArgsConstructor
 @Entity
 @Table(name="users")
 //@DynamicInsert
@@ -51,15 +50,15 @@ import lombok.Setter;
 public class User implements UserDetails {
 	@Id
 	@NotNull
-	@Column(name = "id", updatable = false, unique = true)
+	@Column(name = "id", updatable = false, unique = true, nullable = false)
 	private String id;
 	
 	@NotNull
-	@Column(name = "pwd")
+	@Column(name = "pwd", nullable = false)
 	private String pwd;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
+//    @Builder.Default
     private List<String> roles = new ArrayList<>();
  
     @Override
@@ -103,10 +102,10 @@ public class User implements UserDetails {
         return true;
     }
 	
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 	
-	@Column(name = "tel")
+	@Column(name = "tel", nullable = false, unique = true)
 	private String tel;
 	
 	@Column(name = "email")
@@ -118,7 +117,7 @@ public class User implements UserDetails {
 	
 	
 	@Column(name = "created_date")
-//	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 //	@ColumnDefault(value = "SYSDATE")
 	private LocalDateTime createdDate;
 	
@@ -159,4 +158,32 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Coupon> coupons;
+	
+	@Builder
+	public User(String id, String pwd, int role, List<String> roles, String name, String tel, String email, 
+			String addr, LocalDateTime createdDate, Membership membership, Point point, Seller seller, 
+			List<Board> boards, List<Comment> comments, List<Review> reviews,
+			List<Order> orders, List<Qna> qnas, List<Follow> follows,
+			List<Cart> cart, List<Coupon> coupons) {
+		this.id = id;
+		this.pwd = pwd;
+		this.role = role;
+		this.roles = roles;
+		this.name = name;
+		this.tel = tel;
+		this.email = email;
+		this.addr = addr;
+		this.createdDate = createdDate;
+		this.membership = membership;
+		this.point = point;
+		this.seller = seller;
+		this.boards = boards;
+		this.comments = comments;
+		this.reviews = reviews;
+		this.orders = orders;
+		this.qnas = qnas;
+		this.follows = follows;
+		this.cart = cart;
+		this.coupons = coupons;
+	}
 }
