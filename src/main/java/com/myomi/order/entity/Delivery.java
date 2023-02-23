@@ -1,9 +1,6 @@
 package com.myomi.order.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -39,4 +36,14 @@ public class Delivery {
 
     @Column(name = "receive_date", nullable = false)
     private String receiveDate;
+
+    @Builder
+    Delivery(Order order, String name, String tel, String addr, String deliveryMsg, String receiveDate) {
+        this.order = order;
+        this.name = name;
+        this.tel = tel;
+        this.addr = addr;
+        this.deliveryMsg = deliveryMsg;
+        this.receiveDate = receiveDate;
+    }
 }

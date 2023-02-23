@@ -1,15 +1,12 @@
 package com.myomi.order.entity;
 
 import com.myomi.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -35,7 +32,7 @@ public class Order {
     private User user;
 
     @Column(name = "created_date", nullable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     private String msg;
 
@@ -46,10 +43,10 @@ public class Order {
     private Long usedPoint;
 
     @Column(name = "pay_created_date")
-    private Date payCreatedDate;
+    private LocalDateTime payCreatedDate;
 
     @Column(name = "canceled_date")
-    private Date canceledDate;
+    private LocalDateTime canceledDate;
 
     @Column(name = "total_price")
     private Long totalPrice;
@@ -63,4 +60,20 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Delivery delivery;
 
+    @Builder
+    public Order(User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
+                 LocalDateTime canceledDate, Long totalPrice, Long savePoint, List<OrderDetail> orderDetail,
+                 Delivery delivery) {
+        this.user = user;
+        this.createdDate = createdDate;
+        this.msg = msg;
+        this.couponNum = couponNum;
+        this.usedPoint = usedPoint;
+        this.payCreatedDate = payCreatedDate;
+        this.canceledDate = canceledDate;
+        this.totalPrice = totalPrice;
+        this.savePoint = savePoint;
+        this.orderDetail = orderDetail;
+        this.delivery = delivery;
+    }
 }

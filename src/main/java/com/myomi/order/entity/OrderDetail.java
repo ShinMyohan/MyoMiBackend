@@ -1,10 +1,7 @@
 package com.myomi.order.entity;
 
 import com.myomi.product.entity.Product;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -29,5 +26,12 @@ public class OrderDetail {
     private Product product;
 
     @Column(name = "prod_cnt", nullable = false)
-    private Long prodCnt;
+    private int prodCnt;
+
+    @Builder
+    public OrderDetail(Order order, Product product, int prodCnt) {
+        this.order = order;
+        this.product = product;
+        this.prodCnt = prodCnt;
+    }
 }
