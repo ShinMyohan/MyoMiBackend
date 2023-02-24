@@ -37,17 +37,20 @@ import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="users")
 //@DynamicInsert
 //@DynamicUpdate
-public class User implements UserDetails {
+public class User implements UserDetails
+//, Persistable<String> 
+{
 	@Id
 	@NotNull
 	@Column(name = "id", updatable = false, unique = true, nullable = false)
@@ -57,21 +60,36 @@ public class User implements UserDetails {
 	@Column(name = "pwd", nullable = false)
 	private String pwd;
 	
+	
 	@ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
     private List<String> roles = new ArrayList<>();
  
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
- 
-    @Column(name = "role")
+	
+//	@OneToOne(mappedBy = "roles")
+//	private UserRole role;
 //	@Enumerated(EnumType.STRING)
 	private int role;
+	
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+//    	List<String> roles = new ArrayList<>();
+//    	return roles.stream()
+//    			.map(SimpleGrantedAuthority::new)
+//    			.collect(Collectors.toList());
+    }
     
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//          List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();   
+//          authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//          return authorities;
+//    }
+ 
     @Override
     public String getUsername() {
         return id;
@@ -125,7 +143,11 @@ public class User implements UserDetails {
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date signoutDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	
+	@ManyToOne(
+			fetch = FetchType.LAZY, 
+			cascade = CascadeType.ALL)
+//	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "membership_num")
 	private Membership membership;
 	
@@ -135,36 +157,45 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
 	private Seller seller;
 	
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Board> boards;
+	
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Comment> comments;
 
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Review> reviews;
+	
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Order> orders;
 	
+	
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Qna> qnas;
+	
 	
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Follow> follows;
 	
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
+	
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Coupon> coupons;
 	
 	@Builder
-	public User(String id, String pwd, int role, List<String> roles, String name, String tel, String email, 
-			String addr, LocalDateTime createdDate, Membership membership, Point point, Seller seller, 
-			List<Board> boards, List<Comment> comments, List<Review> reviews,
-			List<Order> orders, List<Qna> qnas, List<Follow> follows,
-			List<Cart> cart, List<Coupon> coupons) {
+	public User(String id, String pwd,
+			int role,
+			List<String> roles,
+			String name, String tel, String email, 
+			String addr, LocalDateTime createdDate, Membership membership
+			) {
 		this.id = id;
 		this.pwd = pwd;
 		this.role = role;
@@ -175,15 +206,14 @@ public class User implements UserDetails {
 		this.addr = addr;
 		this.createdDate = createdDate;
 		this.membership = membership;
-		this.point = point;
-		this.seller = seller;
-		this.boards = boards;
-		this.comments = comments;
-		this.reviews = reviews;
-		this.orders = orders;
-		this.qnas = qnas;
-		this.follows = follows;
-		this.cart = cart;
-		this.coupons = coupons;
 	}
+	
+	
+//	public User(String pwd) {
+//		this.pwd = "{noop}" + pwd;
+//	}
+//	@Override
+//	public boolean isNew() {
+//		return true;
+//	}
 }

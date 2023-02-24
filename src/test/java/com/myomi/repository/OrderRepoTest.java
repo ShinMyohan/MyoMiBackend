@@ -22,6 +22,7 @@ import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
 public class OrderRepoTest {
@@ -29,6 +30,9 @@ public class OrderRepoTest {
 
     @Autowired
     private OrderRepository or;
+    
+    @Autowired
+    private UserRepository ur;
 
     @Test // 주문 추가
     @DisplayName("주문 추가")
@@ -37,9 +41,10 @@ public class OrderRepoTest {
         Order o = new Order();
         o.setONum(4L);
 
-        User u = new User();
-        u.setId("id7");
-        o.setUser(u);
+//        User u = new User();
+//        u.setId("id7");
+        Optional<User> u = ur.findById("id2");
+        o.setUser(u.get());
 
         Date date = new Date();
         o.setCreatedDate(date);

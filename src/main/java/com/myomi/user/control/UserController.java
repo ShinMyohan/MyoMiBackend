@@ -1,15 +1,18 @@
 package com.myomi.user.control;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myomi.jwt.dto.TokenDto;
+import com.myomi.user.dto.UserDto;
 import com.myomi.user.dto.UserLoginRequestDto;
 import com.myomi.user.dto.UserSignUpReqeustDto;
 import com.myomi.user.service.UserService;
@@ -22,10 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
+	@Autowired
 	private final UserService userService;
 	
-	private final BCryptPasswordEncoder passwordEncoder;
-	 
     @PostMapping("/login")
     public TokenDto login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
         String userId = userLoginRequestDto.getUserId();
@@ -33,7 +35,13 @@ public class UserController {
         TokenDto tokenDto = userService.login(userId, password); //포스트맨에서 이걸로 넣어야함
         return tokenDto;
     }
-
+    
+    @PostMapping("/test")
+    public String test() {
+    	return "sucess";
+    }
+    
+    //22일 저녁 추가
     @PostMapping("/signup")
     public String signup(@RequestBody UserSignUpReqeustDto userSignUpReqeustDto) {
     	return userService.signup(userSignUpReqeustDto);
@@ -44,8 +52,13 @@ public class UserController {
     	return ResponseEntity.ok(userService.checkTelExists(tel));
     }
     
-    @PostMapping("/test")
-    public String test() {
-    	return "sucess";
+    @GetMapping("/info")
+    public ResponseEntity<UserDto> userinfo(Authentication user) {
+    	return userService.getUserInfo(user);
+    }
+    
+    @PutMapping("/modify")
+    public ResponseEntity<UserDto> userUpdate(UserDto userDto, Authentication user) {
+    	return userService.updateUserInfo(userDto, user);
     }
 }

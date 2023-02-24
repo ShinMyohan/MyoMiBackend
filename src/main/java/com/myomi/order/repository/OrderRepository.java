@@ -8,4 +8,5 @@ import com.myomi.order.entity.Order;
 
 public interface OrderRepository extends CrudRepository<Order, Long> {
     public List<Order> findAllByUserId(String userId);
+    
 }
