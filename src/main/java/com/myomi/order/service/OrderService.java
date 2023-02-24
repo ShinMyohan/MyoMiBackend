@@ -1,22 +1,24 @@
 package com.myomi.order.service;
 
+import com.myomi.order.dto.DeliveryDto;
 import com.myomi.order.dto.OrderDto;
 import com.myomi.order.entity.Delivery;
 import com.myomi.order.entity.Order;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.repository.OrderRepository;
+import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
@@ -33,56 +35,46 @@ public class OrderService {
     */
 
     // 주문서 작성
-    public void addOrder(Authentication user, OrderDto requestDto) {
+    public void addOrder(Authentication user, OrderDto orderDto) {
         User u = userRepository.findById(user.getName())
                 .orElseThrow(() -> new IllegalArgumentException("로그인한 사용자만 이용 가능합니다."));
 
-        Long savePoint = (long)(requestDto.getTotalPrice() * 0.01);
+        Order order = orderDto.toEntity(u, orderDto);
+//        orderDto.getOrder().registerDelivery(orderDto.getDelivery());
+//        Order or = orderDto.getOrder();
+//        orderDto.getDelivery().getOrder().registerDelivery(deli);
+        orderDto.getDelivery().registerOrder(order); // orderDto.getOrder()은 안되고 order entity를 넣으니까 됨..
 
-        Order order = Order.builder()
-                .user(u)
-                .createdDate(LocalDateTime.now())
-                .msg(requestDto.getMsg())
-                .couponNum(requestDto.getCouponNum())
-                .usedPoint(requestDto.getUsedPoint())
-                .savePoint(savePoint) // TODO: 그냥 받아와도 될까?
-                .totalPrice(requestDto.getTotalPrice()) // TODO: 그냥 받아와도 될까?2
-
-                .build();
-
-        List<OrderDetail> odList = addOrderDetail(order, requestDto);
-        Delivery delivery = addDelivery(order, requestDto);
-
-        Order.builder().orderDetail(odList).delivery(delivery).build();
-        orderRepository.save(order);
-
-    }
-
-    // 주문 상세 작성
-    protected List<OrderDetail> addOrderDetail(Order order, OrderDto requestDto) {
-        List<OrderDetail> list = new ArrayList<>();
-        for (int i = 0; i <= requestDto.getProducts().size() - 1; i++) {
-            OrderDetail od = OrderDetail.builder()
-                    .order(order)
-                    .product(requestDto.getProducts().get(i))
-                    .prodCnt(requestDto.getProdCnt())
-                    .build();
-            list.add(od);
+        int size = orderDto.getOrderDetail().size() - 1;
+        for (int i = 0; i <= size; i++) {
+            orderDto.getOrderDetail().get(i).registerOrder(order);
+//            Product p = orderDto.getOrderDetail().get(i).getProduct();
+//            orderDto.getOrderDetail().get(i).registerOrder(p);
         }
-        return list;
+
+        List<OrderDetail> orderDetailList = orderDto.getOrderDetail();
+
+        for (int i = 0; i <= size; i++) {
+            Product prod = Product.builder().pNum(orderDetailList.get(i).getProduct().getPNum()).build();
+            OrderDetail od2 = OrderDetail.builder()
+//                    .order(orderDetail.getOrder())
+                    .product(prod)
+                    .prodCnt(orderDetailList.get(i).getProdCnt())
+                    .build();
+        }
+
+        DeliveryDto delDto = new DeliveryDto();
+        Delivery delivery = delDto.createDelivery(orderDto);
+
+//        System.out.println("order : " + order.toString());
+//        System.out.println("orderdetail : " + orderDetailList.get(0).toString());
+
+//        order.addOrderDetails(odList);
+//        order.addDelivery(delivery);
+
+        orderRepository.save(order);
     }
 
-    // 배송정보 작성
-    protected Delivery addDelivery(Order order, OrderDto requestDto) {
-        return Delivery.builder()
-                .order(order)
-                .name(requestDto.getName())
-                .tel(requestDto.getTel())
-                .addr(requestDto.getAddr())
-                .deliveryMsg(requestDto.getDeliveryMsg())
-                .receiveDate(requestDto.getReceiveDate())
-                .build();
-    }
 
     public List<OrderDto> findOrderListByUserId(Authentication user) {
         return orderRepository.findAllByUserId(user.getName());

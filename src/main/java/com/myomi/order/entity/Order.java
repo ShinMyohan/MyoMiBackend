@@ -7,12 +7,11 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Setter
 @Getter
 @NoArgsConstructor
-@ToString
 @DynamicInsert
 @DynamicUpdate
 @Entity
@@ -55,15 +54,16 @@ public class Order {
     private Long savePoint;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    private List<OrderDetail> orderDetail; // 양방향
+    private List<OrderDetail> orderDetails = new ArrayList<>(); // 양방향
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Delivery delivery;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
+    private Delivery delivery = new Delivery();
 
     @Builder
-    public Order(User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
-                 LocalDateTime canceledDate, Long totalPrice, Long savePoint, List<OrderDetail> orderDetail,
+    public Order(Long oNum, User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
+                 LocalDateTime canceledDate, Long totalPrice, Long savePoint, List<OrderDetail> orderDetails,
                  Delivery delivery) {
+        this.oNum = oNum;
         this.user = user;
         this.createdDate = createdDate;
         this.msg = msg;
@@ -73,7 +73,26 @@ public class Order {
         this.canceledDate = canceledDate;
         this.totalPrice = totalPrice;
         this.savePoint = savePoint;
-        this.orderDetail = orderDetail;
+//        OrderDetail.builder().order(this).build();
+//        Delivery.builder().order(this).build();
+//        this.orderDetails = orderDetails;
         this.delivery = delivery;
+    }
+
+    // 연관관계 편의 메소드
+    public void addOrderDetail(OrderDetail orderDetail) {
+        this.orderDetails.add(orderDetail);
+//        if (orderDetail.getOrder() != this) {
+//            orderDetail.setOrder(this);
+//        }
+    }
+    public void addOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+    public void addDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+    public void registerDelivery(Delivery delivery) {
+        delivery.registerOrder(this);
     }
 }

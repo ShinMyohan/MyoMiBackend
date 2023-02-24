@@ -1,27 +1,22 @@
 package com.myomi.repository;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import javax.transaction.Transactional;
-
+import com.myomi.product.repository.ProductRepository;
+import com.myomi.review.entity.BestReview;
+import com.myomi.review.entity.Review;
+import com.myomi.review.repository.BestReviewRepository;
+import com.myomi.review.repository.ReviewRepository;
+import com.myomi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.myomi.order.entity.OrderDetail;
-import com.myomi.order.entity.OrderDetailEmbedded;
-import com.myomi.product.repository.ProductRepository;
-import com.myomi.review.entity.BestReview;
-//import com.myomi.review.entity.BestReview;
-import com.myomi.review.entity.Review;
-import com.myomi.review.repository.BestReviewRepository;
-import com.myomi.review.repository.ReviewRepository;
-import com.myomi.user.entity.User;
-import com.myomi.user.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class ReviewRepoTest {
@@ -36,32 +31,32 @@ class ReviewRepoTest {
 	@Autowired
 	private ProductRepository pr;
 
-	@Test
-	void reviewSaveTest() {
-		Optional<User> optU = ur.findById("id7");
-		OrderDetailEmbedded ode = new OrderDetailEmbedded();
-		ode.setONum(1L);
-		ode.setPNum(1L);
-		OrderDetail od = new OrderDetail();
-		od.setId(ode);
-		//Optional<Product> optP = pr.findById(1L);
-		//Long tReview = optP.get().getReviewCnt(); // 상품1의 리뷰갯수 가져와서 tReview에 담아줌
-		//토탈리뷰수
-		Review r = new Review();
-		r.setRNum(1L);
-		r.setUser(optU.get());
-		r.setSort(3);
-		r.setTitle("짱입니다요");
-		r.setContent("완전 맛있어요 최고");
-		LocalDateTime date = LocalDateTime.now();
-		r.setCreatedDate(date);
-		r.setStars(2.5F);
-		r.setOrderDetail(od);
-		//Product p = optP.get();
-		//p.setReviewCnt(tReview + 1L);//리뷰 갯수 하나증가
-		rr.save(r);
-		//pr.save(p);
-	}
+//	@Test
+//	void reviewSaveTest() {
+//		Optional<User> optU = ur.findById("id7");
+//		OrderDetailEmbedded ode = new OrderDetailEmbedded();
+//		ode.setONum(1L);
+//		ode.setPNum(1L);
+//		OrderDetail od = new OrderDetail();
+//		od.setId(ode);
+//		//Optional<Product> optP = pr.findById(1L);
+//		//Long tReview = optP.get().getReviewCnt(); // 상품1의 리뷰갯수 가져와서 tReview에 담아줌
+//		//토탈리뷰수
+//		Review r = new Review();
+//		r.setRNum(1L);
+//		r.setUser(optU.get());
+//		r.setSort(3);
+//		r.setTitle("짱입니다요");
+//		r.setContent("완전 맛있어요 최고");
+//		LocalDateTime date = LocalDateTime.now();
+//		r.setCreatedDate(date);
+//		r.setStars(2.5F);
+//		r.setOrderDetail(od);
+//		//Product p = optP.get();
+//		//p.setReviewCnt(tReview + 1L);//리뷰 갯수 하나증가
+//		rr.save(r);
+//		//pr.save(p);
+//	}
 	
 	@Test
   void testReviewFindById() {

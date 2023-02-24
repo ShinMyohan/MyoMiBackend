@@ -6,10 +6,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Setter
 @Getter
 @NoArgsConstructor
-@ToString
 @DynamicInsert
 @DynamicUpdate
 @Entity
@@ -19,8 +17,10 @@ public class Delivery {
     private Long oNum;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_num", insertable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="order_num", referencedColumnName = "num")
+//    @PrimaryKeyJoinColumn(name = "num", referencedColumnName = "order_num")
+//    @PrimaryKeyJoinColumn(name="order_num", referencedColumnName = "num")
     private Order order;
 
     @Column(name = "name", nullable = false)
@@ -39,11 +39,17 @@ public class Delivery {
 
     @Builder
     Delivery(Order order, String name, String tel, String addr, String deliveryMsg, String receiveDate) {
+//        this.oNum = oNum;
         this.order = order;
         this.name = name;
         this.tel = tel;
         this.addr = addr;
         this.deliveryMsg = deliveryMsg;
         this.receiveDate = receiveDate;
+    }
+
+    public void registerOrder(Order order) {
+        this.order = order;
+//        order.registerDelivery(this);
     }
 }
