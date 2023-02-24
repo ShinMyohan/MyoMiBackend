@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myomi.board.dto.BoardReadResponseDto.BoardReadResponseDtoBuilder;
 import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
@@ -47,8 +48,8 @@ public class Board {
                    generator = "BOARD_SEQ_GENERATOR")
    private Long bNum;
    
-   @JsonIgnore
-   @ManyToOne //(fetch = FetchType.LAZY)
+  
+   @ManyToOne (fetch = FetchType.LAZY)
    @JoinColumn(name="user_id", nullable = false,
                                updatable =  false)
    private User user;
@@ -92,11 +93,11 @@ public class Board {
 	//this.comments = comments;
 }
     
+    //더티체킹 
     public void update(String category, String title, String content) {
 		this.category = category;
 		this.title = title;
 		this.content = content;
-   
     }
     
     @PrePersist
@@ -105,5 +106,6 @@ public class Board {
         //hits가 null값이면 자동으로 0으로 셋팅 (=defaultColumn)
         //defaultColumn 사용하면 DynamicInsert없이 셋팅이 안됨 
     }
+
    
 }

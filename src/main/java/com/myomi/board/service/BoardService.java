@@ -1,8 +1,5 @@
 package com.myomi.board.service;
 
-
-//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +8,19 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.myomi.board.dto.BoardAddRequestDto;
-import com.myomi.board.dto.BoardEditRequestDto;
 import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
+import com.myomi.board.dto.BoardReadResponseDto.BoardReadResponseDtoBuilder;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
+import com.myomi.comment.dto.CommentDto;
+import com.myomi.comment.entity.Comment;
+import com.myomi.comment.repository.CommentRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 
@@ -31,20 +33,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 public class BoardService {
-	//   @Autowired 
-	//   private BoardRepository br;
+
 	private final BoardRepository br;
 	private final UserRepository ur;
+	private final CommentRepository cr;
 
-	@Transactional
+
+	//글 리스트 출력 
 	public List<BoardReadResponseDto> findBoard(Pageable pageable) {
 		//  Sort sort = sort.by(Direction.DESC,"createdDate");
-		List<Board> list = br.findAll(pageable);
+		List <Board> list = br.findAll(pageable);
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
 					.bNum(board.getBNum())
-				  //  .user(board.getUser())
+					.user(board.getUser())
 					.category(board.getCategory())
 					.title(board.getTitle())
 					.content(board.getContent())
@@ -57,45 +60,171 @@ public class BoardService {
 
 	}
 
-	
-	@Transactional
-	public BoardDetailResponseDto detailBoard(Long bNum) {
-		Board board = br.findById(bNum).get();
-		return new BoardDetailResponseDto(board);
-	}
-	
+	//제목으로 검색 
+	public List<BoardReadResponseDto> findByTitle(String keyword, Pageable pageable) {
+		List<Board> list = br.findByTitleContaining(keyword, pageable);
+		List <BoardReadResponseDto> boardList = new ArrayList<>();
+		for (Board board : list) {
+			BoardReadResponseDto dto = BoardReadResponseDto.builder()
+					.bNum(board.getBNum())
+					.user(board.getUser())
+					.category(board.getCategory())
+					.title(board.getTitle())
+					.content(board.getContent())
+					.createdDate(board.getCreatedDate())
+					.hits(board.getHits())
+					.build();
+			boardList.add(dto);
+		}
+		return boardList;
 
+	}
+
+	//제목, 카테고리로 검색 
+	public List<BoardReadResponseDto> findByCategoryAndTitle(String category, String keyword, Pageable pageable) {
+		List<Board> list = br.findByCategoryAndTitleContaining(category, keyword, pageable);
+		List <BoardReadResponseDto> boardList = new ArrayList<>();
+		for (Board board : list) {
+			BoardReadResponseDto dto = BoardReadResponseDto.builder()
+					.bNum(board.getBNum())
+					.user(board.getUser())
+					.category(board.getCategory())
+					.title(board.getTitle())
+					.content(board.getContent())
+					.createdDate(board.getCreatedDate())
+					.hits(board.getHits())
+					.build();
+			boardList.add(dto);
+		}
+		return boardList;
+
+	}
+
+	//글 상세보기 
 	@Transactional
-	public void addBoard (BoardAddRequestDto addDto) {
-		//String userId = addDto.getUser().getId();
-		LocalDateTime date = LocalDateTime.now();
-		Optional<User> optU = ur.findById("id1");
-        Board board = new Board();
-		board = Board.builder()
-				.user(optU.get())
-				.category(addDto.getCategory())
-				.title(addDto.getTitle())
-				.content(addDto.getContent())
-				.createdDate(date)
-				.hits(addDto.getHits())
+	public BoardReadResponseDto detailBoard(Long bNum) {
+		Board board = br.findById(bNum).get();
+		BoardReadResponseDto dto = BoardReadResponseDto.builder()
+				.bNum(board.getBNum())
+				.user(board.getUser())
+				.category(board.getCategory())
+				.title(board.getTitle())
+				.content(board.getContent())
+				.createdDate(board.getCreatedDate())
+				.hits(board.getHits())
+				.comments(board.getComments())
 				.build();
 
+		return dto;
+	}
+
+	//글 작성 
+	@Transactional
+	public ResponseEntity<BoardReadResponseDto> addBoard (BoardReadResponseDto addDto, Authentication user) {
+
+		String username = user.getName();
+		Optional<User> optU = ur.findById(username);
+		Board board = addDto.toEntity(optU.get());
 		br.save(board);
-
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+
+
+	//글 수정 
 	@Transactional
-	public BoardDetailResponseDto modifyBoard(BoardEditRequestDto editDto, Long bNum) {
+	public BoardDetailResponseDto modifyBoard(BoardReadResponseDto editDto, Long bNum, Authentication user) {
+		String username = user.getName();
 		Board board = br.findById(bNum).get();
-		board.update(editDto.getCategory(), editDto.getContent(), editDto.getTitle());
+		if (board.getUser().getId().equals(username)) {
+			board.update(editDto.getCategory(), editDto.getContent(), editDto.getTitle());
+		}else {
+			log.info("작성자만 수정 가능합니다.");
+		}
 		return new BoardDetailResponseDto(board);
-
 	}
-	
+
+
+	//글 삭제 
 	@Transactional
-	public void deleteBoard(Long bNum) {
+	public void deleteBoard(Long bNum, Authentication user) {
+		String username = user.getName();
 		Board board = br.findById(bNum).get();
-		br.delete(board);
+		if (board.getUser().getId().equals(username)) {
+			br.delete(board);
+		}else {
+			log.info("작성자만 삭제 가능합니다.");
+		}
 	}
 
+	//마이페이지에서 내가 작성한 글 보기 
+	//	@Transactional
+	//	public  List<BoardReadResponseDto> findBoardListByUser (Principal principal, Pageable pageable) {
+	//		//String username = user.getName();
+	//		String user = principal.getName();
+	//		List<Board> list = br.findByUserName(user);
+	//		System.out.println(user);
+	//		List <BoardReadResponseDto> boardList = new ArrayList<>();
+	//		for (Board board : list) {
+	//			BoardReadResponseDto dto = BoardReadResponseDto.builder()
+	//				//	.bNum(board.getBNum())
+	//				//	.user(board.getUser())
+	//					.category(board.getCategory())
+	//					.title(board.getTitle())
+	//				//	.content(board.getContent())
+	//					.createdDate(board.getCreatedDate())
+	//					.hits(board.getHits())
+	//					.build();
+	//			boardList.add(dto);
+	//		}
+	//		return boardList;
+	//
+	//	}
+
+
+	//-------------------댓글--------------------
+
+	//댓글 작성 
+	@Transactional
+	public ResponseEntity<CommentDto> addComment(CommentDto cDto, Authentication user, Long bNum){
+		LocalDateTime date = LocalDateTime.now();
+		String username = user.getName();
+		Optional<Board> optB = br.findById(bNum);
+		Optional<User> optU = ur.findById(username);
+		Comment comment = cDto.toEntity(optU.get(), optB.get());
+		cr.save(comment);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	//댓글 수정
+	@Transactional
+	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long bNum, Long cNum){
+		String username = user.getName();
+		Optional<Board> optB = br.findById(bNum);
+		Optional<Comment> optC = cr.findById(cNum);
+		Comment comment = optC.get();
+		if (comment.getUser().getId().equals(username)) {
+			comment.update(cDto.getContent());
+		}else {
+			log.info("작성자만 수정 가능합니다.");
+		}
+		return cDto;
+	}
+
+	//댓글 삭제
+	@Transactional
+	public void deleteComment (Authentication user, Long bNum, Long cNum) {
+		String username = user.getName();
+		Optional<Board> optB = br.findById(bNum);
+		Optional<Comment> optC = cr.findById(cNum);
+		Comment comment = optC.get();
+		if (comment.getUser().getId().equals(username)) {
+			cr.delete(comment);
+		}else {
+			log.info("작성자만 삭제 가능합니다.");
+		}
+	}
 }
+
+
+

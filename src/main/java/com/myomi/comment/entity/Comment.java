@@ -13,26 +13,24 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
 import com.myomi.board.entity.Board;
 import com.myomi.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
+@Getter 
+@NoArgsConstructor 
 @Entity
 @Table(name="comments")
 @SequenceGenerator(
 name = "COMMENTS_SEQ_GENERATOR",
 sequenceName = "COMMENTS_SEQ", 
 initialValue = 1, allocationSize = 1 )
-@DynamicInsert
-@DynamicUpdate
+//@DynamicInsert
+//@DynamicUpdate
 public class Comment {
 	@Id
 	@Column(name = "comment_num",  updatable =  false)
@@ -62,4 +60,20 @@ public class Comment {
 	
 	@Column(name = "created_date", updatable =  false)
 	 private LocalDateTime createdDate;
+	
+	@Builder
+	public Comment(Long cNum, Board board, User user, @NotNull String content, int parent, LocalDateTime createdDate) {
+		this.cNum = cNum;
+		this.board = board;
+		this.user = user;
+		this.content = content;
+		this.parent = parent;
+		this.createdDate = createdDate;
+	}
+	
+	 public void update(String content) {
+		 this.content = content;
+	 }
+	
+	
 }
