@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.dto.BoardReadResponseDto.BoardReadResponseDtoBuilder;
 import com.myomi.comment.entity.Comment;
@@ -67,6 +68,7 @@ public class Board {
    private String content;
    
    @Column(name = "created_date", updatable =  false)
+   @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
    private LocalDateTime createdDate;
    
    @Column(name = "hits", updatable =  false)

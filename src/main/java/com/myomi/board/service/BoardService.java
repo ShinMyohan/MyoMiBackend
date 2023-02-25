@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
-import com.myomi.board.dto.BoardReadResponseDto.BoardReadResponseDtoBuilder;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.dto.CommentDto;
@@ -81,8 +80,8 @@ public class BoardService {
 	}
 
 	//제목, 카테고리로 검색 
-	public List<BoardReadResponseDto> findByCategoryAndTitle(String category, String keyword, Pageable pageable) {
-		List<Board> list = br.findByCategoryAndTitleContaining(category, keyword, pageable);
+	public List<BoardReadResponseDto> findByCategoryAndTitle(String category, String title, Pageable pageable) {
+		List<Board> list = br.findByCategoryContainingAndTitleContaining(category, title, pageable);
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
@@ -103,7 +102,7 @@ public class BoardService {
 	//글 상세보기 
 	@Transactional
 	public BoardReadResponseDto detailBoard(Long bNum) {
-		Board board = br.findById(bNum).get();
+		Board board = br.findBoardById(bNum);
 		BoardReadResponseDto dto = BoardReadResponseDto.builder()
 				.bNum(board.getBNum())
 				.user(board.getUser())
@@ -158,28 +157,24 @@ public class BoardService {
 	}
 
 	//마이페이지에서 내가 작성한 글 보기 
-	//	@Transactional
-	//	public  List<BoardReadResponseDto> findBoardListByUser (Principal principal, Pageable pageable) {
-	//		//String username = user.getName();
-	//		String user = principal.getName();
-	//		List<Board> list = br.findByUserName(user);
-	//		System.out.println(user);
-	//		List <BoardReadResponseDto> boardList = new ArrayList<>();
-	//		for (Board board : list) {
-	//			BoardReadResponseDto dto = BoardReadResponseDto.builder()
-	//				//	.bNum(board.getBNum())
-	//				//	.user(board.getUser())
-	//					.category(board.getCategory())
-	//					.title(board.getTitle())
-	//				//	.content(board.getContent())
-	//					.createdDate(board.getCreatedDate())
-	//					.hits(board.getHits())
-	//					.build();
-	//			boardList.add(dto);
-	//		}
-	//		return boardList;
-	//
-	//	}
+		@Transactional
+		public  List<BoardReadResponseDto> findBoardListByUser (Authentication user,
+				Pageable pageable) {
+			String username = user.getName();
+			List<Board> list = br.findAllByUser(username, pageable);
+			List <BoardReadResponseDto> boardList = new ArrayList<>();
+			for (Board board : list) {
+				BoardReadResponseDto dto = BoardReadResponseDto.builder()
+						.category(board.getCategory())
+						.title(board.getTitle())
+						.createdDate(board.getCreatedDate())
+						.hits(board.getHits())
+						.build();
+				boardList.add(dto);
+			}
+			return boardList;
+	
+		}
 
 
 	//-------------------댓글--------------------
