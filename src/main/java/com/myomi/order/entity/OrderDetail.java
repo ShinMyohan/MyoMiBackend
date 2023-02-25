@@ -14,7 +14,7 @@ public class OrderDetail {
     private OrderDetailEmbedded id = new OrderDetailEmbedded();
 
     @MapsId("oNum")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)// , cascade = CascadeType.ALL)  // TODO: cascade지우고 추가해보기
     @JoinColumn(name = "order_num", referencedColumnName = "num")
     private Order order;
 
@@ -27,7 +27,7 @@ public class OrderDetail {
     private int prodCnt;
 
     @Builder
-    public OrderDetail(Order order, Product product, int prodCnt) {
+    private OrderDetail(Order order, Product product, int prodCnt) {
         this.product = product;
         this.prodCnt = prodCnt;
     }

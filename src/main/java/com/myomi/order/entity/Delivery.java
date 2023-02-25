@@ -36,8 +36,8 @@ public class Delivery {
     private String receiveDate;
 
     @Builder
-    Delivery(Order order, String name, String tel, String addr, String deliveryMsg, String receiveDate) {
-        this.order = order;
+    private Delivery(Order order, String name, String tel, String addr, String deliveryMsg, String receiveDate) {
+        order.getDelivery().registerOrder(order);
         this.name = name;
         this.tel = tel;
         this.addr = addr;

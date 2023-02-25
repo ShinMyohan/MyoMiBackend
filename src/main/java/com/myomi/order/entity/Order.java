@@ -24,9 +24,9 @@ public class Order {
             strategy = GenerationType.SEQUENCE, generator = "ORDERS_SEQ_GENERATOR"
     )
     @Column(name = "num")
-    private Long oNum;
+    private Long orderNum;
 
-    @ManyToOne // 양방향
+    @ManyToOne(fetch = FetchType.LAZY) // 양방향
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -60,10 +60,10 @@ public class Order {
     private Delivery delivery = new Delivery();
 
     @Builder
-    public Order(Long oNum, User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
+    public Order(Long orderNum, User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
                  LocalDateTime canceledDate, Long totalPrice, Long savePoint, List<OrderDetail> orderDetails,
                  Delivery delivery) {
-        this.oNum = oNum;
+        this.orderNum = orderNum;
         this.user = user;
         this.createdDate = createdDate;
         this.msg = msg;

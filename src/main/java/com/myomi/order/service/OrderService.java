@@ -1,10 +1,8 @@
 package com.myomi.order.service;
 
-import com.myomi.order.dto.DeliveryDto;
 import com.myomi.order.dto.OrderDetailDto;
 import com.myomi.order.dto.OrderDto;
 import com.myomi.order.entity.Order;
-import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
@@ -42,28 +40,40 @@ public class OrderService {
         Order order = orderDto.toEntity(u, orderDto);
 
         // 주문 상세 등록
-        List<OrderDetail> orderDetailList = orderDto.getOrderDetail();
-        OrderDetailDto orderDetailDto = new OrderDetailDto();
+        List<OrderDetailDto> orderDetailList = orderDto.getOrderDetails();
+//        OrderDetailDto orderDetailDto = new OrderDetailDto();
 
-        for (OrderDetail orderDetail : orderDetailList) {
+//        for (OrderDetail orderDetail : orderDetailList) {
+//            // 연관관계 등록
+//            orderDetail.registerOrder(order);
+//            orderDetailDto.toEntity(orderDetail);
+//        }
+        for (OrderDetailDto orderDetailDto : orderDetailList) {
             // 연관관계 등록
-            orderDetail.registerOrder(order);
-            orderDetailDto.createOrderDetail(orderDetail);
+            orderDetailDto.toEntity(orderDetailDto).registerOrder(order);
+//        }
+
+            // 배송 정보 등록
+            // 연관관계 등록
+//        orderDto.getDelivery().registerOrder(order);
+//        DeliveryDto delDto = new DeliveryDto();
+//        delDto.toEntity(orderDto);
+            orderDto.getDelivery().toEntity(orderDto.getDelivery(), order);
+
+            orderRepository.save(order);
+        }
+    }
+
+        // 회원 정보로 주문 목록 확인
+        public List<OrderDto> findOrderListByUserId (Authentication user){
+            return orderRepository.findAllByUserId(user.getName());
         }
 
-        // 배송 정보 등록
-        // 연관관계 등록
-        orderDto.getDelivery().registerOrder(order);
-        DeliveryDto delDto = new DeliveryDto();
-        delDto.createDelivery(orderDto);
+        // 회원 정보로 주문 상세 조회
+        public OrderDto findOrderByUserId (Authentication user, Long num){
+            Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num);
+            OrderDto orderDto = new OrderDto();
+                return orderDto.toDto(user.getName(), order);
 
-        orderRepository.save(order);
+        }
     }
-
-    // 회원 정보로 주문 목록 확인
-    public List<OrderDto> findOrderListByUserId(Authentication user) {
-        return orderRepository.findAllByUserId(user.getName());
-    }
-
-    // 회원 정보로 주문 상세 조회
-}
