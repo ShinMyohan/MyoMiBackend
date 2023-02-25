@@ -73,10 +73,7 @@ public class Order {
         this.canceledDate = canceledDate;
         this.totalPrice = totalPrice;
         this.savePoint = savePoint;
-//        OrderDetail.builder().order(this).build();
-//        Delivery.builder().order(this).build();
-//        this.orderDetails = orderDetails;
-        this.delivery = delivery;
+        this.delivery = delivery; // 필수
     }
 
     // 연관관계 편의 메소드

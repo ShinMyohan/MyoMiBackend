@@ -19,8 +19,6 @@ public class Delivery {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="order_num", referencedColumnName = "num")
-//    @PrimaryKeyJoinColumn(name = "num", referencedColumnName = "order_num")
-//    @PrimaryKeyJoinColumn(name="order_num", referencedColumnName = "num")
     private Order order;
 
     @Column(name = "name", nullable = false)
@@ -39,7 +37,6 @@ public class Delivery {
 
     @Builder
     Delivery(Order order, String name, String tel, String addr, String deliveryMsg, String receiveDate) {
-//        this.oNum = oNum;
         this.order = order;
         this.name = name;
         this.tel = tel;
@@ -50,6 +47,5 @@ public class Delivery {
 
     public void registerOrder(Order order) {
         this.order = order;
-//        order.registerDelivery(this);
     }
 }

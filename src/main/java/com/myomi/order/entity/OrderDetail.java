@@ -16,7 +16,6 @@ public class OrderDetail {
     @MapsId("oNum")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_num", referencedColumnName = "num")
-//    @org.hibernate.annotations.Generated(GenerationTime.INSERT)
     private Order order;
 
     @MapsId("pNum") // 복합키
@@ -29,7 +28,6 @@ public class OrderDetail {
 
     @Builder
     public OrderDetail(Order order, Product product, int prodCnt) {
-        this.order = order;
         this.product = product;
         this.prodCnt = prodCnt;
     }

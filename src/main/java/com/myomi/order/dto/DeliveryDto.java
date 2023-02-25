@@ -16,9 +16,7 @@ public class DeliveryDto {
     private String receiveDate;
 
     public Delivery createDelivery(OrderDto orderDto) {
-//        delivery.registerOrder(o);
         return Delivery.builder()
-//                .order(Order.builder().order(orderDto.getOrder()).build())
                 .name(orderDto.getDelivery().getName())
                 .tel(orderDto.getDelivery().getTel())
                 .addr(orderDto.getDelivery().getAddr())
