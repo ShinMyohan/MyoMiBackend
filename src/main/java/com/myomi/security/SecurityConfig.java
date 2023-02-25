@@ -27,29 +27,10 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	private final JwtTokenProvider jwtTokenProvider;
 	
-//	@Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        UserDetails user = org.springframework.security.core.userdetails.User.withUsername("spring")
-//            .password("{noop}secret")
-//            .roles("USER")
-//            .build();
-//        return new InMemoryUserDetailsManager(user);
-//    }
-	
-	// Spring security룰을 무시하게 하는 url규칙
-//	@Bean
-//	@Override
-//    public void configure(WebSecurity web) {
-//        web.ignoring()
-//                .antMatchers("/favicon.ico")
-//                .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**");
-////                .antMatchers("/resources/**")
-////                .antMatchers("/css/**")
-////                .antMatchers("/vendor/**")
-////                .antMatchers("/js/**")
-////                .antMatchers("/favicon*/**")
-////                .antMatchers("/img/**")
-//    }
+	@Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 	
 	/**
 	 * httpBasic().disable().csrf().disable(): rest api이므로 basic auth 및 csrf 보안을 사용하지 않는다는 설정
@@ -63,14 +44,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable() 
+                .httpBasic().disable()
                 .csrf().disable()
-                
+                .cors()
+                .and()
+//                .formLogin().disable()
                 // 시큐리티는 기본적으로 세션을 사용
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/", "/**").permitAll()
                 .antMatchers("/health/**",
                         "/v1/user/**",
                         "/swagger-ui.html",
@@ -88,15 +72,4 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
- 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-    
-//    @Bean
-//    public BCryptPasswordEncoder encoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-    
 }

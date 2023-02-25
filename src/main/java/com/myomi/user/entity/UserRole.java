@@ -1,7 +1,11 @@
 package com.myomi.user.entity;
 
-//@Getter 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter 
 //@NoArgsConstructor
+@RequiredArgsConstructor
 //@Entity
 //@Table(name = "user_roles")
 public enum UserRole {

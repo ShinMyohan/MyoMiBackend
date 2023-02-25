@@ -25,6 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
 import com.myomi.cart.entity.Cart;
 import com.myomi.comment.entity.Comment;
@@ -77,18 +78,8 @@ public class User implements UserDetails
        return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-//    	List<String> roles = new ArrayList<>();
-//    	return roles.stream()
-//    			.map(SimpleGrantedAuthority::new)
-//    			.collect(Collectors.toList());
     }
-    
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//          List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();   
-//          authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-//          return authorities;
-//    }
+
  
     @Override
     public String getUsername() {
@@ -152,9 +143,11 @@ public class User implements UserDetails
 	private Membership membership;
 	
 	@OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Point point;
 	
 	@OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Seller seller;
 	
 	
@@ -207,13 +200,4 @@ public class User implements UserDetails
 		this.createdDate = createdDate;
 		this.membership = membership;
 	}
-	
-	
-//	public User(String pwd) {
-//		this.pwd = "{noop}" + pwd;
-//	}
-//	@Override
-//	public boolean isNew() {
-//		return true;
-//	}
 }

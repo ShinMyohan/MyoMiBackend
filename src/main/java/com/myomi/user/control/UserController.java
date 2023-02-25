@@ -32,7 +32,7 @@ public class UserController {
     public TokenDto login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
         String userId = userLoginRequestDto.getUserId();
         String password = userLoginRequestDto.getPassword();
-        TokenDto tokenDto = userService.login(userId, password); //포스트맨에서 이걸로 넣어야함
+        TokenDto tokenDto = userService.login(userId, password);
         return tokenDto;
     }
     

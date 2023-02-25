@@ -14,7 +14,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 	Optional<User> findById(String username); //id
 	//휴대폰 번호 중복 방지를 위해 번호가 존재하는지 확인
 	boolean existsUserByTel(String tel);
-
 	
 	//User findByTel(String tel);
 }
