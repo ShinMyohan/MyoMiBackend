@@ -43,7 +43,7 @@ public class Product {
 	@Column(name = "num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 	   generator = "PRODUCT_SEQ_GENERATOR")
-	private Long pNum;
+	private Long prodNum;
 	
 	@ManyToOne
 //	(fetch = FetchType.LAZY) //지연로딩

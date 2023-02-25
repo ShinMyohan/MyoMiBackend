@@ -64,8 +64,9 @@ public class UserService {
     	//-----되는 코드 
     	// 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passwordEncoder.encode(password)); //들어온 raw한 패스워드를 인코딩해서 디비에 있는 인코딩 된 패스워드랑 비교했어야했다!!!!!!
-        log.info("authenticationToken: "+authenticationToken.getName());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, optU.get().getPwd()); //들어온 raw한 패스워드를 인코딩해서 디비에 있는 인코딩 된 패스워드랑 비교했어야했다!!!!!!
+//    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passwordEncoder.encode(password));
+    	log.info("authenticationToken: "+authenticationToken.getName());
         
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
@@ -91,9 +92,9 @@ public class UserService {
 //    	m.setMNum(1);
 //    	m.setMLevel("골드");
     	
-    	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
+//    	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
 //    	String encPwd = new BCryptPasswordEncoder().encode(userSignUpReqeustDto.getPwd());
-//    	String encPwd = userSignUpReqeustDto.getPwd();
+    	String encPwd = userSignUpReqeustDto.getPwd();
 //    	
 //    	//User 객체 만들어서 save()
 ////    	User user = userRepository.save(userSignUpReqeustDto.toEntity(encPwd));

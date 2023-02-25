@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 //@NoArgsConstructor
 public class ProductDto {
-	private Long pNum;
+	private Long prodNum;
 	
 	@JsonIgnore
 	private Seller seller;
@@ -23,10 +23,10 @@ public class ProductDto {
 	private String detail;
 	
 	@Builder
-	public ProductDto(Long pNum, Seller seller, String category,
+	public ProductDto(Long prodNum, Seller seller, String category,
 			String name, Long originPrice, int percentage, 
 			int week, int status, String detail) {
-		this.pNum = pNum;
+		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
 		this.name = name;

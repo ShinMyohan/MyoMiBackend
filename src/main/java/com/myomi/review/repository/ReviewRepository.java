@@ -11,7 +11,7 @@ import com.myomi.review.entity.Review;
 public interface ReviewRepository extends CrudRepository<Review, Long> {
 	public Optional<Review> findById(Long num);
 //	List<Review> findAllByProdNum(Long prodNum);
-//	List<Review> findByOrderDetail_Product_PNum(Long prodNum);
+	List<Review> findByOrderDetail_Product_ProdNum(Long prodNum);
 	
 //	@Query(value = "SELECT r.*, od.prod_num FROM review r"
 //			+ "JOIN orders_detail od ON r.order_num = od.order_num"

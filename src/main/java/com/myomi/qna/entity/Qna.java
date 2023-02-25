@@ -48,7 +48,7 @@ public class Qna implements Serializable{
 			strategy = GenerationType.SEQUENCE,
 			generator = 
 			"QNA_SEQ_GENERATOR") // 위의 sequence 이름
-	private Long qNum;
+	private Long qnaNum;
 	
 	
 	@ManyToOne
@@ -84,10 +84,10 @@ public class Qna implements Serializable{
 	private LocalDateTime ansCreatedDate;
 	
 	@Builder
-	public Qna(Long qNum, User userId, Product prodNum, String queTitle,
+	public Qna(Long qnaNum, User userId, Product prodNum, String queTitle,
 			 String queContent, LocalDateTime queCreatedDate, String ansContent,
 			LocalDateTime ansCreatedDate) {
-		this.qNum = qNum;
+		this.qnaNum = qnaNum;
 		this.userId = userId;
 		this.prodNum = prodNum;
 		this.queTitle = queTitle;

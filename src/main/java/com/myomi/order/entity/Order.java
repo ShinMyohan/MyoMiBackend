@@ -42,7 +42,7 @@ public class Order {
             strategy = GenerationType.SEQUENCE, generator = "ORDERS_SEQ_GENERATOR"
     )
     @Column(name = "num")
-    private Long oNum;
+    private Long oderNum;
 
     @ManyToOne // 양방향
     @JoinColumn(name = "user_id")

@@ -87,7 +87,7 @@ public class ProductService {
 		} else {
 		    for (Product p : prods) {
 		    	ProductDto dto = ProductDto.builder()
-			            .pNum(p.getPNum())
+			            .prodNum(p.getProdNum())
 			            .seller(p.getSeller())
 //			            .sellerDto()
 			            .category(p.getCategory())
@@ -110,9 +110,9 @@ public class ProductService {
 		Optional<Product> optP = productRepository.findProdInfo(prodNum);
 		List<Qna> qnas = qnaRepository.findByProdNum(optP.get());
 		List<Review> reviews = reviewRepository.findAllReviewByProd(prodNum);
+//		List<Review> reviews = reviewRepository.findByOrderDetail_Product_ProdNum(prodNum);
 		if(qnas.size() == 0) {
 			log.info("상품관련 문의가 없습니다.");
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		//빌터 패턴을 이용한 객체 보내기는 실패...! -> 빈배열로 들어감
 //		List<Qna> list = new ArrayList<>();
@@ -136,7 +136,7 @@ public class ProductService {
 				
 		return new ResponseEntity<>(
 				ProdReadOneDto.builder()
-					.pNum(prodNum)
+					.prodNum(prodNum)
 					.seller(optP.get().getSeller())
 					.category(optP.get().getCategory())
 					.name(optP.get().getName())

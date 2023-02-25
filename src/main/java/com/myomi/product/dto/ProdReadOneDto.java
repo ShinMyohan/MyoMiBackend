@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ProdReadOneDto {
-	private Long pNum;
+	private Long prodNum;
 //	@JsonIgnore //셀러 정보 가지고 올거면 쓰지말자
 	private Seller seller;
 	private String category;
@@ -29,10 +29,10 @@ public class ProdReadOneDto {
 	private List<Qna> qnas;
 	
 	@Builder
-	public ProdReadOneDto(Long pNum, Seller seller, String category,
+	public ProdReadOneDto(Long prodNum, Seller seller, String category,
 			String name, Long originPrice, int percentage, 
 			int week, int status, String detail, List<Review> reviews, List<Qna> qnas) {
-		this.pNum = pNum;
+		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
 		this.name = name;
