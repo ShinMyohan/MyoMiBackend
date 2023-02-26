@@ -11,14 +11,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor @JsonAutoDetect
-public class ProductSaveDto {
-	
+public class ProductUpdateDto {
 	@NotBlank
 	private String category;
-	
+//	
 	@NotBlank
 	private String name;
-	
+//	
 	@NotBlank
 	private Long originPrice;
 	
@@ -30,11 +29,14 @@ public class ProductSaveDto {
 	@Size(max = 60, message = "상품 특이사항을 입력해주세요.")
 	private String detail;
 	
-	//상품 등록시 사용
-	public Product toEntity(ProductSaveDto productSaveDto
-			, Seller seller
-			) {
+	private int status;
+	
+	//상품 업데이트시 사용
+	public Product toEntity(Long prodNum, 
+			ProductUpdateDto productUpdateDto
+			, Seller seller) {
 		return Product.builder()
+				.prodNum(prodNum)
 				.seller(seller)
 				.category(category)
 				.name(name)
@@ -42,7 +44,7 @@ public class ProductSaveDto {
 				.percentage(percentage)
 				.week(week)
 				.detail(detail)
-				.fee(9) //기본값 9로 넣어주려고 셋팅
+				.status(status)
 				.build();
 	}
 }

@@ -97,11 +97,11 @@ public class Product {
 	
 	@Builder
 	public Product(
-//			Long pNum,
+			Long prodNum,
 			Seller seller, String category, String name,
 			Long originPrice, int percentage, int week, int status,
-			String detail, List<OrderDetail> orderDetails) {
-//		this.pNum = pNum;
+			String detail, int fee, List<OrderDetail> orderDetails) {
+		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
 		this.name = name;
@@ -110,6 +110,7 @@ public class Product {
 		this.week = week;
 		this.status = status;
 		this.detail = detail;
+		this.fee = fee;
 		this.orderDetails = orderDetails;
 	}
 	

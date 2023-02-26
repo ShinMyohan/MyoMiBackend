@@ -182,6 +182,8 @@ public class User implements UserDetails
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Coupon> coupons;
 	
+	private String provider;
+	
 	@Builder
 	public User(String id, String pwd,
 			int role,
@@ -200,4 +202,16 @@ public class User implements UserDetails
 		this.createdDate = createdDate;
 		this.membership = membership;
 	}
+	
+	public User update(String name, String provider) {
+        this.name = name;
+        this.provider = provider;
+        return this;
+    }
+
+    public String getRoleKey() {
+//        return this.roles.getKey();
+    	return this.getRoleKey();
+    }
+
 }

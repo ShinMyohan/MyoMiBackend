@@ -2,6 +2,7 @@ package com.myomi.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,6 +13,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.myomi.jwt.filter.JwtAuthenticationFilter;
 import com.myomi.jwt.provider.JwtTokenProvider;
+import com.myomi.oauth.CustomOAuth2UserService;
+import com.myomi.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.myomi.oauth.OAuth2AuthenticationFailureHandler;
+import com.myomi.oauth.OAuth2AuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,12 +31,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtTokenProvider jwtTokenProvider;
+	private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 	
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
+
+    
 	@Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-	
+
 	/**
 	 * httpBasic().disable().csrf().disable(): rest api이므로 basic auth 및 csrf 보안을 사용하지 않는다는 설정
 	 *  sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS): JWT를 사용하기 때문에 세션을 사용하지 않는다는 설정
@@ -53,6 +67,18 @@ public class SecurityConfig {
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+	                .oauth2Login()
+//                .authorizationEndpoint().baseUri("/oauth2/authorize")
+//                .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/login/oauth2/code/**")
+//                .and()
+//                .userInfoEndpoint().userService(customOAuth2UserService)
+//                .and()
+//                .successHandler(oAuth2AuthenticationSuccessHandler)
+//                .failureHandler(oAuth2AuthenticationFailureHandler)
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "/**").permitAll()
                 .antMatchers("/health/**",
@@ -61,13 +87,18 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v2/api-docs/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
+                .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
-                .antMatchers("/user/login", "/user/signup", "/product/list/*", "/product/info/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/product/list/{seller}", "/product/{prodNum}").permitAll()
+                .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
                 .antMatchers("/product/add").hasRole("SELLER")
                 .antMatchers("/user/test", "/user/modify").hasRole("USER")
                 .antMatchers("/user/info").hasAnyRole("USER","SELLER")
+                .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll ()
                 .anyRequest().authenticated()
                 .and()
+                //OAuth
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();

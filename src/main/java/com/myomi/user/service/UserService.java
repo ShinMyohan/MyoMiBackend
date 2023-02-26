@@ -49,9 +49,6 @@ public class UserService {
      */
     @Transactional
     public TokenDto login(String userId, String password) {
-//    	User optU = userRepository.findById(userId)
-//    			.orElseThrow(() -> new IllegalArgumentException());
-    	
     	Optional<User> optU = userRepository.findById(userId);
     	log.info("입력한 id:" + userId + " 디비아이디: " + optU.get().getId());
     	log.info("입력한 비번:" + password + " 디비비번: " + optU.get().getPwd());
@@ -83,18 +80,22 @@ public class UserService {
     public String signup(UserSignUpReqeustDto userSignUpReqeustDto) {
     	
     	//휴대폰 번호가 이미 등록된 번호인지 확인 (이 메서드는 아래에 있습니다.)
-    	boolean check = checkTelExists(userSignUpReqeustDto.getTel());
-    	
-    	if(check) { //번호가 이미 등록된 번호면 예외발생
+    	boolean checkTel = checkTelExists(userSignUpReqeustDto.getTel());
+    	if(checkTel) { //번호가 이미 등록된 번호면 예외발생
     		throw new IllegalArgumentException("이미 사용중인 번호입니다.");
     	}
-//    	Membership m = new Membership();
-//    	m.setMNum(1);
-//    	m.setMLevel("골드");
     	
-//    	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
+    	boolean checkId = checkIdExists(userSignUpReqeustDto.getId());
+    	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
+    		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+    	}
+//    	Membership m = new Membership();
+//    	m.setMNum(0);
+//    	m.setMLevel("일반");
+    	
+    	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
 //    	String encPwd = new BCryptPasswordEncoder().encode(userSignUpReqeustDto.getPwd());
-    	String encPwd = userSignUpReqeustDto.getPwd();
+//    	String encPwd = userSignUpReqeustDto.getPwd();
 //    	
 //    	//User 객체 만들어서 save()
 ////    	User user = userRepository.save(userSignUpReqeustDto.toEntity(encPwd));
@@ -120,10 +121,7 @@ public class UserService {
     	throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     
-    //이미 등록된 휴대폰번호인지 확인 - 해당 메서드는 user repository에 선언되어있습니다.
-    public boolean checkTelExists(String tel) {
-    	return userRepository.existsUserByTel(tel);
-    }
+    
     
     // 회원정보 검색
     public ResponseEntity<UserDto> getUserInfo(Authentication user) {
@@ -165,5 +163,16 @@ public class UserService {
     	
     	userRepository.save(u);
     	return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    //----- 중복 방지를 위한 메서드 ----
+    //이미 등혹된 아이디인지 확인
+    public boolean checkIdExists(String id) {
+    	return userRepository.existsUserById(id);
+    }
+    
+    //이미 등록된 휴대폰번호인지 확인 - 해당 메서드는 user repository에 선언되어있습니다.
+    public boolean checkTelExists(String tel) {
+    	return userRepository.existsUserByTel(tel);
     }
 }

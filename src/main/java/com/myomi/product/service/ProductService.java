@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.dto.ProdReadOneDto;
 import com.myomi.product.dto.ProductDto;
 import com.myomi.product.dto.ProductSaveDto;
+import com.myomi.product.dto.ProductUpdateDto;
 import com.myomi.product.entity.Product;
 import com.myomi.product.repository.ProductRepository;
 import com.myomi.qna.entity.Qna;
@@ -36,18 +36,15 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-//	@Autowired
 	private final ProductRepository productRepository;
-
-//	@Autowired
 	private final SellerRepository sellerRepository;
 	
-//	@Autowired
 	private final UserRepository userRepository;
 	private final ReviewRepository reviewRepository;
-	private final OrderRepository orderRepository;
+
 	private final QnaRepository qnaRepository;
 	/**
+	 * TODO:
 	 * 1. 셀러 등록 후 상품 등록하기
 	 * 2. 등록된 상품 리스트 조회
 	 * 3. 셀러별 상품 리스트 조회
@@ -57,19 +54,29 @@ public class ProductService {
 	 */
 	
 	@Transactional
-	public ResponseEntity<ProductSaveDto> addProduct(ProductSaveDto productSaveDto, Authentication user) {		
-		String username = user.getName();
-		Optional<Seller> s = sellerRepository.findById(username); // 로그인한 유저의 id
+//	public ResponseEntity<ProductSaveDto> addProduct(ProductSaveDto productSaveDto, Authentication user) {		
+//		String username = user.getName();
+//		Optional<Seller> s = sellerRepository.findById(username); // 로그인한 유저의 id
+//		
+//		Product product = Product.builder()
+//				.seller(s.get()) //seller
+//				.category(productSaveDto.getCategory())
+//				.name(productSaveDto.getName())
+//				.originPrice(productSaveDto.getOriginPrice())
+//				.percentage(productSaveDto.getPercentage())
+//				.week(productSaveDto.getWeek())
+//				.detail(productSaveDto.getDetail())
+//				.build();
+//		
+//		productRepository.save(product);
+//		return new ResponseEntity<>(HttpStatus.OK);
+		//------ 되는 코드 end
+	public ResponseEntity<ProductSaveDto> addProduct(ProductSaveDto productSaveDto, Authentication seller) {
+		Seller s = sellerRepository.findById(seller.getName())
+				.orElseThrow(() -> new IllegalArgumentException("판매자만 상품 등록이 가능합니다"));
 		
-		Product product = Product.builder()
-				.seller(s.get()) //seller
-				.category(productSaveDto.getCategory())
-				.name(productSaveDto.getName())
-				.originPrice(productSaveDto.getOriginPrice())
-				.percentage(productSaveDto.getPercentage())
-				.week(productSaveDto.getWeek())
-				.detail(productSaveDto.getDetail())
-				.build();
+		//상품등록
+		Product product = productSaveDto.toEntity(productSaveDto, s);
 		
 		productRepository.save(product);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -77,10 +84,33 @@ public class ProductService {
 	
 	@Transactional
 	public List<ProductDto> selectBySellerId(String sellerId) {
-		Optional<Seller> seller = sellerRepository.findById(sellerId);
-	
-		log.info("셀러아이디는:" + sellerId);
-		List<Product> prods = productRepository.findAllBySellerId(seller.get().getId());
+//		Optional<Seller> seller = sellerRepository.findById(sellerId);
+//	
+//		log.info("셀러아이디는:" + sellerId);
+//		List<Product> prods = productRepository.findAllBySellerId(seller.get().getId());
+//		List<ProductDto> list = new ArrayList<>();
+//		if (prods.size() == 0) {
+//		        log.info("등록된 상품이 없습니다.");
+//		} else {
+//		    for (Product p : prods) {
+//		    	ProductDto dto = ProductDto.builder()
+//			            .prodNum(p.getProdNum())
+//			            .seller(p.getSeller())
+////			            .sellerDto()
+//			            .category(p.getCategory())
+//			            .name(p.getName())
+//			            .originPrice(p.getOriginPrice())
+//			            .percentage(p.getPercentage())
+//			            .week(p.getWeek())
+//			            .status(p.getStatus())
+//			            .detail(p.getDetail())
+//		                .build();
+//		        list.add(dto);
+//		    }
+//		}
+//		return list;
+		//-----되는코드
+		List<Product> prods = productRepository.findAllBySellerId(sellerId);
 		List<ProductDto> list = new ArrayList<>();
 		if (prods.size() == 0) {
 		        log.info("등록된 상품이 없습니다.");
@@ -89,7 +119,6 @@ public class ProductService {
 		    	ProductDto dto = ProductDto.builder()
 			            .prodNum(p.getProdNum())
 			            .seller(p.getSeller())
-//			            .sellerDto()
 			            .category(p.getCategory())
 			            .name(p.getName())
 			            .originPrice(p.getOriginPrice())
@@ -149,5 +178,27 @@ public class ProductService {
 		            .qnas(qnas)
 //		            .qnas(list) //빌더로 받아오는거 실패 ㅠ
 					.build(), HttpStatus.OK);
+	}
+	
+	@Transactional //성공
+	public ResponseEntity<ProductUpdateDto> updateProd(Long prodNum, ProductUpdateDto productUpdateDto, Authentication seller) {
+		Optional<Product> p = productRepository.findBySellerIdAndProdNum(seller.getName(), prodNum);
+//				.orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+		
+		Product prod = productUpdateDto.toEntity(prodNum, productUpdateDto, p.get().getSeller());
+		if(p != null) {
+			productRepository.save(prod);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@Transactional //성공
+	public ResponseEntity<?> deleteProd(Long prodNum, Authentication seller) {
+		Optional<Product> p = productRepository.findById(prodNum);
+		Optional<Seller> s = sellerRepository.findById(seller.getName());
+		if(p.get().getSeller().getId() == s.get().getId()) {
+			productRepository.deleteById(prodNum);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
