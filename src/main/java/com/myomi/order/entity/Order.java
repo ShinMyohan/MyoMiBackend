@@ -83,13 +83,19 @@ public class Order {
 //            orderDetail.setOrder(this);
 //        }
     }
-    public void addOrderDetails(List<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
-    }
+//    public void addOrderDetails(List<OrderDetail> orderDetails) {
+//        this.orderDetails = orderDetails;
+//    }
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
     }
-    public void registerDelivery(Delivery delivery) {
-        delivery.registerOrder(this);
+
+    public void updateCanceledDate(Long orderNum) {
+        this.orderNum = orderNum;
+        this.canceledDate = LocalDateTime.now();
     }
+
+//    public void registerDelivery(Delivery delivery) {
+//        delivery.registerOrder(this);
+//    }
 }

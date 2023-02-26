@@ -29,4 +29,9 @@ public class OrderController {
     public OrderDto orderDetails(Authentication user, @PathVariable Long num) {
         return orderService.findOrderByUserId(user, num);
     }
+
+    @PutMapping("/{num}")
+    public void orderModifyCanceledDate(Authentication user, @PathVariable Long num) {
+        orderService.modifyOrderCanceledDate(user, num);
+    }
 }
