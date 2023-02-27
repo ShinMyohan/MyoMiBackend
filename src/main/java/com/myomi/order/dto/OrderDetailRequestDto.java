@@ -9,28 +9,29 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class OrderDetailDto {
+public class OrderDetailRequestDto {
     private Product product;
+//    private Long prodNum;
     private int prodCnt;
 
     @Builder
-    public OrderDetailDto(Order order, Product product, int prodCnt) {
+    public OrderDetailRequestDto(Order order, Product product, int prodCnt) {
         this.product = product;
         this.prodCnt = prodCnt;
     }
 
-    public OrderDetail toEntity(OrderDetailDto orderDetailDto) {
+    public OrderDetail toEntity(OrderDetailRequestDto orderDetailRequestDto) {
             return OrderDetail.builder()
-                    .product(orderDetailDto.getProduct())
-                    .prodCnt(orderDetailDto.getProdCnt())
+//                    .product(orderDetailRequestDto.getProduct())
+//                    .product(orderDetailRequestDto.getProduct())
+                    .prodCnt(orderDetailRequestDto.getProdCnt())
                     .build();
     }
 
-    public static OrderDetailDto toDto(OrderDetail orderDetail) {
-        return OrderDetailDto.builder()
+    public static OrderDetailRequestDto toDto(OrderDetail orderDetail) {
+        return OrderDetailRequestDto.builder()
                 .product(orderDetail.getProduct())
                 .prodCnt(orderDetail.getProdCnt())
                 .build();
-
     }
 }

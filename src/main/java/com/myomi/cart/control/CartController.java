@@ -7,6 +7,7 @@ import com.myomi.cart.service.CartService;
 import com.myomi.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class CartController {
     }
 
     @DeleteMapping("/cart")
-    public void cartRemove(@RequestBody List<CartDeleteRequestDto> requestDto) {
+    public void cartRemove(Authentication user, @RequestBody List<CartDeleteRequestDto> requestDto) {
         cartService.removeCart(user, requestDto);
     }
 }

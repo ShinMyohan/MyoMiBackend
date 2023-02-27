@@ -1,6 +1,6 @@
 package com.myomi.order.dto;
 
-public class PaymentDto {
+public class PaymentRequestDto {
 
 //    @Builder
 //    public PaymentDto (User user, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,

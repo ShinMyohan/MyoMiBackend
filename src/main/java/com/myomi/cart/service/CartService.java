@@ -9,6 +9,7 @@ import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +67,7 @@ public class CartService {
                     .product(requestDto.getProduct())
                     .prodCnt(requestDto.getProdCnt())
                     .build();
-            log.info(cart.getUser().getId() + "님의 장바구니에 상품번호 " + cart.getProduct().getPNum() + "번째 상품이 담겼습니다.");
+            log.info(cart.getUser().getId() + "님의 장바구니에 상품번호 " + cart.getProduct().getProdNum() + "번째 상품이 담겼습니다.");
             cartRepository.save(cart);
         }
     }
@@ -80,8 +81,8 @@ public class CartService {
 //        Cart cart = Cart.builder().user(requestDto.getUser()).product(requestDto.getProduct()).prodCnt(cnt).build();
 //        cart.updateProdCnt(cart);
 
-        cartRepository.updateCart(requestDto.getUser().getId(), requestDto.getProduct().getPNum(), requestDto.getProdCnt());
-        log.info(requestDto.getUser().getId() + "님의 장바구니에 상품번호 " + requestDto.getProduct().getPNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 더 추가되었습니다.");
+        cartRepository.updateCart(requestDto.getUser().getId(), requestDto.getProduct().getProdNum(), requestDto.getProdCnt());
+        log.info(requestDto.getUser().getId() + "님의 장바구니에 상품번호 " + requestDto.getProduct().getProdNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 더 추가되었습니다.");
 //        cartRepository.save(cart);
     }
 
@@ -90,10 +91,10 @@ public class CartService {
 //    public void
 
     @Transactional
-    public void removeCart(User user, List<CartDeleteRequestDto> requestDto) {
-        String userId = user.getId();
+    public void removeCart(Authentication user, List<CartDeleteRequestDto> requestDto) {
+        String userId = user.getName();
         for (CartDeleteRequestDto cart : requestDto) {
-            cartRepository.deleteCartByUserIdAndProduct(userId, cart.getProduct().getPNum());
+            cartRepository.deleteCartByUserIdAndProduct(userId, cart.getProduct().getProdNum());
         }
     }
 }

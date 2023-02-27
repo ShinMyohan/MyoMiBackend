@@ -2,6 +2,7 @@ package com.myomi.order.entity;
 
 import com.myomi.user.entity.User;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -33,12 +34,15 @@ public class Order {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
+    @ColumnDefault("' '")
     private String msg;
 
     @Column(name = "coupon_num")
+    @ColumnDefault("'0'")
     private Long couponNum;
 
     @Column(name = "used_point")
+    @ColumnDefault("'0'")
     private Long usedPoint;
 
     @Column(name = "pay_created_date")
@@ -52,6 +56,8 @@ public class Order {
 
     @Column(name = "save_point")
     private Long savePoint;
+
+    private String impUid; // 아임포트 결제 번호
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderDetail> orderDetails = new ArrayList<>(); // 양방향
@@ -83,9 +89,6 @@ public class Order {
 //            orderDetail.setOrder(this);
 //        }
     }
-//    public void addOrderDetails(List<OrderDetail> orderDetails) {
-//        this.orderDetails = orderDetails;
-//    }
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
     }
@@ -95,7 +98,8 @@ public class Order {
         this.canceledDate = LocalDateTime.now();
     }
 
-//    public void registerDelivery(Delivery delivery) {
-//        delivery.registerOrder(this);
-//    }
+    public void updatePayCreatedDate(Long orderNum) {
+        this.orderNum = orderNum;
+        this.payCreatedDate = LocalDateTime.now();
+    }
 }

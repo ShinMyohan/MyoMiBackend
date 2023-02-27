@@ -1,6 +1,6 @@
 package com.myomi.order.repository;
 
-import com.myomi.order.dto.OrderDto;
+import com.myomi.order.dto.OrderResponseDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +28,17 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 
     // QueryDsl
     @Override
-    public List<OrderDto> findAllByUserId(String userId) {
-        List<OrderDto> result = jpaQueryFactory
+    public List<OrderResponseDto> findAllByUserId(String userId) {
+        List<OrderResponseDto> result = jpaQueryFactory
                 .selectFrom(order)
                 .from(orderDetail)
                 .join(order).on(order.eq(orderDetail.order))
                 .join(product).on(orderDetail.product.eq(product))
                 .leftJoin(review).on(orderDetail.eq(review.orderDetail))
                 .where(order.user.id.eq(userId))
-                .orderBy(order.oNum.desc())
-                .transform(groupBy(orderDetail.order.oNum, orderDetail.product.pNum).list(Projections.fields(OrderDto.class,
-                        orderDetail.order.oNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.rNum.as("rNum"))));
+                .orderBy(order.orderNum.desc())
+                .transform(groupBy(orderDetail.order.orderNum, orderDetail.product.prodNum).list(Projections.fields(OrderResponseDto.class,
+                        orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.rNum.as("rNum"))));
         return result;
     }
 }

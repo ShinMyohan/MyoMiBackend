@@ -1,7 +1,9 @@
 package com.myomi.order.entity;
 
 import com.myomi.product.entity.Product;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -13,14 +15,14 @@ public class OrderDetail {
     @EmbeddedId
     private OrderDetailEmbedded id = new OrderDetailEmbedded();
 
-    @MapsId("oNum")
-    @ManyToOne(fetch = FetchType.LAZY)// , cascade = CascadeType.ALL)  // TODO: cascade지우고 추가해보기
+    @MapsId("orderNum")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num", referencedColumnName = "num")
     private Order order;
 
-    @MapsId("pNum") // 복합키
+    @MapsId("prodNum") // 복합키
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_num", insertable = false, updatable = false)
+    @JoinColumn(name = "prod_num", referencedColumnName = "num")
     private Product product;
 
     @Column(name = "prod_cnt", nullable = false)
@@ -28,17 +30,20 @@ public class OrderDetail {
 
     @Builder
     private OrderDetail(Order order, Product product, int prodCnt) {
-        this.product = product;
+//        this.order = order;
+//        this.id = id;
+//        registerOrder(order, product);
         this.prodCnt = prodCnt;
     }
 
     // 연관관계 편의 메소드
-    public void registerOrder(Order order) {
+    public void registerOrderAndProduct(Order order, Product product) {
 //        if(this.order != null) {
 //            this.order.getOrderDetails().remove(this);
 //        }
         this.order = order;
-        order.getOrderDetails().add(this);
+        this.product = product;
+        order.addOrderDetail(this);
 
 //        if(!order.getOrderDetails().contains(this)) {
 //            order.getOrderDetails().add(this);

@@ -1,6 +1,8 @@
 package com.myomi.order.dto;
 
+import com.myomi.order.entity.Delivery;
 import com.myomi.order.entity.Order;
+import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +13,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class OrderDto { // 주문 기본, 상세, 배송정보 한번에 다 받아옴
-    private Order order;
+public class OrderResponseDto { // 주문 기본, 상세, 배송정보 한번에 다 받아옴
     private User user;
     private String msg;
     private Long couponNum;
@@ -22,21 +23,21 @@ public class OrderDto { // 주문 기본, 상세, 배송정보 한번에 다 받
     private LocalDateTime createdDate;
     private LocalDateTime payCreatedDate;
     private LocalDateTime canceledDate;
+    private String impUid;
     // 주문정보
-//    @JsonIgnore
-    private List<OrderDetailDto> orderDetails;
+    private List<OrderDetail> orderDetails;
     // 배송정보
-    private DeliveryDto delivery;
+    private Delivery delivery;
 
     // QueryDsl용 변수
-    private Long oNum; // 주문 번호
+    private Long orderNum; // 주문 번호
     private String pName; // 상품 이름
     private Long rNum; // 리뷰 번호
 
     @Builder
-    public OrderDto (User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint,
-                     Long savePoint, Long totalPrice, List<OrderDetailDto> orderDetail,
-                     DeliveryDto delivery) {
+    public OrderResponseDto(User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint,
+                            Long savePoint, Long totalPrice, List<OrderDetail> orderDetail,
+                            Delivery delivery) {
         this.user = user;
         this.createdDate = createdDate;
         this.msg = msg;
@@ -48,21 +49,8 @@ public class OrderDto { // 주문 기본, 상세, 배송정보 한번에 다 받
         this.delivery = delivery;
     }
 
-    public Order toEntity(User u, OrderDto orderDto) {
-        return Order.builder()
-                .user(u)
-                .createdDate(LocalDateTime.now())
-                .msg(orderDto.getOrder().getMsg())
-                .couponNum(orderDto.getOrder().getCouponNum())
-                .usedPoint(orderDto.getOrder().getUsedPoint())
-                .savePoint(orderDto.getOrder().getSavePoint())
-                .totalPrice(orderDto.getOrder().getTotalPrice())
-                .delivery(orderDto.getDelivery().toEntity(orderDto.getDelivery(), orderDto.getOrder()))
-                .build();
-    }
-
-    public OrderDto toDto(String userId, Order order) {
-        return OrderDto.builder()
+    public OrderResponseDto toDto(String userId, Order order) {
+        return OrderResponseDto.builder()
                 .user(User.builder().id(userId).build())
                 .createdDate(LocalDateTime.now())
                 .msg(order.getMsg())
@@ -70,7 +58,8 @@ public class OrderDto { // 주문 기본, 상세, 배송정보 한번에 다 받
                 .usedPoint(order.getUsedPoint())
                 .savePoint(order.getSavePoint())
                 .totalPrice(order.getTotalPrice())
-                .delivery(DeliveryDto.toDto(order.getDelivery()))
+                .orderDetail(orderDetails)
+                .delivery(delivery)
                 .build();
     }
 }

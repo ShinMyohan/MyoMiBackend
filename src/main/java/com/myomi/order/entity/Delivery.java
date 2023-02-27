@@ -1,6 +1,9 @@
 package com.myomi.order.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -29,23 +32,33 @@ public class Delivery {
 
     @Column(name = "addr", nullable = false)
     private String addr;
+
     @Column(name = "delivery_msg")
+    @ColumnDefault("' '")
     private String deliveryMsg;
 
     @Column(name = "receive_date", nullable = false)
     private String receiveDate;
 
     @Builder
-    private Delivery(Order order, String name, String tel, String addr, String deliveryMsg, String receiveDate) {
-        order.getDelivery().registerOrder(order);
+    private Delivery(String name, String tel, String addr, String deliveryMsg, String receiveDate) {
         this.name = name;
         this.tel = tel;
         this.addr = addr;
         this.deliveryMsg = deliveryMsg;
         this.receiveDate = receiveDate;
     }
-
     public void registerOrder(Order order) {
         this.order = order;
+    }
+
+    public Delivery toEntity(Order order) {
+        return Delivery.builder()
+                .name(order.getDelivery().getName())
+                .tel(order.getDelivery().getTel())
+                .addr(order.getDelivery().getAddr())
+                .deliveryMsg(order.getDelivery().getDeliveryMsg())
+                .receiveDate(order.getDelivery().getReceiveDate())
+                .build();
     }
 }

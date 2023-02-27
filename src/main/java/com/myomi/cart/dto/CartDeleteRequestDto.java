@@ -6,4 +6,9 @@ import lombok.*;
 @Getter @Setter @NoArgsConstructor // setter 임시 사용
 public class CartDeleteRequestDto {
     private Product product;
+
+    @Builder
+    public CartDeleteRequestDto(Product product) {
+        this.product = product;
+    }
 }

@@ -21,12 +21,12 @@ public interface CartRepository extends CrudRepository<Cart, CartEmbedded> {
     public Optional<Cart> findByUserAndProduct(User user, Product product);
 
     @Modifying
-    @Query("UPDATE Cart c SET c.prodCnt = c.prodCnt + :prodCnt WHERE c.id.userId = :userId AND c.product.pNum = :pNum")
+    @Query("UPDATE Cart c SET c.prodCnt = c.prodCnt + :prodCnt WHERE c.id.userId = :userId AND c.product.prodNum = :pNum")
     public void updateCart(@Param("userId")String UserId, @Param("pNum") Long pNum, @Param("prodCnt") int prodCnt);
 
 
     @Modifying
-    @Query("DELETE FROM Cart c WHERE c.id.userId = :userId AND c.product.pNum = :pNum")
+    @Query("DELETE FROM Cart c WHERE c.id.userId = :userId AND c.product.prodNum = :pNum")
     public void deleteCartByUserIdAndProduct(@Param("userId")String UserId, @Param("pNum") Long pNum);
 
 }
