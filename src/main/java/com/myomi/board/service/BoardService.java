@@ -20,6 +20,8 @@ import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.dto.CommentDto;
 import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
+import com.myomi.exception.AddException;
+import com.myomi.exception.RemoveException;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 
@@ -132,13 +134,14 @@ public class BoardService {
 
 	//글 수정 
 	@Transactional
-	public BoardDetailResponseDto modifyBoard(BoardReadResponseDto editDto, Long bNum, Authentication user) {
+	public BoardDetailResponseDto modifyBoard(BoardReadResponseDto editDto, Long bNum, Authentication user)
+	   										throws AddException{
 		String username = user.getName();
 		Board board = br.findById(bNum).get();
 		if (board.getUser().getId().equals(username)) {
 			board.update(editDto.getCategory(), editDto.getContent(), editDto.getTitle());
 		}else {
-			log.info("작성자만 수정 가능합니다.");
+			throw new AddException("작성자만 수정 가능합니다.");
 		}
 		return new BoardDetailResponseDto(board);
 	}
@@ -146,13 +149,13 @@ public class BoardService {
 
 	//글 삭제 
 	@Transactional
-	public void deleteBoard(Long boardNum, Authentication user) {
+	public void deleteBoard(Long boardNum, Authentication user) throws RemoveException{
 		String username = user.getName();
 		Board board = br.findById(boardNum).get();
 		if (board.getUser().getId().equals(username)) {
 			br.delete(board);
 		}else {
-			log.info("작성자만 삭제 가능합니다.");
+			throw new RemoveException("작성자만 삭제 가능합니다.");
 		}
 	}
 
@@ -194,7 +197,8 @@ public class BoardService {
 
 	//댓글 수정
 	@Transactional
-	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long boardNum, Long commentNum){
+	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long boardNum,
+			Long commentNum) throws AddException{
 		String username = user.getName();
 		Optional<Board> optB = br.findById(boardNum);
 		Optional<Comment> optC = cr.findById(commentNum);
@@ -202,14 +206,15 @@ public class BoardService {
 		if (comment.getUser().getId().equals(username)) {
 			comment.update(cDto.getContent());
 		}else {
-			log.info("작성자만 수정 가능합니다.");
+			throw new AddException("작성자만 수정 가능합니다.");
 		}
 		return cDto;
 	}
 
 	//댓글 삭제
 	@Transactional
-	public void deleteComment (Authentication user, Long boardNum, Long commentNum) {
+	public void deleteComment (Authentication user, Long boardNum,
+			Long commentNum) throws RemoveException{
 		String username = user.getName();
 		Optional<Board> optB = br.findById(boardNum);
 		Optional<Comment> optC = cr.findById(commentNum);
@@ -217,7 +222,7 @@ public class BoardService {
 		if (comment.getUser().getId().equals(username)) {
 			cr.delete(comment);
 		}else {
-			log.info("작성자만 삭제 가능합니다.");
+			throw new RemoveException("작성자만 삭제 가능합니다.");
 		}
 	}
 }
