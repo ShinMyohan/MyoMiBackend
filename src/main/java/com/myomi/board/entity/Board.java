@@ -47,7 +47,7 @@ public class Board {
    @Column(name="num", updatable =  false)
    @GeneratedValue(strategy = GenerationType.SEQUENCE,
                    generator = "BOARD_SEQ_GENERATOR")
-   private Long bNum;
+   private Long boardNum;
    
   
    @ManyToOne (fetch = FetchType.LAZY)
@@ -83,9 +83,9 @@ public class Board {
 
    
     @Builder
-    public Board(Long bNum, User user, @NotNull String category, @NotNull String title, @NotNull String content,
+    public Board(Long boardNum, User user, @NotNull String category, @NotNull String title, @NotNull String content,
 		LocalDateTime createdDate, Long hits) {
-	this.bNum = bNum;
+	this.boardNum = boardNum;
 	this.user = user;
 	this.category = category;
 	this.title = title;

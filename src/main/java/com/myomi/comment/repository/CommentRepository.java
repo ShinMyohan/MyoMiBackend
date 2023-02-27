@@ -14,7 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import com.myomi.comment.entity.Comment;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-   public Optional<Comment> findBycNumAndBoard(Long cNum, Long bNum);
+   public Optional<Comment> findBycommentNumAndBoard(Long commentNum, Long boardNum);
 
    @EntityGraph(attributePaths = {"user","board"})
    @Query("select c from Comment c join c.board where c.user.id=:username")

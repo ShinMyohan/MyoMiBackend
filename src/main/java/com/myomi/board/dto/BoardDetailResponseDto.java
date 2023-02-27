@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 public class BoardDetailResponseDto {
-	private Long bNum;
+	private Long boardNum;
     private User user;
     private String category;
     private String title;
@@ -23,7 +23,7 @@ public class BoardDetailResponseDto {
     
 	public BoardDetailResponseDto(Board entity) {
 		
-		this.bNum = entity.getBNum();
+		this.boardNum = entity.getBoardNum();
 		this.user = entity.getUser();
 		this.category = entity.getCategory();
 		this.title = entity.getTitle();

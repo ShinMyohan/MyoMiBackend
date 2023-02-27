@@ -34,6 +34,7 @@ public class CommentService {
 		for (Comment cmt : list) {
 			CommentDto cDto = CommentDto.builder()
 					.board(cmt.getBoard())
+					.commentNum(cmt.getCommentNum())
 					.content(cmt.getContent())
 					.createdDate(cmt.getCreatedDate())
 					.category(cmt.getBoard().getCategory())

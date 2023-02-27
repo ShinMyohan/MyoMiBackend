@@ -45,7 +45,7 @@ public class BoardService {
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
-					.bNum(board.getBNum())
+					.boardNum(board.getBoardNum())
 					.user(board.getUser())
 					.category(board.getCategory())
 					.title(board.getTitle())
@@ -65,7 +65,7 @@ public class BoardService {
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
-					.bNum(board.getBNum())
+					.boardNum(board.getBoardNum())
 					.user(board.getUser())
 					.category(board.getCategory())
 					.title(board.getTitle())
@@ -85,7 +85,7 @@ public class BoardService {
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
-					.bNum(board.getBNum())
+					.boardNum(board.getBoardNum())
 					.user(board.getUser())
 					.category(board.getCategory())
 					.title(board.getTitle())
@@ -101,10 +101,10 @@ public class BoardService {
 
 	//글 상세보기 
 	@Transactional
-	public BoardReadResponseDto detailBoard(Long bNum) {
-		Board board = br.findBoardById(bNum);
+	public BoardReadResponseDto detailBoard(Long boardNum) {
+		Board board = br.findBoardById(boardNum);
 		BoardReadResponseDto dto = BoardReadResponseDto.builder()
-				.bNum(board.getBNum())
+				.boardNum(board.getBoardNum())
 				.user(board.getUser())
 				.category(board.getCategory())
 				.title(board.getTitle())
@@ -146,9 +146,9 @@ public class BoardService {
 
 	//글 삭제 
 	@Transactional
-	public void deleteBoard(Long bNum, Authentication user) {
+	public void deleteBoard(Long boardNum, Authentication user) {
 		String username = user.getName();
-		Board board = br.findById(bNum).get();
+		Board board = br.findById(boardNum).get();
 		if (board.getUser().getId().equals(username)) {
 			br.delete(board);
 		}else {
@@ -158,13 +158,14 @@ public class BoardService {
 
 	//마이페이지에서 내가 작성한 글 보기 
 		@Transactional
-		public  List<BoardReadResponseDto> findBoardListByUser (Authentication user,
+		public List<BoardReadResponseDto> findBoardListByUser (Authentication user,
 				Pageable pageable) {
 			String username = user.getName();
 			List<Board> list = br.findAllByUser(username, pageable);
 			List <BoardReadResponseDto> boardList = new ArrayList<>();
 			for (Board board : list) {
 				BoardReadResponseDto dto = BoardReadResponseDto.builder()
+						.boardNum(board.getBoardNum())
 						.category(board.getCategory())
 						.title(board.getTitle())
 						.createdDate(board.getCreatedDate())
@@ -181,10 +182,10 @@ public class BoardService {
 
 	//댓글 작성 
 	@Transactional
-	public ResponseEntity<CommentDto> addComment(CommentDto cDto, Authentication user, Long bNum){
+	public ResponseEntity<CommentDto> addComment(CommentDto cDto, Authentication user, Long boardNum){
 		LocalDateTime date = LocalDateTime.now();
 		String username = user.getName();
-		Optional<Board> optB = br.findById(bNum);
+		Optional<Board> optB = br.findById(boardNum);
 		Optional<User> optU = ur.findById(username);
 		Comment comment = cDto.toEntity(optU.get(), optB.get());
 		cr.save(comment);
@@ -193,10 +194,10 @@ public class BoardService {
 
 	//댓글 수정
 	@Transactional
-	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long bNum, Long cNum){
+	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long boardNum, Long commentNum){
 		String username = user.getName();
-		Optional<Board> optB = br.findById(bNum);
-		Optional<Comment> optC = cr.findById(cNum);
+		Optional<Board> optB = br.findById(boardNum);
+		Optional<Comment> optC = cr.findById(commentNum);
 		Comment comment = optC.get();
 		if (comment.getUser().getId().equals(username)) {
 			comment.update(cDto.getContent());
@@ -208,10 +209,10 @@ public class BoardService {
 
 	//댓글 삭제
 	@Transactional
-	public void deleteComment (Authentication user, Long bNum, Long cNum) {
+	public void deleteComment (Authentication user, Long boardNum, Long commentNum) {
 		String username = user.getName();
-		Optional<Board> optB = br.findById(bNum);
-		Optional<Comment> optC = cr.findById(cNum);
+		Optional<Board> optB = br.findById(boardNum);
+		Optional<Comment> optC = cr.findById(commentNum);
 		Comment comment = optC.get();
 		if (comment.getUser().getId().equals(username)) {
 			cr.delete(comment);

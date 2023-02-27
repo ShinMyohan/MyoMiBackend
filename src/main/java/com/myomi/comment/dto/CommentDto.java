@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor 
 public class CommentDto {
-	private Long cNum;
+	private Long commentNum;
 	@JsonIgnore
 	private Board board;
 	@JsonIgnore
@@ -26,13 +26,14 @@ public class CommentDto {
 	private String category;
 	private String title;
 	private String userId;
+	private int parent;
 
 
 	@Builder
-	public CommentDto(Long cNum, Board board, User user, String content, LocalDateTime createdDate, String category,
-			String title,String userId) {
+	public CommentDto(Long commentNum, Board board, User user, String content, LocalDateTime createdDate, String category,
+			String title,String userId, int parent) {
 		super();
-		this.cNum = cNum;
+		this.commentNum = commentNum;
 		this.board = board;
 		this.user = user;
 		this.content = content;
@@ -40,6 +41,7 @@ public class CommentDto {
 		this.category = category;
 		this.title = title;
 		this.userId = userId;
+		this.parent = parent;
 	}
 	
 
@@ -50,6 +52,7 @@ public class CommentDto {
 				.user(user)
 				.content(content)
 				.createdDate(date)
+				.parent(parent)
 				.build();
 	}
 

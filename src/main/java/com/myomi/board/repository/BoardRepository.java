@@ -20,7 +20,7 @@ public interface BoardRepository extends CrudRepository<Board, Long> {
 	public List<Board> findAll(Pageable pageable);
 	
 	@EntityGraph(attributePaths = "user")
-	public Optional<Board> findById(Long bNum);
+	public Optional<Board> findById(Long boardNum);
 	
 	@EntityGraph(attributePaths = "user")
 	public List<Board> findByTitleContaining(String keyword, Pageable pageable);
@@ -32,8 +32,8 @@ public interface BoardRepository extends CrudRepository<Board, Long> {
 	public List<Board> findAllByUser(@Param("username")String username,Pageable pageable);
 
 	@EntityGraph(attributePaths = "user")
-	@Query("select b from Board b join b.comments where b.bNum=:bNum")
-	public Board findBoardById(@Param("bNum")Long bNum);
+	@Query("select b from Board b join b.comments where b.boardNum=:boardNum")
+	public Board findBoardById(@Param("boardNum")Long boardNum);
 }
  
 

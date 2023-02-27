@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class BoardReadResponseDto {
-	private Long bNum;
+	private Long boardNum;
 	@JsonIgnore
     private User user;
     private String category;
@@ -30,9 +30,9 @@ public class BoardReadResponseDto {
     
     
     @Builder  
-    public BoardReadResponseDto(Long bNum, User user, String category, String title, String content,
+    public BoardReadResponseDto(Long boardNum, User user, String category, String title, String content,
     		LocalDateTime createdDate, Long hits,Comment comment, List<Comment> comments) {
-    	this.bNum = bNum;
+    	this.boardNum = boardNum;
     	this.user = user;
     	this.category = category;
     	this.title = title;
@@ -47,17 +47,12 @@ public class BoardReadResponseDto {
     public Board toEntity(User user) {
     	LocalDateTime date = LocalDateTime.now();
     	return Board.builder()
-   		//  	.bNum(bNum)
     			.user(user)
     			.category(category)
     			.title(title)
     			.content(content)
     			.createdDate(date)
-//    			.hits(hits)
     			.build();
     }
-
-   
-
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myomi.board.dto.BoardReadResponseDto;
@@ -22,15 +23,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@RequestMapping("/board")
 @RequiredArgsConstructor
 @Slf4j
-
 
 public class BoardController {
       private final BoardService service;
       
     //글 목록 보기 
-	@GetMapping("board/list")
+	@GetMapping("/list")
 	  public List<BoardReadResponseDto> boardList(
 			                     //size = 한 페이지당 글 개수 
 			       @PageableDefault(size=4) Pageable pageable) {
@@ -39,14 +40,14 @@ public class BoardController {
 	}
 	
 	//제목으로 검색 
-	@GetMapping("board/list/{keyword}")
+	@GetMapping("/list/{keyword}")
 	public List<BoardReadResponseDto> boardListByTitle (@PathVariable String keyword,
 			@PageableDefault(size=4) Pageable pageable) {
 		return service.findByTitle(keyword, pageable);
 	}
 	
 	//제목과 카테고리로 검색 
-	@GetMapping("board/list/{category}/{title}")
+	@GetMapping("/list/{category}/{title}")
 	public List<BoardReadResponseDto> boardListByTitleAndCategory (@PathVariable String category,
 																   @PathVariable String title,
 																   @PageableDefault(size=4) Pageable pageable) {
@@ -55,33 +56,33 @@ public class BoardController {
 
 	
 	//글 작성 
-	@PostMapping("board/add")  //로그인필요 
+	@PostMapping("/add")  //로그인필요 
 	public ResponseEntity<BoardReadResponseDto> boardAdd(@RequestBody BoardReadResponseDto addDto,
 			Authentication user) {
 		return service.addBoard(addDto, user);
 	}
 	
 	//글 상세보기 + 댓글 리스트 같이 
-	@GetMapping("board/detail/{bNum}")
+	@GetMapping("/detail/{bNum}")
 	public BoardReadResponseDto boardDetail(@PathVariable Long bNum) {
 	    return service.detailBoard(bNum);
 	}
 
 	//글 수정
-	@PutMapping("board/detail/{bNum}") //로그인필요 
+	@PutMapping("/detail/{bNum}") //로그인필요 
 	public void boardModify(@RequestBody BoardReadResponseDto editDto, 
 			@PathVariable Long bNum, Authentication user) {
 		service.modifyBoard(editDto, bNum, user);
 	}
 	
 	//글 삭제 
-	@DeleteMapping("board/detail{bNum}") //로그인필요 
+	@DeleteMapping("/detail{bNum}") //로그인필요 
 	public void boardDelete (@PathVariable Long bNum, Authentication user) {
 		service.deleteBoard(bNum, user);
 	}
 
 	//마이페이지에서 내가 작성한 글 보기 
-	@GetMapping("mypage/boardList")
+	@GetMapping("/mypage/boardList")
 	public List<BoardReadResponseDto> myBoardList(Authentication user,
 			@PageableDefault(size=4) Pageable pageable){
 		return service.findBoardListByUser(user,pageable);
@@ -90,28 +91,28 @@ public class BoardController {
 	//=======================댓글===========================
 	
 	//댓글 작성 
-	@PostMapping("board/detail/{bNum}")
+	@PostMapping("/detail/{boardNum}")
 	public ResponseEntity<CommentDto> commentAdd(@RequestBody CommentDto cDto, 
 												 Authentication user,		
-												 @PathVariable Long bNum ) {
-		return service.addComment(cDto,user,bNum);
+												 @PathVariable Long boardNum ) {
+		return service.addComment(cDto,user,boardNum);
 	}
 	
 	//댓글 수정 
-	@PutMapping("board/detail/{bNum}/{cNum}")
+	@PutMapping("/detail/{boardNum}/{commentNum}")
 	public void commentModify (@RequestBody CommentDto cDto, 
 							   Authentication user,	
-							   @PathVariable Long bNum,
-							   @PathVariable Long cNum) {
-		service.modifyComment(cDto, user, bNum, cNum);
+							   @PathVariable Long boardNum,
+							   @PathVariable Long commentNum) {
+		service.modifyComment(cDto, user, boardNum, commentNum);
 		
 	}
 	
 	//댓글 삭제 
-	@DeleteMapping("board/detail/{bNum}/{cNum}")
+	@DeleteMapping("/detail/{boardNum}/{commentNum}")
 	public void commentDelete (Authentication user,	
-							   @PathVariable Long bNum,
-							   @PathVariable Long cNum) {
-	    service.deleteComment(user, bNum, cNum);
+							   @PathVariable Long boardNum,
+							   @PathVariable Long commentNum) {
+	    service.deleteComment(user, boardNum, commentNum);
 	}
 }

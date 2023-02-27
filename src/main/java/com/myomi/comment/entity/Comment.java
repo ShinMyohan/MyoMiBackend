@@ -39,7 +39,7 @@ public class Comment {
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COMMENTS_SEQ_GENERATOR") 
-	private Long cNum;
+	private Long commentNum;
 	
     @ManyToOne
     @JoinColumn(name="board_num", nullable = false ,
@@ -67,8 +67,8 @@ public class Comment {
 	 private LocalDateTime createdDate;
 	
 	@Builder
-	public Comment(Long cNum, Board board, User user, @NotNull String content, int parent, LocalDateTime createdDate) {
-		this.cNum = cNum;
+	public Comment(Long commentNum, Board board, User user, @NotNull String content, int parent, LocalDateTime createdDate) {
+		this.commentNum = commentNum;
 		this.board = board;
 		this.user = user;
 		this.content = content;
