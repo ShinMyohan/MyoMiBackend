@@ -26,27 +26,27 @@ public class FollowController {
 	private final FollowService followService;
 	
 	//팔로우 하기
-	@PostMapping("store/{sId}")
-	public void followAdd(@PathVariable String sId, Authentication user){
+	@PostMapping("store/follow/{sId}")
+	public void followSave(@PathVariable String sId, Authentication user){
 		followService.addFollow(sId,user);
 	}
 	
 	//언팔로우 하기(마이페이지,다중삭제 가능)
 	@DeleteMapping("mypage/follow")
 	public void followMypageDelete(@RequestBody List<FollowDeleteRequestDto> requestDto, Authentication user ) {
-		followService.deleteMypageFollow(requestDto,user);
+		followService.removeMypageFollow(requestDto,user);
 	}
 	
 	//팔로우 목록 조회(마이페이지,페이징)
 	@GetMapping("mypage/follow")
-	public List<FollowReadResponseDto> followList(Authentication user,@PageableDefault(size=5) Pageable pageable) {
-		return followService.findFollowList(user,pageable);
+	public List<FollowReadResponseDto> followAllByUserList(Authentication user,@PageableDefault(size=5) Pageable pageable) {
+		return followService.getAllUserFollowList(user,pageable);
 	}
 	
 	//언팔로우 하기(스토어)
 	@DeleteMapping("store/{sId}")
-	public void followDelete(@PathVariable String sId, Authentication user) {
-		followService.deleteFollow(sId,user);
+	public void followStoreDelete(@PathVariable String sId, Authentication user) {
+		followService.removeStoreFollow(sId,user);
 	}
 
 }

@@ -1,13 +1,10 @@
 package com.myomi.seller.repository;
 
 import java.util.List;
-<<<<<<< HEAD
 
 import org.springframework.data.jpa.repository.Query;
-=======
 import java.util.Optional;
 
->>>>>>> develop
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 

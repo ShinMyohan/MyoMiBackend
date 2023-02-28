@@ -36,13 +36,13 @@ public class SellerController {
 	//판매자 신청현황 조회하기
 	@GetMapping("mypage/partner")
 	public SellerReadResponseDto sellerJoinDetail(Authentication user) {
-		return sellerService.detailSellerJoin(user);
+		return sellerService.getDetailBySellerJoin(user);
 	}
 	
 	//판매자 주문 현황 조회(상세포함)
 	@GetMapping("sellerPage/order")
 	public List<SellerOrderDetailDto> sellerOrderList(Authentication user,@PageableDefault(size=5) Pageable pageable){
-		return sellerService.findSellerOrderList(user,pageable);
+		return sellerService.getAllSellerOrderList(user,pageable);
 	}
 	
 	//판매자 info
@@ -55,7 +55,7 @@ public class SellerController {
 	//판매자 탈퇴
 	@PutMapping("sellerPage/")
 	public void sellerDelete(Authentication user){
-		sellerService.deleteSeller(user);
+		sellerService.removeSeller(user);
 	}
 	
 	
