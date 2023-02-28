@@ -21,7 +21,7 @@ public class CartController {
 
     @GetMapping("/cart/list")
     public List<CartReadResponseDto> cartList(Authentication user) {
-        return cartService.findCartList(user);
+        return cartService.getCartList(user);
     }
 
     @PostMapping("/cart")
