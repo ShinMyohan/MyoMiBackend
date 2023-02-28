@@ -29,70 +29,67 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/board")
+//@RequestMapping("/board")
 @RequiredArgsConstructor
 @Slf4j
-@Api(tags = "게시글과 댓글")
+@Api(tags = "게시판")
 
 public class BoardController {
       private final BoardService service;
       
-
     @ApiOperation(value = "게시판 | 글 목록 보기 ")
-	@GetMapping("/list")
-	  public ResponseEntity<?> boardList(
+	@GetMapping("/board/list")
+	  public ResponseEntity<?> boardAll(
 			                     //size = 한 페이지당 글 개수 
 			       @PageableDefault(size=4) Pageable pageable) throws FindException{
-		List<BoardReadResponseDto> list = service.findBoard(pageable);
+		List<BoardReadResponseDto> list = service.getBoard(pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
     @ApiOperation(value = "게시판 | 제목으로 검색")
-	@GetMapping("/list/{keyword}")
-	public ResponseEntity<?> boardListByTitle (@PathVariable String keyword,
+	@GetMapping("/board/list/{keyword}")
+	public ResponseEntity<?> boardAllByTitle (@PathVariable String keyword,
 			@PageableDefault(size=4) Pageable pageable) throws FindException{
-		List<BoardReadResponseDto> list = service.findByTitle(keyword, pageable);
+		List<BoardReadResponseDto> list = service.getByTitle(keyword, pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
     @ApiOperation(value = "게시판 | 제목 + 카테고리로 검색 ")
-	@GetMapping("/list/{category}/{title}")
-	public ResponseEntity<?> boardListByTitleAndCategory (@PathVariable String category,
-																   @PathVariable String title,
-																   @PageableDefault(size=4) Pageable pageable) throws FindException{
-		List<BoardReadResponseDto> list = service.findByCategoryAndTitle(category, title, pageable);
+	@GetMapping("/board/list/{category}/{title}")
+	public ResponseEntity<?> boardAllByTitleAndCategory (@PathVariable String category,
+													    @PathVariable String title,
+														@PageableDefault(size=4) Pageable pageable) throws FindException{
+		List<BoardReadResponseDto> list = service.getByCategoryAndTitle(category, title, pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
-	
     @ApiOperation(value = "게시판 | 글 작성 ")
-	@PostMapping("/add")  //로그인필요 
+	@PostMapping("/board/add")  //로그인필요 
 	public ResponseEntity<?> boardAdd(@RequestBody BoardReadResponseDto addDto,
 			Authentication user) throws AddException{
 		service.addBoard(addDto, user);
 		return new ResponseEntity<>( HttpStatus.OK);
-		
 	}
 	
     @ApiOperation(value = "게시판 | 글 상세 + 댓글 보기 ")
-	@GetMapping("/detail/{bNum}")
-	public ResponseEntity<?> boardDetail(@PathVariable Long bNum) throws FindException{
-		BoardReadResponseDto dto = service.detailBoard(bNum);
+	@GetMapping("/board/detail/{boardNum}")
+	public ResponseEntity<?> boardDetail(@PathVariable Long boardNum){
+		BoardReadResponseDto dto = service.detailBoard(boardNum);
 	    return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
     @ApiOperation(value = "게시판 | 글 수정 ")
-	@PutMapping("/detail/{bNum}") //로그인필요 
+	@PutMapping("/board/detail/{boardNum}") //로그인필요 
 	public ResponseEntity<?> boardModify(@RequestBody BoardReadResponseDto editDto, 
-			@PathVariable Long bNum, Authentication user) throws AddException{
-		service.modifyBoard(editDto, bNum, user);
+			@PathVariable Long boardNum, Authentication user) throws AddException{
+		service.modifyBoard(editDto, boardNum, user);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
     @ApiOperation(value = "게시판 | 글 삭제 ")
-	@DeleteMapping("/detail{bNum}") //로그인필요 
-	public ResponseEntity<?> boardDelete (@PathVariable Long bNum, Authentication user) throws RemoveException{
-		service.deleteBoard(bNum, user);
+	@DeleteMapping("/board/detail/{boardNum}") //로그인필요 
+	public ResponseEntity<?> boardDelete (@PathVariable Long boardNum, Authentication user) throws RemoveException{
+		service.deleteBoard(boardNum, user);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -104,34 +101,5 @@ public class BoardController {
 		 return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
-	//=======================댓글===========================
 	
-    @ApiOperation(value = "댓글 | 댓글 작성 ")
-	@PostMapping("/detail/{boardNum}")
-	public ResponseEntity<?> commentAdd(@RequestBody CommentDto cDto, 
-												 Authentication user,		
-												 @PathVariable Long boardNum ) throws AddException{
-		service.addComment(cDto,user,boardNum);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
-    @ApiOperation(value = "댓글 | 댓글 수정 ")
-	@PutMapping("/detail/{boardNum}/{commentNum}")
-	public ResponseEntity<?> commentModify (@RequestBody CommentDto cDto, 
-							   Authentication user,	
-							   @PathVariable Long boardNum,
-							   @PathVariable Long commentNum) throws AddException{
-		
-		service.modifyComment(cDto, user, boardNum, commentNum);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
-    @ApiOperation(value = "댓글 | 댓글 삭제 ")
-	@DeleteMapping("/detail/{boardNum}/{commentNum}")
-	public ResponseEntity<?>  commentDelete (Authentication user,	
-							   @PathVariable Long boardNum,
-							   @PathVariable Long commentNum) throws RemoveException{
-	    service.deleteComment(user, boardNum, commentNum);
-	    return new ResponseEntity<>(HttpStatus.OK);
-	}
 }
