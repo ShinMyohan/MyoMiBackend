@@ -17,15 +17,17 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.myomi.user.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
+@Setter @Getter @NoArgsConstructor
+//@AllArgsConstructor
 @SequenceGenerator(
 name =
 "QNA_SEQ_GENERATOR", // 사용할 sequence 이름
@@ -46,17 +48,19 @@ public class Qna implements Serializable{
 			strategy = GenerationType.SEQUENCE,
 			generator = 
 			"QNA_SEQ_GENERATOR") // 위의 sequence 이름
-	private Long qNum;
+	private Long qnaNum;
 	
 	
 	@ManyToOne
 	@JoinColumn(name="qna_user",nullable=false)
 	@NotNull
+	@JsonIgnore
 	private User userId;
 	
 	@ManyToOne
 	@JoinColumn(name="prod_num",nullable=false)
 	@NotNull
+	@JsonIgnore
 	private Product prodNum;
 	
 	
@@ -79,6 +83,17 @@ public class Qna implements Serializable{
 	@Column(name="ans_created_date")
 	private LocalDateTime ansCreatedDate;
 	
-	
-	
+	@Builder
+	public Qna(Long qnaNum, User userId, Product prodNum, String queTitle,
+			 String queContent, LocalDateTime queCreatedDate, String ansContent,
+			LocalDateTime ansCreatedDate) {
+		this.qnaNum = qnaNum;
+		this.userId = userId;
+		this.prodNum = prodNum;
+		this.queTitle = queTitle;
+		this.queContent = queContent;
+		this.queCreatedDate = queCreatedDate;
+		this.ansContent = ansContent;
+		this.ansCreatedDate = ansCreatedDate;
+	}
 }

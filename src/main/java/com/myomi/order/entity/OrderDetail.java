@@ -1,12 +1,19 @@
 package com.myomi.order.entity;
 
-import com.myomi.user.Product;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
+import com.myomi.product.entity.Product;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 @Setter
 @Getter
@@ -18,12 +25,12 @@ public class OrderDetail {
     @EmbeddedId
     private OrderDetailEmbedded id = new OrderDetailEmbedded();
 
-    @MapsId("oNum")
+    @MapsId("orderNum")
     @ManyToOne
     @JoinColumn(name = "order_num")
     private Order order;
 
-    @MapsId("pNum") // 복합키
+    @MapsId("prodNum") // 복합키
     @ManyToOne
     @JoinColumn(name = "prod_num")
     private Product product;

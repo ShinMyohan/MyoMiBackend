@@ -1,11 +1,13 @@
 package com.myomi.membership.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 @Setter
 @Getter
@@ -15,7 +17,7 @@ import javax.persistence.*;
 public class Membership {
     @Id
     @Column(name = "membership_num")
-    private Long mNum;
+    private int mNum;
 
     @Column(name = "membership_level", nullable = false)
     private String mLevel;

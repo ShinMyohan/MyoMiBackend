@@ -15,7 +15,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,12 +36,13 @@ import lombok.Setter;
 public class BestReview implements Serializable {
 	@Id
 	@Column(name = "review_num")
-	private Long rNum;
+	private Long reviewNum;
 
 	@MapsId
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn( name = "review_num")
 	@NotNull
+	@JsonIgnore
 	private Review review;
 
 	@Column(name = "created_date",updatable = false)

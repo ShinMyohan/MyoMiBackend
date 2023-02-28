@@ -18,11 +18,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.myomi.board.dto.BoardReadResponseDto.BoardReadResponseDtoBuilder;
 import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
@@ -46,7 +43,7 @@ public class Board {
    @Id
    @Column(name="num", updatable =  false)
    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-                   generator = "BOARD_SEQ_GENERATOR")
+   generator = "BOARD_SEQ_GENERATOR")
    private Long boardNum;
    
   

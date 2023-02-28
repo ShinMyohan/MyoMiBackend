@@ -1,10 +1,12 @@
 
 package com.myomi.repotest;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
 class BoardRepositoryTest {

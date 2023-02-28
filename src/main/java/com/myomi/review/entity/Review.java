@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
 
@@ -41,10 +42,11 @@ public class Review {
 	@Id
 	@Column(name = "num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REVIEW_SEQ_GENERATOR")
-	private Long rNum;
+	private Long reviewNum;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id",updatable = false)
+	@JsonIgnore
 	private User user;
 
 	@Column(name = "sort",updatable = false)
@@ -67,6 +69,7 @@ public class Review {
 	@OneToOne
 	@JoinColumns({ @JoinColumn(name = "order_num",updatable = false), 
 	@JoinColumn(name = "prod_num",updatable = false) })
+	@JsonIgnore
 	private OrderDetail orderDetail;
 
 	@OneToOne(mappedBy = "review")
