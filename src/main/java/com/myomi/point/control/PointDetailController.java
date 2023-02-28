@@ -3,6 +3,9 @@ package com.myomi.point.control;
 import com.myomi.point.dto.PointDetailDto;
 import com.myomi.point.dto.PointDto;
 import com.myomi.point.service.PointDetailService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -20,29 +23,31 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Api(tags = "포인트")
 public class PointDetailController {
 
 	private final PointDetailService service;
-	
-	//마이페이지에서 포인트 내역 조회 
+	@ApiOperation(value = "마이페이지 | 포인트 목록 보기 ")
 	@GetMapping("mypage/pointDetail")
 	public ResponseEntity<?> myPointList(Authentication user,
 			@PageableDefault(size=4) Pageable pageable) {
-		 List<PointDetailDto> list = service.findMyPointList(user, pageable);
+		List<PointDetailDto> list = service.findMyPointList(user, pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
-	
+
+	@ApiOperation(value = "포인트 | 포인트 적립")
 	@PostMapping("point")
 	public ResponseEntity<?> pointAdd(@RequestBody PointDetailDto pDto,
-			 Authentication user) {
+			Authentication user) {
 		ResponseEntity<PointDetailDto> dto = service.addPoint(pDto, user);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("point")
+	@ApiOperation(value = "포인트 | 총 포인트 보기 ")
 	public ResponseEntity<?> findTotalpoint (Authentication user) {
 		PointDto dto = service.findTotalPoint(user);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
+
 }

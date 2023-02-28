@@ -29,7 +29,7 @@ public class CartService {
     */
 
     @Transactional //TODO: 화면에 보여줄 정보 추리기, 주문 화면에 보여줄 정보 / 상품에서 바로구매시 가져올 정보
-    public List<CartReadResponseDto> findCartList(Authentication user) {
+    public List<CartReadResponseDto> getCartList(Authentication user) {
         List<Cart> carts = cartRepository.findByUserId(user.getName());
         List<CartReadResponseDto> list = new ArrayList<>();
         if (carts.size() == 0) {
@@ -52,7 +52,7 @@ public class CartService {
             // 장바구니에 이미 상품이 있다면 수량만 추가
             saveCart(user, requestDto);
         } else {
-            Cart cart = requestDto.toEntity(requestDto);
+            Cart cart = requestDto.toEntity(user.getName(), requestDto);
             log.info(cart.getUser().getId() + "님의 장바구니에 상품번호 " + cart.getProduct().getProdNum() + "번째 상품이 담겼습니다.");
             cartRepository.save(cart);
         }
@@ -62,7 +62,7 @@ public class CartService {
     @Transactional
     public void saveCart(Authentication user, CartSaveRequestDto requestDto) {
         cartRepository.updateCart(user.getName(), requestDto.getProduct().getProdNum(), requestDto.getProdCnt());
-        log.info(requestDto.getUser().getId() + "님의 장바구니에 상품번호 " + requestDto.getProduct().getProdNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 더 추가되었습니다.");
+        log.info(user.getName() + "님의 장바구니에 상품번호 " + requestDto.getProduct().getProdNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 더 추가되었습니다.");
     }
 
     @Transactional

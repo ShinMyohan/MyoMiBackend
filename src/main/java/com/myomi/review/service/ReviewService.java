@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.entity.OrderDetailEmbedded;
 //import com.myomi.order.repository.OrderDetailRepository;
+import com.myomi.order.repository.OrderDetailRepository;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.review.dto.ReviewDetailResponseDto;
 import com.myomi.review.dto.ReviewReadResponseDto;
@@ -41,6 +42,31 @@ public class ReviewService {
     private final OrderRepository or;
     private final BestReviewRepository brr;
     //private final OrderDetailRepository odr;
+    private final OrderDetailRepository odr;
+
+    public List<ReviewReadResponseDto> findProdReviewList(Long prodNum) {
+        List<Review> reviews = rr.findAllByProdNum(prodNum);
+        List<ReviewReadResponseDto> list = new ArrayList<>();
+        if (reviews.size() == 0) {
+            log.info("리뷰가 없습니다.");
+        } else {
+            for (Review review : reviews) {
+                ReviewReadResponseDto dto = ReviewReadResponseDto.builder()
+                        .userId(review.getUser().getId())
+                        .prodName(review.getOrderDetail().getProduct().getName())
+                        .reviewNum(review.getReviewNum())
+                        .title(review.getTitle())
+                        .content(review.getContent())
+                        .createdDate(review.getCreatedDate())
+                        .stars(review.getStars())
+
+                        .build();
+                list.add(dto);
+            }
+        }
+        return list;
+
+    }
 
     @Transactional
     public List<ReviewReadResponseDto> getMyReviewList(String id) {
@@ -78,10 +104,14 @@ public class ReviewService {
         		.orderNum(reviewSaveDto.getOrderNum())
         		.prodNum(reviewSaveDto.getProdNum())
         		.build();
-        
+
         //Optional<OrderDetail> od = odr.findById(ode);
         //Review review = dto.toEntity(reviewSaveDto, optU.get(), od.get());
         //rr.save(review);
+
+        Optional<OrderDetail> od = odr.findById(ode);
+        Review review = dto.toEntity(reviewSaveDto, optU.get(), od.get());
+        rr.save(review);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -9,13 +9,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CartSaveRequestDto {
-    private User user;
     private Product product;
     private int prodCnt;
 
-    public Cart toEntity(CartSaveRequestDto requestDto) {
+    public Cart toEntity(String userId, CartSaveRequestDto requestDto) {
         return Cart.builder()
-                .user(requestDto.getUser())
+                .user(User.builder().id(userId).build())
                 .product(requestDto.getProduct())
                 .prodCnt(requestDto.getProdCnt())
                 .build();

@@ -72,8 +72,7 @@ public class Board {
    private Long hits;
    
    @JsonIgnore
-   @OneToMany(
-		      cascade = CascadeType.REMOVE, 
+   @OneToMany(cascade = CascadeType.REMOVE, 
 		      mappedBy = "board")
    private List<Comment> comments;
 

@@ -1,6 +1,7 @@
 package com.myomi.comment.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,11 +28,12 @@ public class CommentDto {
 	private String title;
 	private String userId;
 	private int parent;
+    private List<Comment> reply;
 
 
 	@Builder
 	public CommentDto(Long commentNum, Board board, User user, String content, LocalDateTime createdDate, String category,
-			String title,String userId, int parent) {
+			String title,String userId, List<Comment> reply) {
 		super();
 		this.commentNum = commentNum;
 		this.board = board;
@@ -42,6 +44,7 @@ public class CommentDto {
 		this.title = title;
 		this.userId = userId;
 		this.parent = parent;
+		this.reply = reply;
 	}
 	
 
