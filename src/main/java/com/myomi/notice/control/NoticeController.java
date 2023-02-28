@@ -32,14 +32,12 @@ public class NoticeController {
 	@Autowired
 	private final NoticeService noticeService;
 	
-	
 	//공지리스트출력
 	@GetMapping("")
 	public List<NoticeDto> noticeList(
 		@PageableDefault(size=4) Pageable pageable){
-		return noticeService.findAllList(pageable);
+		return noticeService.getAllNotice(pageable);
 	}
-	
 	//작성
 	@PostMapping("add")
 	public void noticeSave(@RequestBody NoticeRequestDto noticeDto,Authentication admin){
@@ -55,20 +53,20 @@ public class NoticeController {
 	//상세보기
 	@GetMapping("{noticeNum}")
 	public NoticeDto noticeDetail(@PathVariable Long noticeNum) {
-		return noticeService.detailNotice(noticeNum);
+		return noticeService.getOneNotice(noticeNum);
 	}
 	
 	//삭제
 	@DeleteMapping("{noticeNum}")
 	public void noticeDelete(@PathVariable Long noticeNum) {
-		noticeService.deleteNotice(noticeNum);
+		noticeService.RemoveNotice(noticeNum);
 	}
 	
 	//제목으로 검색
 	@GetMapping("title/{keyword}")
-	public List<NoticeDto> noticeListByTitle(@PathVariable String keyword,
+	public List<NoticeDto> NoticeListByTitle(@PathVariable String keyword,
 			@PageableDefault(size=4) Pageable pageable
 			){
-		return noticeService.findByTitle(keyword,pageable);
+		return noticeService.getAllNoticeByTitle(keyword,pageable);
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.myomi.review.dto.ReviewDetailResponseDto;
 import com.myomi.review.dto.ReviewReadResponseDto;
 import com.myomi.review.dto.ReviewSaveRequestDto;
@@ -30,28 +31,16 @@ public class ReviewController {
 	@Autowired
 	private final ReviewService service;
 
-	//상품리뷰리스트
-	@GetMapping("{prodNum}")
-	public List<ReviewReadResponseDto> reviewprodList(@PathVariable Long prodNum) {
-		return service.findProdReviewList(prodNum);
-	}
-	
-	//상품베스트리뷰리스트
-	@GetMapping("bestreview/{prodNum}")
-	public List<ReviewReadResponseDto> bestreviewprodList(@PathVariable Long prodNum) {
-		return service.findProdBestReviewList(prodNum);
-	}
-	
 	//내리뷰리스트
 	@GetMapping("mypage/{id}")
-	public List<ReviewReadResponseDto> reviewList(@PathVariable String id) {
-		return service.findReviewList(id);
+	public List<ReviewReadResponseDto> MyReviewList(@PathVariable String id) {
+		return service.getMyReviewList(id);
 	}
 
 	//판매자의 리뷰 검색
 	@GetMapping("/sellerpage")
 	public List<ReviewReadResponseDto> sellerReviewList(Authentication seller){
-		return service.findSellerReviewList(seller);
+		return service.getSellerReviewList(seller);
 	}
 
 	//리뷰 상세보기
@@ -63,10 +52,14 @@ public class ReviewController {
 	//리뷰작성
 	@PostMapping("add")
 	public void reviewsave(@RequestBody ReviewSaveRequestDto reviewSaveDto,
-					Long orderNum,
-					Long prodNum, 
-			Authentication user) {
-		service.addReview(reviewSaveDto,user,orderNum,prodNum);
+					Authentication user
+//					,		
+//					Long orderNum,
+//					Long prodNum
+			) {
+		service.addReview(reviewSaveDto,user
+//				,orderNum,prodNum
+				);
 	}
 	
 	//판매자리뷰
