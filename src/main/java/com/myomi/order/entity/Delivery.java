@@ -17,11 +17,11 @@ import javax.persistence.*;
 public class Delivery {
     @Id
     @Column(name = "order_num")
-    private Long oNum;
+    private Long orderNum;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="order_num", referencedColumnName = "num")
+    @JoinColumn(name = "order_num", referencedColumnName = "num")
     private Order order;
 
     @Column(name = "name", nullable = false)
@@ -48,6 +48,7 @@ public class Delivery {
         this.deliveryMsg = deliveryMsg;
         this.receiveDate = receiveDate;
     }
+
     public void registerOrder(Order order) {
         this.order = order;
     }

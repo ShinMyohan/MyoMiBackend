@@ -4,7 +4,6 @@ import com.myomi.cart.dto.CartDeleteRequestDto;
 import com.myomi.cart.dto.CartReadResponseDto;
 import com.myomi.cart.dto.CartSaveRequestDto;
 import com.myomi.cart.service.CartService;
-import com.myomi.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -20,24 +19,19 @@ public class CartController {
 
     private final CartService cartService;
 
-    // 임시 회원정보
-    User user = User.builder()
-            .id("id2").build();
-
-
-    @GetMapping("/cart")
-    public List<CartReadResponseDto> cartList() {
+    @GetMapping("/cart/list")
+    public List<CartReadResponseDto> cartList(Authentication user) {
         return cartService.findCartList(user);
     }
 
     @PostMapping("/cart")
-    public void cartSave(@RequestBody CartSaveRequestDto requestDto) {
-        cartService.addCart(requestDto);
+    public void cartSave(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
+        cartService.addCart(user, requestDto);
     }
 
     @PutMapping("/cart")
-    public void cartModify(@RequestBody CartSaveRequestDto requestDto) {
-        cartService.saveCart(requestDto);
+    public void cartModify(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
+        cartService.saveCart(user, requestDto);
     }
 
     @DeleteMapping("/cart")

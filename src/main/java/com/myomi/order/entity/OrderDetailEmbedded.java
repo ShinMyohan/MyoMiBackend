@@ -11,9 +11,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class OrderDetailEmbedded implements Serializable{
-	// 주문 번호
-	private Long orderNum;
-	// 상품 번호
-	private Long prodNum;
+public class OrderDetailEmbedded implements Serializable {
+    // 주문 번호
+    private Long orderNum;
+    // 상품 번호
+    private Long prodNum;
 }

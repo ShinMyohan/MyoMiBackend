@@ -5,8 +5,6 @@ import com.myomi.cart.dto.CartReadResponseDto;
 import com.myomi.cart.dto.CartSaveRequestDto;
 import com.myomi.cart.entity.Cart;
 import com.myomi.cart.repository.CartRepository;
-import com.myomi.product.entity.Product;
-import com.myomi.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -28,45 +26,33 @@ public class CartService {
                2. 장바구니에 저장하기(이미 있으면 수량만 추가)
                3. 장바구니에서 선택 삭제하기(한개, 여러개 가능)
                5. 장바구니 수량 변경
-    *
-    * */
+    */
 
-
-    @Transactional
-    public List<CartReadResponseDto> findCartList(User user) {
-        List<Cart> carts = cartRepository.findByUserId(user.getId());
+    @Transactional //TODO: 화면에 보여줄 정보 추리기, 주문 화면에 보여줄 정보 / 상품에서 바로구매시 가져올 정보
+    public List<CartReadResponseDto> findCartList(Authentication user) {
+        List<Cart> carts = cartRepository.findByUserId(user.getName());
         List<CartReadResponseDto> list = new ArrayList<>();
         if (carts.size() == 0) {
             log.info("장바구니가 비었습니다.");
         } else {
-
             for (Cart cart : carts) {
-                CartReadResponseDto dto = CartReadResponseDto.builder()
-//                    .user(user)
-                        .product(cart.getProduct())
-                        .prodCnt(cart.getProdCnt())
-                        .build();
-                list.add(dto);
+                CartReadResponseDto dto = new CartReadResponseDto();
+                list.add(dto.toDto(cart));
             }
         }
         return list;
     }
 
+    // 장바구니 추가
     @Transactional
-    public void addCart(CartSaveRequestDto requestDto) {
-        User user = requestDto.getUser();
-        Product prod = requestDto.getProduct();
-        Optional<Cart> cartOpt = cartRepository.findByUserAndProduct(user, prod);
+    public void addCart(Authentication user, CartSaveRequestDto requestDto) {
+        Optional<Cart> cartOpt = cartRepository.findByUserIdAndProduct(user.getName(), requestDto.getProduct());
 
         if (cartOpt.isPresent()) {
             // 장바구니에 이미 상품이 있다면 수량만 추가
-            saveCart(requestDto);
+            saveCart(user, requestDto);
         } else {
-            Cart cart = Cart.builder()
-                    .user(requestDto.getUser())
-                    .product(requestDto.getProduct())
-                    .prodCnt(requestDto.getProdCnt())
-                    .build();
+            Cart cart = requestDto.toEntity(requestDto);
             log.info(cart.getUser().getId() + "님의 장바구니에 상품번호 " + cart.getProduct().getProdNum() + "번째 상품이 담겼습니다.");
             cartRepository.save(cart);
         }
@@ -74,27 +60,15 @@ public class CartService {
 
     // 상품 추가할때도 수량 수정, 수량만 수정할 때는 더티체킹만 하도록
     @Transactional
-    public void saveCart(CartSaveRequestDto requestDto) { // TODO: 본인 것만 추가하도록
-//        Optional<Cart> cartOpt = cartRepository.findByUserIdAndProduct(cart.getId().getUserId(), cart.getProduct());
-//        cart.updateProdCnt(cart); // 더티체킹
-//        int cnt = prodCnt + requestDto.getProdCnt();
-//        Cart cart = Cart.builder().user(requestDto.getUser()).product(requestDto.getProduct()).prodCnt(cnt).build();
-//        cart.updateProdCnt(cart);
-
-        cartRepository.updateCart(requestDto.getUser().getId(), requestDto.getProduct().getProdNum(), requestDto.getProdCnt());
+    public void saveCart(Authentication user, CartSaveRequestDto requestDto) {
+        cartRepository.updateCart(user.getName(), requestDto.getProduct().getProdNum(), requestDto.getProdCnt());
         log.info(requestDto.getUser().getId() + "님의 장바구니에 상품번호 " + requestDto.getProduct().getProdNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 더 추가되었습니다.");
-//        cartRepository.save(cart);
     }
-
-    // 상품 수량만 수정
-//    @Transactional
-//    public void
 
     @Transactional
     public void removeCart(Authentication user, List<CartDeleteRequestDto> requestDto) {
-        String userId = user.getName();
         for (CartDeleteRequestDto cart : requestDto) {
-            cartRepository.deleteCartByUserIdAndProduct(userId, cart.getProduct().getProdNum());
+            cartRepository.deleteCartByUserIdAndProduct(user.getName(), cart.getProduct().getProdNum());
         }
     }
 }

@@ -43,7 +43,7 @@ public class OrderController {
 
     // 결제
     @PutMapping("/payment")
-    public ResponseEntity<String> paymentComplete(@RequestBody PaymentRequestDto paymentRequestDto, Authentication user) throws  IOException {
+    public ResponseEntity<String> paymentComplete(@RequestBody PaymentRequestDto paymentRequestDto, Authentication user) throws IOException {
         return orderService.payment(paymentRequestDto, user);
 //        String token = orderService.getToken();
 //        System.out.println("토큰 : " + token);
@@ -91,7 +91,7 @@ public class OrderController {
 
     }
 
-   // 주문취소
+    // 주문취소
     @PatchMapping("/payment/cancel")
     public ResponseEntity<String> orderCancel(PaymentRequestDto paymentRequestDto) throws IOException {
         if (!"".equals(paymentRequestDto.getImpUid())) {

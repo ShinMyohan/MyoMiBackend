@@ -57,6 +57,7 @@ public class Order {
     @Column(name = "save_point")
     private Long savePoint;
 
+    @Column(name = "imp_uid")
     private String impUid; // 아임포트 결제 번호
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
@@ -89,6 +90,7 @@ public class Order {
 //            orderDetail.setOrder(this);
 //        }
     }
+
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
     }

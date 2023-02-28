@@ -69,65 +69,65 @@ public class OrderService {
         double realPrice = 0.0;
 
 //        try {
-            // 상품이 있는지 확인
-            for (OrderDetailRequestDto od : requestDto.getOrderDetails()) {
-                Product product = productRepository.findByProdNum(od.getProduct().getProdNum())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
-                if(product.getStatus() != 0) {
-                    log.info("품절된 상품입니다.");
-                } else {
-                    // 상품 가격 계산
-                    realPrice += product.getOriginPrice() * (1 - product.getPercentage() * 0.01) * od.getProdCnt();
-                }
-            }
-
-            if (requestDto.getCouponNum() != 0) {
-                // 사용 가능한 쿠폰인지 확인
-                Coupon coupon = couponRepository.findByCouponNumAndUserId(requestDto.getCouponNum(), u.getName())
-                        .orElseThrow(() -> new IllegalArgumentException("사용 가능한 쿠폰이 없습니다."));
-                if (coupon.getStatus() != 0) {
-                    throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다.");
-                } else {
-                    // 쿠폰을 적용한 총 금액
-                    realPrice *= (1 - coupon.getPercentage() * 0.01);
-                }
-            }
-            // 사용포인트가 본인 가진 것 보다 적은지 확인
-            if (u.getPoint().getTotalPoint() < requestDto.getUsedPoint()) {
-                throw new IllegalArgumentException("보유포인트 잔액을 초과했습니다.");
+        // 상품이 있는지 확인
+        for (OrderDetailRequestDto od : requestDto.getOrderDetails()) {
+            Product product = productRepository.findByProdNum(od.getProduct().getProdNum())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
+            if (product.getStatus() != 0) {
+                log.info("품절된 상품입니다.");
             } else {
-                // 사용한 포인트를 제외한 총 금액
-                realPrice -= requestDto.getUsedPoint();
+                // 상품 가격 계산
+                realPrice += product.getOriginPrice() * (1 - product.getPercentage() * 0.01) * od.getProdCnt();
             }
+        }
 
-            if (realPrice * 0.01 != requestDto.getSavePoint()) {
-                throw new IllegalArgumentException("적립 예정 금액이 다릅니다.");
+        if (requestDto.getCouponNum() != 0) {
+            // 사용 가능한 쿠폰인지 확인
+            Coupon coupon = couponRepository.findByCouponNumAndUserId(requestDto.getCouponNum(), u.getName())
+                    .orElseThrow(() -> new IllegalArgumentException("사용 가능한 쿠폰이 없습니다."));
+            if (coupon.getStatus() != 0) {
+                throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다.");
+            } else {
+                // 쿠폰을 적용한 총 금액
+                realPrice *= (1 - coupon.getPercentage() * 0.01);
             }
+        }
+        // 사용포인트가 본인 가진 것 보다 적은지 확인
+        if (u.getPoint().getTotalPoint() < requestDto.getUsedPoint()) {
+            throw new IllegalArgumentException("보유포인트 잔액을 초과했습니다.");
+        } else {
+            // 사용한 포인트를 제외한 총 금액
+            realPrice -= requestDto.getUsedPoint();
+        }
 
-            // 계산한 금액과 가져온 금액이 같은지 확인
-            if ((long) realPrice != requestDto.getTotalPrice()) {
-                throw new IllegalArgumentException("총 금액을 확인해주세요");
+        if (realPrice * 0.01 != requestDto.getSavePoint()) {
+            throw new IllegalArgumentException("적립 예정 금액이 다릅니다.");
+        }
+
+        // 계산한 금액과 가져온 금액이 같은지 확인
+        if ((long) realPrice != requestDto.getTotalPrice()) {
+            throw new IllegalArgumentException("총 금액을 확인해주세요");
+        }
+
+        // 주문 기본 등록
+        Order order = requestDto.toEntity(u);
+        // 주문 가능한 상품인지 확인
+        for (OrderDetailRequestDto orderDetail : requestDto.getOrderDetails()) {
+            // 주문 상세 등록
+            Optional<Product> prod = productRepository.findByProdNum(orderDetail.getProduct().getProdNum());
+            if (prod.isPresent() && prod.get().getStatus() == 0) {
+                // 연관관계 등록
+                orderDetail.toEntity(orderDetail).registerOrderAndProduct(order, prod.get());
+            } else {
+                throw new IllegalArgumentException("구매할 수 없는 상품입니다.");
             }
+        }
+        // 배송 정보 등록
+        requestDto.getDelivery().registerOrder(order);
+        requestDto.getDelivery().toEntity(order);
 
-            // 주문 기본 등록
-            Order order = requestDto.toEntity(u); // TODO: 결제 금액 계산하는 로직 짜기, 포인트가 본인이 가진것보다 많은건지 확인
-            // 주문 가능한 상품인지 확인
-            for (OrderDetailRequestDto orderDetail : requestDto.getOrderDetails()) {
-                // 주문 상세 등록
-                Optional<Product> prod = productRepository.findByProdNum(orderDetail.getProduct().getProdNum());
-                if (prod.isPresent() && prod.get().getStatus() == 0) {
-                    // 연관관계 등록
-                    orderDetail.toEntity(orderDetail).registerOrderAndProduct(order, prod.get());
-                } else {
-                    throw new IllegalArgumentException("구매할 수 없는 상품입니다.");
-                }
-            }
-            // 배송 정보 등록
-            requestDto.getDelivery().registerOrder(order);
-            requestDto.getDelivery().toEntity(order);
-
-            orderRepository.save(order);
-            return order.getOrderNum();
+        orderRepository.save(order);
+        return order.getOrderNum();
 //        } catch (IllegalArgumentException e) {
 //            throw new IllegalArgumentException("주문에 실패했습니다.");
 //        }

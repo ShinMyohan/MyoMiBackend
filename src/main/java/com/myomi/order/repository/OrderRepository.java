@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderCustomRepository {
 //    public List<Order> findByUserId(String userId);
 
-//    @Query("SELECT o From Order o WHERE o.user.id = :userId AND o.oNum = :num")
+    //    @Query("SELECT o From Order o WHERE o.user.id = :userId AND o.oNum = :num")
     public Order findByUserIdAndOrderNum(String userId, Long num);
 }

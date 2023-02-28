@@ -35,7 +35,7 @@ public class Qna implements Serializable{
 			strategy = GenerationType.SEQUENCE,
 			generator = 
 			"QNA_SEQ_GENERATOR") // 위의 sequence 이름
-	private Long qNum;
+	private Long qnaNum;
 	
 	
 	@ManyToOne
