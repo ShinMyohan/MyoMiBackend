@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.myomi.comment.entity.Comment;
 
-public interface CommentRepository extends CrudRepository<Comment, Integer> {
+public interface CommentRepository extends CrudRepository<Comment, Long> {
 
 }

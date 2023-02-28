@@ -39,7 +39,7 @@ public class Comment {
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COMMENTS_SEQ_GENERATOR") 
-	private Long cNum;
+	private Long commentNum;
 	
     @ManyToOne
     @JoinColumn(name="board_num", nullable = false ,

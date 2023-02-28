@@ -41,7 +41,7 @@ public class Coupon {
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COUPON_SEQ_GENERATOR") 
-	private Long CpNum;
+	private Long couponNum;
 	
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false

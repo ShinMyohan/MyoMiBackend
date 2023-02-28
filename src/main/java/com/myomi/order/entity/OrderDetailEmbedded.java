@@ -7,12 +7,19 @@ import java.io.Serializable;
 
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class OrderDetailEmbedded implements Serializable{
 	// 주문 번호
-	private Long oNum;
+	private Long orderNum;
 	// 상품 번호
-	private Long pNum;
+	private Long prodNum;
+	
+	@Builder
+	public OrderDetailEmbedded(Long orderNum, Long prodNum) {
+		this.orderNum = orderNum;
+		this.prodNum = prodNum;
+	}
+	
+	
 }

@@ -9,7 +9,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Setter
 @Getter
 @NoArgsConstructor
 @ToString
@@ -19,7 +18,7 @@ import javax.persistence.*;
 public class Delivery {
     @Id
     @Column(name = "order_num")
-    private Long oNum;
+    private Long orderNum;
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)

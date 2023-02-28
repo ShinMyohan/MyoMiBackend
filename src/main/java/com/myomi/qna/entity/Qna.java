@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.myomi.user.entity.Product;
+import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -46,7 +46,7 @@ public class Qna implements Serializable{
 			strategy = GenerationType.SEQUENCE,
 			generator = 
 			"QNA_SEQ_GENERATOR") // 위의 sequence 이름
-	private Long qNum;
+	private Long qnaNum;
 	
 	
 	@ManyToOne

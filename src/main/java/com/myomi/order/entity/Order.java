@@ -1,23 +1,34 @@
 package com.myomi.order.entity;
 
-import com.myomi.user.User;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.myomi.user.entity.User;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 
-@Setter
 @Getter
 @NoArgsConstructor
-@ToString
-@DynamicInsert
-@DynamicUpdate
 @Entity
 @Table(name = "orders")
 @SequenceGenerator(name = "ORDERS_SEQ_GENERATOR", sequenceName = "ORDERS_SEQ"
@@ -28,7 +39,7 @@ public class Order {
             strategy = GenerationType.SEQUENCE, generator = "ORDERS_SEQ_GENERATOR"
     )
     @Column(name = "num")
-    private Long oNum;
+    private Long orderNum;
 
     @ManyToOne // 양방향
     @JoinColumn(name = "user_id")

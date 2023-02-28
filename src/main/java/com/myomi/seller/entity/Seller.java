@@ -14,23 +14,19 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import com.myomi.follow.entity.Follow;
-import com.myomi.user.entity.Product;
+import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
+ @Getter  @NoArgsConstructor
 @Entity(name = "seller")
 @Table(name = "seller_info")
-@DynamicInsert
-@DynamicUpdate
+
 public class Seller {
 	@Id
 	@Column(name = "seller_id")
@@ -78,6 +74,21 @@ public class Seller {
 	
 	@OneToMany(mappedBy ="seller",cascade = CascadeType.REMOVE)
 	private List<Product> products;
+	
+	@Builder
+	public Seller(String id, String companyName, String companyNum,
+			String internetNum, String addr,String manager, String bank_account,
+			int status, Long followCnt) {
+		this.id = id;
+		this.companyName = companyName;
+		this.companyNum = companyNum;
+		this.internetNum = internetNum;
+		this.addr = addr;
+		this.manager = manager;
+		this.bank_account = bank_account;
+		this.status = status;
+		this.followCnt = followCnt;
+	}
 	
 
 	 

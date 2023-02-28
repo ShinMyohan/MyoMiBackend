@@ -29,7 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
+@Getter @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name="board")
 @SequenceGenerator(
@@ -43,7 +43,7 @@ public class Board {
    @Column(name="num", updatable =  false)
    @GeneratedValue(strategy = GenerationType.SEQUENCE,
    generator = "BOARD_SEQ_GENERATOR")
-   private Long bNum;
+   private Long boardNum;
    
    @ManyToOne
    @JoinColumn(name="user_id", nullable = false,

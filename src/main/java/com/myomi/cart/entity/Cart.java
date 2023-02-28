@@ -1,13 +1,20 @@
 package com.myomi.cart.entity;
 
-import com.myomi.user.Product;
-import com.myomi.user.User;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import com.myomi.product.entity.Product;
+import com.myomi.user.entity.User;
 
-@Setter
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Getter
 @NoArgsConstructor
 @ToString
@@ -21,7 +28,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @MapsId("num") // PK, 상품 번호
+    @MapsId("pNum") // PK, 상품 번호
     @ManyToOne
     @JoinColumn(name = "prod_num")
     private Product product;
