@@ -26,12 +26,12 @@ public class BoardReadResponseDto {
     private LocalDateTime createdDate;
     private Long hits;
     private List<Comment> comments;
- 
+    private List<Comment> reply;
     
     
     @Builder  
     public BoardReadResponseDto(Long boardNum, User user, String category, String title, String content,
-    		LocalDateTime createdDate, Long hits,Comment comment, List<Comment> comments) {
+    		LocalDateTime createdDate, Long hits,Comment comment, List<Comment> comments, List<Comment> reply) {
     	this.boardNum = boardNum;
     	this.user = user;
     	this.category = category;
@@ -40,7 +40,7 @@ public class BoardReadResponseDto {
     	this.createdDate = createdDate;
     	this.hits = hits;
     	this.comments = comments;
-   
+        this.reply = reply;
     }
 
     

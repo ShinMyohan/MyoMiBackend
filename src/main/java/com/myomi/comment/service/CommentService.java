@@ -1,18 +1,27 @@
 package com.myomi.comment.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.myomi.board.entity.Board;
+import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.dto.CommentDto;
 import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
+import com.myomi.exception.AddException;
+import com.myomi.exception.RemoveException;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class CommentService {
 	private final CommentRepository cr;
-	
+	private final BoardRepository br; 
+	private final UserRepository ur;
+
+
 	//마이페이지에서 나의 댓글 목록 보기
 	@Transactional
-	public List<CommentDto> findMyCommentList(Authentication user, Pageable pageable) {
+	public List<CommentDto> getMyCommentList(Authentication user, Pageable pageable) {
 		String username = user.getName();
 		List<Comment> list = cr.findAllByComments(username, pageable);
 		List<CommentDto> commentList = new ArrayList<>();
@@ -43,5 +55,50 @@ public class CommentService {
 			commentList.add(cDto);
 		}
 		return commentList;
+	}
+
+	//댓글 작성 
+	@Transactional
+	public ResponseEntity<CommentDto> addComment(CommentDto cDto, Authentication user, Long boardNum){
+		LocalDateTime date = LocalDateTime.now();
+		String username = user.getName();
+		Optional<Board> optB = br.findById(boardNum);
+		Optional<User> optU = ur.findById(username);
+		Comment comment = cDto.toEntity(optU.get(), optB.get());
+		cr.save(comment);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
+
+	//댓글 수정
+	@Transactional
+	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long boardNum,
+			Long commentNum) throws AddException{
+		String username = user.getName();
+		Optional<Board> optB = br.findById(boardNum);
+		Optional<Comment> optC = cr.findById(commentNum);
+		Comment comment = optC.get();
+		if (comment.getUser().getId().equals(username)) {
+			comment.update(cDto.getContent());
+		}else {
+			throw new AddException("작성자만 수정 가능합니다.");
+		}
+		return cDto;
+	}
+
+	//댓글 삭제
+	@Transactional
+	public void deleteComment (Authentication user, Long boardNum,
+			Long commentNum) throws RemoveException{
+		String username = user.getName();
+		Optional<Board> optB = br.findById(boardNum);
+		Optional<Comment> optC = cr.findById(commentNum);
+		Comment comment = optC.get();
+		if (comment.getUser().getId().equals(username)) {
+			cr.delete(comment);
+		}else {
+			throw new RemoveException("작성자만 삭제 가능합니다.");
+		}
 	}
 }

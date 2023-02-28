@@ -43,6 +43,8 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 
                         orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.reviewNum.as("rNum"))));
                         orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum"))));
+                      orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum"))));
+
         return result;
     }
 }
