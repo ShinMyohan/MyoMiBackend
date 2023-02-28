@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myomi.product.entity.Product;
 import com.myomi.seller.entity.Seller;
 
 import lombok.Builder;
@@ -33,7 +34,8 @@ public class ProductDto {
 	@Builder
 	public ProductDto(
 			Long prodNum, 
-			Seller seller, String category,
+			Seller seller, 
+			String category,
 			String name, Long originPrice, int percentage, 
 			int week,
 			int status,
@@ -49,19 +51,17 @@ public class ProductDto {
 		this.detail = detail;
 	}
 	
-	//상품 등록시 사용
-//	public Product toEntity(ProductDto productDto
-////			, Seller seller
-//			) {
-//		return Product.builder()
-//				.seller(seller)
-//				.category(category)
-//				.name(name)
-//				.originPrice(originPrice)
-//				.percentage(percentage)
-//				.week(week)
-//				.detail(detail)
+	//상품 리스트 조회시
+	public ProductDto toDto(Product product) {
+		return ProductDto.builder()
+				.seller(product.getSeller())
+				.category(product.getCategory())
+				.name(product.getName())
+				.originPrice(product.getOriginPrice())
+				.percentage(product.getPercentage())
+				.week(product.getWeek())
+				.detail(product.getDetail())
 //				.fee(9) //기본값 9로 넣어주려고 셋팅
-//				.build();
-//	}
+				.build();
+	}
 }

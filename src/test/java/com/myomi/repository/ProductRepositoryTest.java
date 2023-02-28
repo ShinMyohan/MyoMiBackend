@@ -19,6 +19,13 @@
 //@SpringBootTest
 //class ProductRepositoryTest {
 //	private Logger logger = LoggerFactory.getLogger(getClass());
+//	
+//	@Autowired
+//	private ProductRepository pr;
+//	
+//	@Autowired
+//	private UserRepository userRepository;
+//	
 //
 //	@Autowired
 //	private ProductRepository pr;
@@ -33,6 +40,7 @@
 //	void testProductSave() {
 //		Optional<User> u = userRepository.findById("id1");
 //		Seller seller = u.get().getSeller();
+//		
 //
 //		Product product = Product.builder()
 //				.seller(seller)
@@ -44,19 +52,17 @@
 //				.status(0)
 //				.detail("굿")
 //				.build();
-//
 //		seller.addProduct(product);
 //		pr.save(product);
 //	}
 //
-//
+//	
 //	@Test
 //	void testProdList() {
 //		Optional<Seller> seller = sr.findById("id1");
 //		List<Product> prods = pr.findAllBySellerId(seller.get().getId());
 //		for(Product p : prods) {
 //			logger.info("상품명: " + p.getName() + "상품 가격:" + p.getOriginPrice());
-//
 //		}
 //		logger.info("--------------------------");
 //	}

@@ -90,7 +90,7 @@ public class BoardController {
 	}
 	
     @ApiOperation(value = "게시판 | 글 삭제 ")
-	@DeleteMapping("/detail{bNum}") //로그인필요 
+	@DeleteMapping("/detail/{bNum}") //로그인필요 
 	public ResponseEntity<?> boardDelete (@PathVariable Long bNum, Authentication user) throws RemoveException{
 		service.deleteBoard(bNum, user);
 		return new ResponseEntity<>(HttpStatus.OK);

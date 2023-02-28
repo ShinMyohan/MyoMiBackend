@@ -1,7 +1,6 @@
 package com.myomi.seller.dto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,7 +21,7 @@ public class SellerOrderDetailDto {
 	@JsonIgnore
 	private Product product;
 	
-	private Long prodCnt;
+	private int prodCnt;
 	private Long prodNum;
 	private String name;
 	private Long orderNum;
@@ -41,7 +40,7 @@ public class SellerOrderDetailDto {
 	private LocalDateTime createdDate;
 
 	@Builder
-	public SellerOrderDetailDto(Order order, Product product, Long prodCnt, Long prodNum, String name, Long orderNum,
+	public SellerOrderDetailDto(Order order, Product product, int prodCnt, Long prodNum, String name, Long orderNum,
 			String user, int week, String msg, String deliveryName, String deliveryTel, String deliveryAddr,
 			String deliveryMsg, String receiveDate, LocalDateTime createdDate) {
 		this.order = order;
