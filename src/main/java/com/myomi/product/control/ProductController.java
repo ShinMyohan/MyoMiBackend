@@ -39,7 +39,7 @@ public class ProductController {
 	//셀러 - 상품 등록
 	@ApiOperation(value = "셀러| 상품등록")
 	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> productsave(@RequestBody ProductSaveDto productSaveDto, 
+	public ResponseEntity<?> productSave(@RequestBody ProductSaveDto productSaveDto, 
 //			@AuthenticationPrincipal User user
 			Authentication seller) {
 		if(productSaveDto.getName().length() > 30) {
@@ -54,44 +54,44 @@ public class ProductController {
 	@ApiOperation(value = "사용자| 판매자 상품 리스트 조회")
 	@ResponseBody
 	@GetMapping(value = "list/{seller}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProductDto> prodList(@PathVariable String seller){
-		return productService.selectBySellerId(seller);
-	}
-	
-	//셀러 - 특정 상품 정보 수정
-	@ApiOperation(value = "셀러| 특정 상품 정보 수정")
-	@PutMapping(value = "{prodNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> prodUpdate(@PathVariable Long prodNum, @RequestBody ProductUpdateDto productUpdateDto, Authentication seller) {
-		return new ResponseEntity<>(productService.updateProd(prodNum, productUpdateDto, seller),HttpStatus.OK);
-	}
-	
-	//셀러 - 특정 상품 삭제 
-	@ApiOperation(value = "셀러| 특정 상품 삭제")
-	@DeleteMapping(value = "{prodNum}")
-	public ResponseEntity<?> prodDelete(@PathVariable Long prodNum, Authentication seller) {
-		return new ResponseEntity<>(productService.deleteProd(prodNum, seller),HttpStatus.OK);
+	public List<ProductDto> productList(@PathVariable String seller){
+		return productService.getProductBySellerId(seller);
 	}
 	
 	//사용자 - 상품 정보 + 리뷰 + 문의 조회
 	@ApiOperation(value = "사용자| 특정 상품 정보+리뷰+문의 조회")
 	@ResponseBody
 	@GetMapping(value = "{prodNum}")
-	public ResponseEntity<?> prodInfo(@PathVariable Long prodNum) {
-		return new ResponseEntity<>(productService.sellectOneProd(prodNum),HttpStatus.OK);
+	public ResponseEntity<?> prodDetails(@PathVariable Long prodNum) {
+		return new ResponseEntity<>(productService.getOneProd(prodNum),HttpStatus.OK);
+	}
+	
+	//셀러 - 특정 상품 정보 수정
+	@ApiOperation(value = "셀러| 특정 상품 정보 수정")
+	@PutMapping(value = "{prodNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> productModify(@PathVariable Long prodNum, @RequestBody ProductUpdateDto productUpdateDto, Authentication seller) {
+		return new ResponseEntity<>(productService.modifyProduct(prodNum, productUpdateDto, seller),HttpStatus.OK);
+	}
+	
+	//셀러 - 특정 상품 삭제 
+	@ApiOperation(value = "셀러| 특정 상품 삭제")
+	@DeleteMapping(value = "{prodNum}")
+	public ResponseEntity<?> productRemove(@PathVariable Long prodNum, Authentication seller) {
+		return new ResponseEntity<>(productService.removeProduct(prodNum, seller),HttpStatus.OK);
 	}
 	
 	//사용자 - 상품 리스트
 	@ApiOperation(value = "메인| 모든 상품 리스트")
 	@ResponseBody
 	@GetMapping(value = "list")
-	public ResponseEntity<?> prodAllList(int status) {
-		return new ResponseEntity<>(productService.sellectAllProd(status), HttpStatus.OK);
+	public ResponseEntity<?> productAllList(int status) {
+		return new ResponseEntity<>(productService.getAllProduct(status), HttpStatus.OK);
 	}
 	
 	//사용자 - 키워드로 상품 검색
 	@ApiOperation(value = "메인| 키워드로 상품 검색")
 	@GetMapping(value = "list/{keyword}")
-	public ResponseEntity<?> prodAllByKeyword(String keyword) {
-		return new ResponseEntity<>(productService.sellectAllprod(keyword),HttpStatus.OK);
+	public ResponseEntity<?> productAllByKeyword(String keyword) {
+		return new ResponseEntity<>(productService.getAllProduct(keyword),HttpStatus.OK);
 	}
 }
