@@ -27,129 +27,178 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
-@Builder
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="users")
+@Table(name = "users")
 //@DynamicInsert
 //@DynamicUpdate
-public class User implements UserDetails {
-	@Id
-	@NotNull
-	@Column(name = "id", updatable = false, unique = true)
-	private String id;
-	
-	@NotNull
-	@Column(name = "pwd")
-	private String pwd;
-	
-	@ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
+public class User implements UserDetails
+//, Persistable<String> 
+{
+    @Id
+    @NotNull
+    @Column(name = "id", updatable = false, unique = true, nullable = false)
+    private String id;
+
+    @NotNull
+    @Column(name = "pwd", nullable = false)
+    private String pwd;
+
+
+    @ElementCollection(fetch = FetchType.EAGER)
+//    @Builder.Default
     private List<String> roles = new ArrayList<>();
- 
+
+
+    //	@OneToOne(mappedBy = "roles")
+//	private UserRole role;
+//	@Enumerated(EnumType.STRING)
+    private int role;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
- 
-    @Column(name = "role")
-//	@Enumerated(EnumType.STRING)
-	private int role;
-    
+
     @Override
     public String getUsername() {
         return id;
     }
- 
+
     @Override
     public String getPassword() {
         return pwd;
     }
- 
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
- 
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
- 
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
- 
+
     @Override
     public boolean isEnabled() {
         return true;
     }
-	
-	@Column(name = "name")
-	private String name;
-	
-	@Column(name = "tel")
-	private String tel;
-	
-	@Column(name = "email")
-	private String email;
-	
-	@Column(name = "addr")
-	private String addr;
-	
-	
-	
-	@Column(name = "created_date")
-//	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
-//	@ColumnDefault(value = "SYSDATE")
-	private LocalDateTime createdDate;
-	
-	@Column(name = "signout_date")
-	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
-	private Date signoutDate;
-	
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(name = "membership_num")
-	private Membership membership;
 
-	@OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private Point point;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-	@OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
-	private Seller seller;
+    @Column(name = "tel", nullable = false, unique = true)
+    private String tel;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	private List<Board> boards;
+    @Column(name = "email")
+    private String email;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	private List<Comment> comments;
+    @Column(name = "addr")
+    private String addr;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	private List<Review> reviews;
+    @Column(name = "created_date")
+    @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	private List<Order> orders;
+    private LocalDateTime createdDate;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private List<Qna> qnas;
+    @Column(name = "signout_date")
+    @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+    private Date signoutDate;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private List<Follow> follows;
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "membership_num")
+    private Membership membership;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private List<Cart> cart;
+    @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Point point;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private List<Coupon> coupons;
+    @OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Seller seller;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Board> boards;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Qna> qnas;
+
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Follow> follows;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Cart> cart;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Coupon> coupons;
+
+    private String provider;
+
+    @Builder
+    public User(String id, String pwd,
+                int role,
+                List<String> roles,
+                String name, String tel, String email,
+                String addr, LocalDateTime createdDate, Membership membership) {
+        this.id = id;
+        this.pwd = pwd;
+        this.role = role;
+        this.roles = roles;
+        this.name = name;
+        this.tel = tel;
+        this.email = email;
+        this.addr = addr;
+        this.createdDate = createdDate;
+        this.membership = membership;
+    }
+
+    //for OAuth!
+//	public User update(String name, String provider) {
+//        this.name = name;
+//        this.provider = provider;
+//        return this;
+//    }
+//
+//    public String getRoleKey() {
+////        return this.roles.getKey();
+//    	return this.getRoleKey();
+//    }
 }

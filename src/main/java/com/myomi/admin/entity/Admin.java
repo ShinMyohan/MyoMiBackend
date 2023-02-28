@@ -8,14 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-//import com.myomi.chat.entity.ChatRoom;
 import com.myomi.notice.entity.Notice;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,11 +18,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @Entity
 @Table(name = "admin")
-@DynamicInsert
-@DynamicUpdate
+//@DynamicInsert
+//@DynamicUpdate
 public class Admin {
 	@Id
 	@Column(name = "admin_id")
@@ -38,7 +33,13 @@ public class Admin {
 
 	@OneToMany(mappedBy = "admin")
 	private List<Notice> notices;
-	
+
+	@Builder
+	public Admin(String adminId, @NotNull String pwd) {
+		this.adminId = adminId;
+		this.pwd = pwd;
+	}
+
 //	@OneToMany(mappedBy = "admin")
 //	private List<ChatRoom> rooms;
 }

@@ -1,3 +1,4 @@
+
 package com.myomi.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +30,7 @@ class SellerRepositoryTest {
 	
 	@Test
 	void testSellerSave() {
-		Optional<User> optU = ur.findById("id2");
+		Optional<User> optU = ur.findById("id1");
 
 		Seller seller = new Seller();
 		User user = optU.get();
@@ -40,7 +41,7 @@ class SellerRepositoryTest {
 		seller.setInternetNum("30허하889너");
 		seller.setAddr("경기도 용인시 보정동");
 		seller.setManager("호호호");
-		seller.setBank_account("국민 234235-23523");
+//		seller.setBank_account("국민 234235-23523");
 		sr.save(seller);
 	}
 	
@@ -82,4 +83,6 @@ class SellerRepositoryTest {
 		
 	}
 	
+	
 }
+

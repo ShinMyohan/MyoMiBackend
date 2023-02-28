@@ -26,5 +26,4 @@ public interface CartRepository extends CrudRepository<Cart, CartEmbedded> {
     @Modifying
     @Query("DELETE FROM Cart c WHERE c.id.userId = :userId AND c.product.prodNum = :pNum")
     public void deleteCartByUserIdAndProduct(@Param("userId")String UserId, @Param("pNum") Long pNum);
-
 }

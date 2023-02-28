@@ -2,9 +2,19 @@ package com.myomi.order.entity;
 
 import com.myomi.product.entity.Product;
 import lombok.Builder;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
+import com.myomi.product.entity.Product;
+import lombok.Builder;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Getter

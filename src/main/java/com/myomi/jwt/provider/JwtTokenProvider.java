@@ -48,9 +48,9 @@ public class JwtTokenProvider {
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
     public TokenDto generateToken(Authentication authentication) {
         // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    	 String authorities = authentication.getAuthorities().stream()
+                 .map(GrantedAuthority::getAuthority)
+                 .collect(Collectors.joining(","));
  
         long now = (new Date()).getTime();
         // Access Token 생성
