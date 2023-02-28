@@ -20,17 +20,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 //fk를 갖는 클래스
-@Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
 @Entity
 @Table(name = "best_review")
 public class BestReview implements Serializable {
@@ -45,7 +42,15 @@ public class BestReview implements Serializable {
 	@JsonIgnore
 	private Review review;
 
-	@Column(name = "created_date",updatable = false)
-	@JsonFormat(pattern = "yy/MM/dd", timezone = "Asia/Seoul")
+	@Column(name = "created_date")
 	private LocalDateTime createdDate;
+	
+	@Builder
+	public BestReview(Review review,Long reviewNum, LocalDateTime createdDate) {
+		this.review=review;
+		this.reviewNum = reviewNum;
+		this.createdDate = createdDate;
+	}
+	
+	
 }

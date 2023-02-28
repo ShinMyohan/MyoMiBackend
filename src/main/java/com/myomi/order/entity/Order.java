@@ -26,12 +26,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
 @NoArgsConstructor
-@ToString
-@DynamicInsert
-@DynamicUpdate
 @Entity
 @Table(name = "orders")
 @SequenceGenerator(name = "ORDERS_SEQ_GENERATOR", sequenceName = "ORDERS_SEQ"

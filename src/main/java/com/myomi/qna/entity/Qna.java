@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
 
@@ -36,8 +38,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Getter
-@NoArgsConstructor 
+
 @Getter @NoArgsConstructor
 //@AllArgsConstructor
 @SequenceGenerator(

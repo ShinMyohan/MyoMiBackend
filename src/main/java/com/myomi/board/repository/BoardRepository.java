@@ -13,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 import com.myomi.board.entity.Board;
 import com.myomi.comment.entity.Comment;
 
-
 public interface BoardRepository extends CrudRepository<Board, Long> {
 
 	@EntityGraph(attributePaths = "user")

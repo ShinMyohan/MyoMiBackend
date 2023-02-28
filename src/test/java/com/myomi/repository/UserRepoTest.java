@@ -1,3 +1,4 @@
+
 package com.myomi.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +31,7 @@ class UserRepoTest {
 	@Autowired
 	private CouponRepository cr;
 	
+
 //	@Test //성공
 //	@DisplayName("회원가입")
 //	void testUserSave() {
@@ -47,12 +49,14 @@ class UserRepoTest {
 //			
 //			LocalDateTime date = LocalDateTime.now();
 ////			user.setCreatedDate(date);
+
 //			Membership membership = new Membership();
 //			membership.setMNum(1);
 //			membership.setMLevel("브론즈");
 //			
 //			user.setMembership(membership);
 //			
+
 ////			Point point = new Point();
 ////			point.setTotalPoint(2000);
 ////			point.setId("id"+i);
@@ -147,7 +151,9 @@ class UserRepoTest {
 //		
 //		User user = optU.get();
 //		user.setMembership(membership);
+
 //		user.setRole(1);
+
 //		
 //		ur.save(user);
 //	}
@@ -158,6 +164,7 @@ class UserRepoTest {
 //		
 //		ur.delete(optU.get());
 //	}
+
 	
 //	PasswordEncoder encoder = new PasswordEncoder() {
 //		
@@ -207,3 +214,4 @@ class UserRepoTest {
 //		}
 //	}
 }
+

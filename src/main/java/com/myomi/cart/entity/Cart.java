@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
 @NoArgsConstructor
 @ToString
@@ -29,7 +28,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @MapsId("num") // PK, 상품 번호
+    @MapsId("pNum") // PK, 상품 번호
     @ManyToOne
     @JoinColumn(name = "prod_num")
     private Product product;

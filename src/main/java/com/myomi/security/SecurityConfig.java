@@ -27,11 +27,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtTokenProvider jwtTokenProvider;
-	
+
 	@Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
 
 	/**
 	 * httpBasic().disable().csrf().disable(): rest api이므로 basic auth 및 csrf 보안을 사용하지 않는다는 설정
@@ -46,10 +47,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
-                .csrf().disable()
+                .csrf().disable()     
+
                 .cors()
                 .and()
 //                .formLogin().disable()
+
                 // 시큐리티는 기본적으로 세션을 사용
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -60,6 +63,8 @@ public class SecurityConfig {
 //	        	.and()	
                 .and()
                 .authorizeRequests()
+
+
                 .antMatchers("/", "/**").permitAll()
                 .antMatchers("/health/**",
                         "/v1/user/**",
@@ -67,6 +72,7 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v2/api-docs/**").permitAll()
+
                 .antMatchers("/api/v1/**").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
@@ -84,4 +90,5 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }

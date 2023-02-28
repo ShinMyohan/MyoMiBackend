@@ -23,19 +23,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "review")
-@DynamicInsert
-@DynamicUpdate
+/*
+ * @DynamicInsert
+ * 
+ * @DynamicUpdate
+ */
 @SequenceGenerator(name = "REVIEW_SEQ_GENERATOR", sequenceName = "REVIEW_SEQ", // 매핑할 데이터베이스 시퀀스 이름
 		initialValue = 1, allocationSize = 1)
 public class Review {
@@ -74,4 +77,20 @@ public class Review {
 
 	@OneToOne(mappedBy = "review")
 	private BestReview bestReview;
+	
+	@Builder
+	public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars,OrderDetail orderDetail){
+		this.reviewNum = reviewNum;
+		this.user = user;
+		this.sort = sort;
+		this.title = title;
+		this.content = content;
+		this.createdDate = createdDate;
+		this.stars = stars;
+		this.orderDetail = orderDetail;
+	}
+	public void update(String title,String content) {
+		this.title=title;
+		this.content=content;
+	}
 }

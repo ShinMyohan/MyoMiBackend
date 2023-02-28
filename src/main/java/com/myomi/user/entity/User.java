@@ -38,7 +38,10 @@ import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 
+<<<<<<< HEAD
+=======
 import lombok.AccessLevel;
+>>>>>>> develop
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -127,6 +130,7 @@ public class User implements UserDetails
 	
 	@Column(name = "created_date")
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+
 	private LocalDateTime createdDate;
 	
 	@Column(name = "signout_date")
@@ -180,6 +184,7 @@ public class User implements UserDetails
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Coupon> coupons;
 	
+
 	private String provider;
 	
 	@Builder
@@ -189,6 +194,7 @@ public class User implements UserDetails
 			String name, String tel, String email, 
 			String addr, LocalDateTime createdDate, Membership membership
 			) {
+
 		this.id = id;
 		this.pwd = pwd;
 		this.role = role;
@@ -199,6 +205,8 @@ public class User implements UserDetails
 		this.addr = addr;
 		this.createdDate = createdDate;
 		this.membership = membership;
+
+
 	}
 	
 	//for OAuth!
@@ -212,4 +220,5 @@ public class User implements UserDetails
 ////        return this.roles.getKey();
 //    	return this.getRoleKey();
 //    }
+
 }

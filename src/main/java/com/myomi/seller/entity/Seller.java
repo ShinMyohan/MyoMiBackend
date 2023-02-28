@@ -14,26 +14,36 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+<<<<<<< HEAD
+import org.hibernate.annotations.ColumnDefault;
+=======
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+>>>>>>> develop
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.follow.entity.Follow;
 import com.myomi.product.entity.Product;
+<<<<<<< HEAD
+import com.myomi.user.entity.User;
+
+=======
 import com.myomi.qna.entity.Qna;
 import com.myomi.user.entity.User;
 
 import lombok.AllArgsConstructor;
+>>>>>>> develop
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+
 
 @Getter @NoArgsConstructor
 @Entity(name = "Seller")
+
 @Table(name = "seller_info")
-@DynamicInsert
-@DynamicUpdate
+
 public class Seller {
 	@Id
 	@Column(name = "seller_id")
@@ -73,7 +83,6 @@ public class Seller {
 	@JsonIgnore
 	@OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
 	private List<Product> products;
-	
 	
 	@Builder
 	public Seller(String id, User sellerId, @NotNull String companyName, @NotNull String companyNum,

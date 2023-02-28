@@ -10,6 +10,10 @@ import javax.persistence.Table;
 
 import com.myomi.product.entity.Product;
 
+<<<<<<< HEAD
+import lombok.Builder;
+=======
+>>>>>>> develop
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,4 +41,14 @@ public class OrderDetail {
 
     @Column(name = "prod_cnt", nullable = false)
     private Long prodCnt;
+
+    @Builder
+	public OrderDetail(OrderDetailEmbedded id,Order order, Product product, Long prodCnt) {
+		this.id = id;
+    	this.order = order;
+		this.product = product;
+		this.prodCnt = prodCnt;
+	}
+    
+    
 }

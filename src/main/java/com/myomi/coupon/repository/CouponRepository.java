@@ -12,11 +12,14 @@ import org.springframework.data.repository.query.Param;
 import com.myomi.coupon.entity.Coupon;
 
 public interface CouponRepository extends CrudRepository<Coupon, Long> {
+<<<<<<< HEAD
+=======
 
 	@Query("SELECT cp from Coupon cp WHERE cp.user.id=:username")
 	public List<Coupon> findAllByUser(@Param("username")String username, Pageable pageable);
 
 	//public Optional<Coupon> findByCouponNumAndUserId(Long couponNum, String username);
 
+>>>>>>> develop
 
 }

@@ -12,7 +12,6 @@ import lombok.Setter;
 
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class OrderDetailEmbedded implements Serializable{
@@ -20,4 +19,11 @@ public class OrderDetailEmbedded implements Serializable{
 	private Long orderNum;
 	// 상품 번호
 	private Long prodNum;
+
+	@Builder
+	public OrderDetailEmbedded(Long orderNum, Long prodNum) {
+		this.orderNum = orderNum;
+		this.prodNum = prodNum;
+	}
+
 }

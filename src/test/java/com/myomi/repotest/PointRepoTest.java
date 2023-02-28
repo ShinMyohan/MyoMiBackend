@@ -1,3 +1,4 @@
+
 package com.myomi.repotest;
 
 import java.time.LocalDateTime;
@@ -85,3 +86,4 @@ class PointRepoTest {
 	
 	
 }
+

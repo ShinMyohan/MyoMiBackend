@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.myomi.user.entity.User;
 
+
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 	//JWT 로그인시 사용 - 유저 찾기
@@ -20,4 +21,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 	Optional<User> findByEmail(String email);
 	//OAuth 시 필요
 	User findByIdAndPwd(String email, String password);
+
 }
