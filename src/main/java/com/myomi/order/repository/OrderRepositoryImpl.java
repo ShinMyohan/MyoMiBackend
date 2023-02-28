@@ -1,18 +1,20 @@
 package com.myomi.order.repository;
 
-import com.myomi.order.dto.OrderResponseDto;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 import static com.myomi.order.entity.QOrder.order;
 import static com.myomi.order.entity.QOrderDetail.orderDetail;
 import static com.myomi.product.entity.QProduct.product;
 import static com.myomi.review.entity.QReview.review;
 import static com.querydsl.core.group.GroupBy.groupBy;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.myomi.order.dto.OrderResponseDto;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,7 +40,9 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
                 .where(order.user.id.eq(userId))
                 .orderBy(order.orderNum.desc())
                 .transform(groupBy(orderDetail.order.orderNum, orderDetail.product.prodNum).list(Projections.fields(OrderResponseDto.class,
-                        orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.rNum.as("rNum"))));
+
+                        orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.reviewNum.as("rNum"))));
+                        orderDetail.order.orderNum, product.name.as("pName"), order.totalPrice, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum"))));
         return result;
     }
 }

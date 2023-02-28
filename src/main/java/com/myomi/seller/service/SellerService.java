@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.myomi.order.entity.Order;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.entity.Product;
