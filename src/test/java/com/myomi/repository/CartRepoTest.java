@@ -1,6 +1,13 @@
 
 package com.myomi.repository;
 
+<<<<<<< HEAD
+import com.myomi.cart.entity.Cart;
+import com.myomi.cart.repository.CartRepository;
+import com.myomi.product.entity.Product;
+import com.myomi.user.entity.User;
+=======
+>>>>>>> develop
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +30,7 @@ public class CartRepoTest {
     void testSave() {
         Cart cart = new Cart();
         User user = new User();
-        user.setId("id6");
+        user.setId("id1");
         cart.setUser(user);
         Product p = new Product();
         p.setPNum(1L);

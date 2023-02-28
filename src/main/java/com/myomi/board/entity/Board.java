@@ -24,13 +24,12 @@ import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
 import lombok.Builder;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@NoArgsConstructor 
-
+@NoArgsConstructor
 @Entity
 @Table(name="board")
 @SequenceGenerator(
@@ -78,7 +77,6 @@ public class Board {
 		      mappedBy = "board")
    private List<Comment> comments;
 
-   
     @Builder
     public Board(Long boardNum, User user, @NotNull String category, @NotNull String title, @NotNull String content,
 		LocalDateTime createdDate, Long hits) {
@@ -91,20 +89,16 @@ public class Board {
 	this.hits = hits;
 	//this.comments = comments;
 }
-    
     //더티체킹 
     public void update(String category, String title, String content) {
 		this.category = category;
 		this.title = title;
 		this.content = content;
     }
-    
     @PrePersist
     public void prePersist() {
         this.hits = this.hits == null ? 0 : this.hits;
         //hits가 null값이면 자동으로 0으로 셋팅 (=defaultColumn)
         //defaultColumn 사용하면 DynamicInsert없이 셋팅이 안됨 
     }
-
-   
 }

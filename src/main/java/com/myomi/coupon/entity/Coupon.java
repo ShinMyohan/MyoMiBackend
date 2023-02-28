@@ -22,14 +22,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
-@Setter @Getter @NoArgsConstructor
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
-@Table(name="coupon")
+@Table(name = "coupon")
 @SequenceGenerator(
-name = "COUPON_SEQ_GENERATOR",
-sequenceName = "COUPON_SEQ", 
-initialValue = 1, allocationSize = 1 )
+        name = "COUPON_SEQ_GENERATOR",
+        sequenceName = "COUPON_SEQ",
+        initialValue = 1, allocationSize = 1)
 
 /**
  * @쿠폰sort
@@ -46,65 +54,63 @@ initialValue = 1, allocationSize = 1 )
  * 만료됨 : 2 
  */
 public class Coupon {
-	@Id
-	@Column(name="num")
-	@GeneratedValue(
-				strategy = GenerationType.SEQUENCE,
-				generator = "COUPON_SEQ_GENERATOR") 
-	private Long couponNum;
-	
+    @Id
+    @Column(name = "num")
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "COUPON_SEQ_GENERATOR")
+    private Long couponNum;
+
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false
-    		, updatable =  false)
-	private User user;
-	
-	@Column(name="sort"
-			, updatable =  false)
-	//@NotNull
-	private int sort;
-	
-	@Column(name="percentage"
-			, updatable =  false)
-	//@NotNull
-	private int percentage;
-	
-	@Column(name="created_date"
-			, updatable =  false)
-	@JsonFormat(timezone="Asia/Seoul", pattern ="yyyy-MM-dd")
-	//@NotNull
-	private LocalDateTime createdDate;
-	
-	@Column(name="used_date")
-	@JsonFormat(timezone="Asia/Seoul", pattern ="yyyy-MM-dd")
-	private LocalDateTime usedDate;
-	
-	@Column(name="status")
-	@ColumnDefault("'0'")
-	private int status;
-	//status:0 -> 사용 전 
+    @JoinColumn(name = "user_id", nullable = false
+            , updatable = false)
+    private User user;
 
-	@Builder
-	public Coupon(User user, int sort, int percentage, LocalDateTime createdDate, LocalDateTime usedDate, int status,
-			Long couponNum) {
-		this.user = user;
-		this.sort = sort;
-		this.percentage = percentage;
-		this.createdDate = createdDate;
-		this.usedDate = usedDate;
-		this.status = status;
-		this.couponNum = couponNum;
-	}
+    @Column(name = "sort"
+            , updatable = false)
+    //@NotNull
+    private int sort;
 
-	//더티체킹
-	public void update (LocalDateTime usedDate, int status) {
-		this.usedDate = usedDate;
-		this.status = status;
-	}
+    @Column(name = "percentage"
+            , updatable = false)
+    //@NotNull
+    private int percentage;
 
-	@PrePersist
-	public void prePersist() {
-		this.status = 0 ;
-	}
-	
-	
+    @Column(name = "created_date"
+            , updatable = false)
+    @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
+    //@NotNull
+    private LocalDateTime createdDate;
+
+    @Column(name = "used_date")
+    @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
+    private LocalDateTime usedDate;
+
+    @Column(name = "status")
+    @ColumnDefault("'0'")
+    private int status;
+    //status:0 -> 사용 전
+
+    @Builder
+    public Coupon(User user, int sort, int percentage, LocalDateTime createdDate, LocalDateTime usedDate, int status,
+                  Long couponNum) {
+        this.user = user;
+        this.sort = sort;
+        this.percentage = percentage;
+        this.createdDate = createdDate;
+        this.usedDate = usedDate;
+        this.status = status;
+        this.couponNum = couponNum;
+    }
+
+    //더티체킹
+    public void update(LocalDateTime usedDate, int status) {
+        this.usedDate = usedDate;
+        this.status = status;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.status = 0;
+    }
 }

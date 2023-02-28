@@ -5,9 +5,13 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-
 import com.myomi.product.entity.Product;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
+@Repository
 public interface ProductRepository extends CrudRepository<Product, Long>{
 	//셀러가 등록한 모든 상품 찾기
 	List<Product> findAllBySellerId(String sellerId);

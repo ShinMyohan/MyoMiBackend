@@ -33,7 +33,6 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
 	/**
 	 * httpBasic().disable().csrf().disable(): rest api이므로 basic auth 및 csrf 보안을 사용하지 않는다는 설정
 	 *  sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS): JWT를 사용하기 때문에 세션을 사용하지 않는다는 설정
@@ -80,6 +79,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/product/list/*", "/product/{prodNum}").permitAll()
                 .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
                 .antMatchers("/product/add").hasRole("SELLER")
+				.antMatchers("/order").hasRole("USER")
                 .antMatchers("/user/test", "/user/modify").hasRole("USER")
                 .antMatchers("/user/info").hasAnyRole("USER","SELLER")
                 .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll ()
@@ -90,5 +90,4 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 }

@@ -13,17 +13,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 //fk를 갖는 클래스
 @Getter
@@ -51,6 +46,4 @@ public class BestReview implements Serializable {
 		this.reviewNum = reviewNum;
 		this.createdDate = createdDate;
 	}
-	
-	
 }

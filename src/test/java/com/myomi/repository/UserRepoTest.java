@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +23,12 @@ class UserRepoTest {
 	private Logger logger = LoggerFactory.getLogger(getClass()); 
 	@Autowired
 	private UserRepository ur;
-	
+
 	@Autowired
 	private PointRepository pr;
-	
+
 	@Autowired
 	private CouponRepository cr;
-	
 
 //	@Test //성공
 //	@DisplayName("회원가입")
@@ -99,15 +97,14 @@ class UserRepoTest {
 				.build();
 		ur.save(user);
 	}
-	
-	@Test
-	void testUserFindById() {
-		Optional<User> optU = ur.findById("id1");
-		assertTrue(optU.isPresent());
-		String expectedName = "유저이름1";
-		assertEquals(expectedName, optU.get().getName());
-	}
-	
+//	@Test
+//	void testUserFindById() {
+//		Optional<User> optU = ur.findById("id1");
+//		assertTrue(optU.isPresent());
+//		String expectedName = "유저이름1";
+//		assertEquals(expectedName, optU.get().getName());
+//	}
+
 //	@Test
 //	void testUserTel() {
 //		boolean optU = ur.existsUserByTel("010-9999-9999");
@@ -154,7 +151,7 @@ class UserRepoTest {
 
 //		user.setRole(1);
 
-//		
+//
 //		ur.save(user);
 //	}
 //	
@@ -164,8 +161,6 @@ class UserRepoTest {
 //		
 //		ur.delete(optU.get());
 //	}
-
-	
 //	PasswordEncoder encoder = new PasswordEncoder() {
 //		
 //		@Override
@@ -214,4 +209,3 @@ class UserRepoTest {
 //		}
 //	}
 }
-

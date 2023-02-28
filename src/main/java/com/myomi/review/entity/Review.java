@@ -1,4 +1,3 @@
-
 package com.myomi.review.entity;
 
 import java.time.LocalDateTime;
@@ -16,19 +15,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -36,61 +29,62 @@ import lombok.Setter;
 @Table(name = "review")
 /*
  * @DynamicInsert
- * 
+ *
  * @DynamicUpdate
  */
 @SequenceGenerator(name = "REVIEW_SEQ_GENERATOR", sequenceName = "REVIEW_SEQ", // 매핑할 데이터베이스 시퀀스 이름
-		initialValue = 1, allocationSize = 1)
+        initialValue = 1, allocationSize = 1)
 public class Review {
-	@Id
-	@Column(name = "num")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REVIEW_SEQ_GENERATOR")
-	private Long reviewNum;
+    @Id
+    @Column(name = "num")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REVIEW_SEQ_GENERATOR")
+    private Long reviewNum;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id",updatable = false)
-	@JsonIgnore
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", updatable = false)
+    @JsonIgnore
+    private User user;
 
-	@Column(name = "sort",updatable = false)
-	private int sort;
+    @Column(name = "sort", updatable = false)
+    private int sort;
 
-	@Column(name = "title")
-	@NotNull
-	private String title;
+    @Column(name = "title")
+    @NotNull
+    private String title;
 
-	@Column(name = "content")
-	@NotNull
-	private String content;
+    @Column(name = "content")
+    @NotNull
+    private String content;
 
-	@Column(name = "created_date",updatable = false)
-	private LocalDateTime createdDate;
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
-	@Column(name = "stars",updatable = false)
-	private float stars;
+    @Column(name = "stars", updatable = false)
+    private float stars;
 
-	@OneToOne
-	@JoinColumns({ @JoinColumn(name = "order_num",updatable = false), 
-	@JoinColumn(name = "prod_num",updatable = false) })
-	@JsonIgnore
-	private OrderDetail orderDetail;
+    @OneToOne
+    @JoinColumns({@JoinColumn(name = "order_num", updatable = false),
+            @JoinColumn(name = "prod_num", updatable = false)})
+    @JsonIgnore
+    private OrderDetail orderDetail;
 
-	@OneToOne(mappedBy = "review")
-	private BestReview bestReview;
-	
-	@Builder
-	public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars,OrderDetail orderDetail){
-		this.reviewNum = reviewNum;
-		this.user = user;
-		this.sort = sort;
-		this.title = title;
-		this.content = content;
-		this.createdDate = createdDate;
-		this.stars = stars;
-		this.orderDetail = orderDetail;
-	}
-	public void update(String title,String content) {
-		this.title=title;
-		this.content=content;
-	}
+    @OneToOne(mappedBy = "review")
+    private BestReview bestReview;
+
+    @Builder
+    public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars, OrderDetail orderDetail) {
+        this.reviewNum = reviewNum;
+        this.user = user;
+        this.sort = sort;
+        this.title = title;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.stars = stars;
+        this.orderDetail = orderDetail;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

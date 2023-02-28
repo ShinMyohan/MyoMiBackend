@@ -1,33 +1,20 @@
 package com.myomi.order.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import com.myomi.user.entity.User;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.myomi.user.entity.User;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 @Entity
 @Table(name = "orders")
 @SequenceGenerator(name = "ORDERS_SEQ_GENERATOR", sequenceName = "ORDERS_SEQ"
@@ -40,26 +27,29 @@ public class Order {
     @Column(name = "num")
     private Long orderNum;
 
-    @ManyToOne // 양방향
+    @ManyToOne(fetch = FetchType.LAZY) // 양방향
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "created_date", nullable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
+    @ColumnDefault("' '")
     private String msg;
 
     @Column(name = "coupon_num")
+    @ColumnDefault("'0'")
     private Long couponNum;
 
     @Column(name = "used_point")
+    @ColumnDefault("'0'")
     private Long usedPoint;
 
     @Column(name = "pay_created_date")
-    private Date payCreatedDate;
+    private LocalDateTime payCreatedDate;
 
     @Column(name = "canceled_date")
-    private Date canceledDate;
+    private LocalDateTime canceledDate;
 
     @Column(name = "total_price")
     private Long totalPrice;
@@ -67,10 +57,51 @@ public class Order {
     @Column(name = "save_point")
     private Long savePoint;
 
+    @Column(name = "imp_uid")
+    private String impUid; // 아임포트 결제 번호
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    private List<OrderDetail> orderDetail; // 양방향
+    private List<OrderDetail> orderDetails = new ArrayList<>(); // 양방향
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Delivery delivery;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
+    private Delivery delivery = new Delivery();
 
+    @Builder
+    public Order(Long orderNum, User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
+                 LocalDateTime canceledDate, Long totalPrice, Long savePoint, List<OrderDetail> orderDetails,
+                 Delivery delivery) {
+        this.orderNum = orderNum;
+        this.user = user;
+        this.createdDate = createdDate;
+        this.msg = msg;
+        this.couponNum = couponNum;
+        this.usedPoint = usedPoint;
+        this.payCreatedDate = payCreatedDate;
+        this.canceledDate = canceledDate;
+        this.totalPrice = totalPrice;
+        this.savePoint = savePoint;
+        this.delivery = delivery; // 필수
+    }
+
+    // 연관관계 편의 메소드
+    public void addOrderDetail(OrderDetail orderDetail) {
+        this.orderDetails.add(orderDetail);
+//        if (orderDetail.getOrder() != this) {
+//            orderDetail.setOrder(this);
+//        }
+    }
+
+    public void addDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    public void updateCanceledDate(Long orderNum) {
+        this.orderNum = orderNum;
+        this.canceledDate = LocalDateTime.now();
+    }
+
+    public void updatePayCreatedDate(Long orderNum) {
+        this.orderNum = orderNum;
+        this.payCreatedDate = LocalDateTime.now();
+    }
 }

@@ -1,49 +1,21 @@
 package com.myomi.seller.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-<<<<<<< HEAD
-import org.hibernate.annotations.ColumnDefault;
-=======
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
->>>>>>> develop
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.follow.entity.Follow;
 import com.myomi.product.entity.Product;
-<<<<<<< HEAD
 import com.myomi.user.entity.User;
-
-=======
-import com.myomi.qna.entity.Qna;
-import com.myomi.user.entity.User;
-
-import lombok.AllArgsConstructor;
->>>>>>> develop
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Getter @NoArgsConstructor
 @Entity(name = "Seller")
-
 @Table(name = "seller_info")
-
 public class Seller {
 	@Id
 	@Column(name = "seller_id")
@@ -73,7 +45,11 @@ public class Seller {
 	
 	@Column(name = "manager")
 	private String manager;
-	
+
+	@Column(name = "bank_account")
+	@NotNull
+	private String bank_account;
+
 	@Column(name = "status")
 	private int status;
 	
@@ -86,8 +62,8 @@ public class Seller {
 	
 	@Builder
 	public Seller(String id, User sellerId, @NotNull String companyName, @NotNull String companyNum,
-			@NotNull String internetNum, @NotNull String addr, @NotNull String manager, @NotNull String bank_account,
-			int status, Long followCnt, List<Follow> follows, List<Product> products) {
+				  @NotNull String internetNum, @NotNull String addr, @NotNull String manager, @NotNull String bank_account,
+				  int status, Long followCnt, List<Follow> follows, List<Product> products) {
 		this.id = id;
 		this.sellerId = sellerId;
 		this.companyName = companyName;
@@ -105,6 +81,4 @@ public class Seller {
 	@JsonIgnore
 	@OneToMany(mappedBy = "sellerId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Follow> follows;
-
-	
 }

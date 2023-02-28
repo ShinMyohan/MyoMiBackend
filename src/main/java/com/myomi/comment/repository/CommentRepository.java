@@ -1,6 +1,5 @@
 package com.myomi.comment.repository;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import com.myomi.comment.entity.Comment;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-<<<<<<< HEAD
-=======
    public Optional<Comment> findBycommentNumAndBoard(Long commentNum, Long boardNum);
->>>>>>> develop
 
    @EntityGraph(attributePaths = {"user","board"})
    @Query("select c from Comment c join c.board where c.user.id=:username")
