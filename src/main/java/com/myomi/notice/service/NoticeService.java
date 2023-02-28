@@ -32,7 +32,7 @@ public class NoticeService {
 	
 	
 	@Transactional
-	public List<NoticeDto> findAllList(Pageable pageable){
+	public List<NoticeDto> getAllNotice(Pageable pageable){
 		List<Notice>notices = noticeRepository.findAll(pageable);
 		List<NoticeDto>list = new ArrayList<>();
 		if(notices.size()==0) {
@@ -61,7 +61,7 @@ public class NoticeService {
 	}
 	
 	@Transactional
-	public NoticeDto detailNotice(Long noticeNum) {
+	public NoticeDto getOneNotice(Long noticeNum) {
 		Notice notice = noticeRepository.findById(noticeNum).get();
 		return new NoticeDto(notice);
 	}
@@ -80,14 +80,14 @@ public class NoticeService {
 	}
 	
 	@Transactional
-	public void deleteNotice(Long nNum) {
+	public void RemoveNotice(Long nNum) {
 		Notice notice = noticeRepository.findById(nNum).get();
 		noticeRepository.delete(notice);
 	}
 	
 	//제목으로 검색
 	@Transactional
-	public List<NoticeDto> findByTitle(String keyword,Pageable pageable) {
+	public List<NoticeDto> getAllNoticeByTitle(String keyword,Pageable pageable) {
 		List<Notice>notices = noticeRepository.findByTitleContaining(keyword,pageable);
 		List<NoticeDto> list =new ArrayList<>();
 		for(Notice notice:notices) {

@@ -1,4 +1,4 @@
-package com.myomi.admin.dto;
+package com.myomi.seller.dto;
 
 import java.util.Date;
 

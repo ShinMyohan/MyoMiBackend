@@ -26,10 +26,10 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
 	public List<Review>findAllBySeller(@Param("user")String user);
 	
 	@Query("select r from Review r join r.orderDetail.order join r.orderDetail.product where r.orderDetail.product.seller.sellerId.id=:user and r.orderDetail.product.prodNum=:prodNum")
-	public List<Review>findAllByUserandProdNum(@Param("user")String user,@Param("prodNum")Long prodNum);
+	public List<Review>findAllByUserANDProdNum(@Param("user")String user,@Param("prodNum")Long prodNum);
 	
-	@Query("select r from Review r join r.orderDetail.order join r.orderDetail.product join r.user join r.bestReview where r.orderDetail.product.prodNum=:prodNum")
-	public List<Review>findAllByprodNumandReviewNum(@Param("prodNum")Long prodNum);
+	@Query("select distinct r from Review r join r.orderDetail.order join r.orderDetail.product join r.user join r.bestReview where r.orderDetail.product.prodNum=:prodNum")
+	public List<Review>findAllByprodNum(@Param("prodNum")Long prodNum);
 
 	public Optional<Review> findById(Long num);
 //	List<Review> findAllByProdNum(Long prodNum);

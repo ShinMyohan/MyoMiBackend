@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.entity.OrderDetailEmbedded;
+//import com.myomi.order.repository.OrderDetailRepository;
 import com.myomi.order.repository.OrderDetailRepository;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.review.dto.ReviewDetailResponseDto;
@@ -40,6 +41,7 @@ public class ReviewService {
     private final UserRepository ur;
     private final OrderRepository or;
     private final BestReviewRepository brr;
+    //private final OrderDetailRepository odr;
     private final OrderDetailRepository odr;
 
     public List<ReviewReadResponseDto> findProdReviewList(Long prodNum) {
@@ -51,7 +53,7 @@ public class ReviewService {
             for (Review review : reviews) {
                 ReviewReadResponseDto dto = ReviewReadResponseDto.builder()
                         .userId(review.getUser().getId())
-                        .pName(review.getOrderDetail().getProduct().getName())
+                        .prodName(review.getOrderDetail().getProduct().getName())
                         .reviewNum(review.getReviewNum())
                         .title(review.getTitle())
                         .content(review.getContent())
@@ -66,9 +68,8 @@ public class ReviewService {
 
     }
 
-
     @Transactional
-    public List<ReviewReadResponseDto> findReviewList(String id) {
+    public List<ReviewReadResponseDto> getMyReviewList(String id) {
         List<Review> reviews = rr.findAllByUserId(id);
         List<ReviewReadResponseDto> list = new ArrayList<>();
         if (reviews.size() == 0) {
@@ -77,7 +78,7 @@ public class ReviewService {
             for (Review review : reviews) {
                 ReviewReadResponseDto dto = ReviewReadResponseDto.builder()
                         .userId(review.getUser().getId())
-                        .pName(review.getOrderDetail().getProduct().getName())
+                        .prodName(review.getOrderDetail().getProduct().getName())
                         .reviewNum(review.getReviewNum())
                         .title(review.getTitle())
                         .content(review.getContent())
@@ -103,7 +104,11 @@ public class ReviewService {
         		.orderNum(reviewSaveDto.getOrderNum())
         		.prodNum(reviewSaveDto.getProdNum())
         		.build();
-        
+
+        //Optional<OrderDetail> od = odr.findById(ode);
+        //Review review = dto.toEntity(reviewSaveDto, optU.get(), od.get());
+        //rr.save(review);
+
         Optional<OrderDetail> od = odr.findById(ode);
         Review review = dto.toEntity(reviewSaveDto, optU.get(), od.get());
         rr.save(review);
@@ -117,9 +122,8 @@ public class ReviewService {
         return new ReviewDetailResponseDto(review);
     }
 
-
     //판매자별 리뷰검색
-    public List<ReviewReadResponseDto> findSellerReviewList(Authentication seller) {
+    public List<ReviewReadResponseDto> getSellerReviewList(Authentication seller) {
         List<Review> reviews = rr.findAllBySeller(seller.getName());
         List<ReviewReadResponseDto> list = new ArrayList<>();
         if (reviews.size() == 0) {
@@ -128,37 +132,12 @@ public class ReviewService {
             for (Review review : reviews) {
                 ReviewReadResponseDto dto = ReviewReadResponseDto.builder()
                         .userId(review.getUser().getId())
-                        .pName(review.getOrderDetail().getProduct().getName())
+                        .prodName(review.getOrderDetail().getProduct().getName())
                         .reviewNum(review.getReviewNum())
                         .title(review.getTitle())
                         .content(review.getContent())
                         .createdDate(review.getCreatedDate())
                         .stars(review.getStars())
-                        .build();
-                list.add(dto);
-            }
-        }
-        return list;
-
-    }
-
-    //상품별 베스트리뷰 조회
-    public List<ReviewReadResponseDto> findProdBestReviewList(Long prodNum) {
-        List<Review> reviews = rr.findAllByprodNumandReviewNum(prodNum);
-        List<ReviewReadResponseDto> list = new ArrayList<>();
-        if (reviews.size() == 0) {
-            log.info("리뷰가 없습니다.");
-        } else {
-            for (Review review : reviews) {
-                ReviewReadResponseDto dto = ReviewReadResponseDto.builder()
-                        .userId(review.getUser().getId())
-                        .pName(review.getOrderDetail().getProduct().getName())
-                        .reviewNum(review.getReviewNum())
-                        .title(review.getTitle())
-                        .content(review.getContent())
-                        .createdDate(review.getCreatedDate())
-                        .stars(review.getStars())
-
                         .build();
                 list.add(dto);
             }
@@ -181,7 +160,6 @@ public class ReviewService {
         brr.save(bestReview);
 
     }
-
 
     @Transactional
     public ReviewDetailResponseDto modifyReview(ReviewUpdateRequestDto updateDto, Long rNum, Authentication user) {

@@ -3,12 +3,10 @@ package com.myomi.admin.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.myomi.admin.dto.SellerDetailDto;
-import com.myomi.admin.dto.SellerResponseDto;
+import com.myomi.seller.dto.SellerDetailDto;
+import com.myomi.seller.dto.SellerResponseDto;
 import com.myomi.seller.entity.Seller;
 import com.myomi.seller.repository.SellerRepository;
 
@@ -23,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminService {
 	private final SellerRepository sr;
 
-public List<SellerResponseDto> findSeller(){
+public List<SellerResponseDto> getAllSeller(){
 	List<Seller> sellers = sr.findAll();
 	List<SellerResponseDto>list = new ArrayList<>();
 	 
@@ -42,7 +40,7 @@ public List<SellerResponseDto> findSeller(){
 	return list;
 }
 
-public List<SellerResponseDto> findSellerListByStatus(int status){
+public List<SellerResponseDto> getAllSellerStatus(int status){
 	List<Seller> sellers=sr.findAllByStatus(status);
 	List<SellerResponseDto>list = new ArrayList<>();
 	for(Seller seller:sellers) {
