@@ -39,10 +39,10 @@ public class SellerService {
 	private final OrderRepository or;
 	private final ProductRepository pr;
 
-	/* TODO : 1.판매자로 신청하기
-	 *        2.판매자 신청현황 조회하기(승인대기,승인완료,승인불가,신청상세) 
-	 *        3.판매자 주문현황 조회 
-	 *        4.판매자 info(팔로우 수, 미답변 문의 건 수, 주문 건 수 조회)
+	/* TODO : 1.판매자로 신청하기@
+	 *        2.판매자 신청현황 조회하기(승인대기,승인완료,승인불가,신청상세) @
+	 *        3.판매자 주문현황 조회 @
+	 *        4.판매자 info(팔로우 수, 미답변 문의 건 수, 주문 건 수 조회)@
 	 *        5.판매자 탈퇴(조건만족시)
 	 */
 
@@ -68,10 +68,10 @@ public class SellerService {
 
 	//판매자 신청현황 조회
 	@Transactional
-	public SellerReadResponseDto detailSellerJoin(Authentication user) {
+	public SellerReadResponseDto getDetailBySellerJoin(Authentication user) {
 		String userId = user.getName();
 		Optional<Seller> seller = sr.findById(userId);
-		if(seller.isPresent()) {
+		if(seller.isEmpty()) {
 			log.info("신청내역이 없습니다.");
 		} 
 		SellerReadResponseDto dto = SellerReadResponseDto.builder()
@@ -81,6 +81,7 @@ public class SellerService {
 				.addr(seller.get().getAddr())
 				.manager(seller.get().getManager())
 				.status(seller.get().getStatus())
+				.bankAccount(seller.get().getBank_account())
 				.build();
 		return dto;
 	}
@@ -88,7 +89,7 @@ public class SellerService {
 	
 	//판매자 주문현황 조회
 	@Transactional
-	public List<SellerOrderDetailDto> findSellerOrderList(Authentication user,Pageable pageable){
+	public List<SellerOrderDetailDto> getAllSellerOrderList(Authentication user,Pageable pageable){
 		String userId = user.getName();
 		List<Product> list = sr.findAllBySellerId(userId);
 	
@@ -162,7 +163,7 @@ public class SellerService {
 	
 	//판매자 탈퇴
 	@Transactional
-	public void deleteSeller(Authentication user) {
+	public void removeSeller(Authentication user) {
 		String userId = user.getName();
 		List<Product> prodList = sr.findAllBySellerId(userId);
 		for(Product p : prodList) {

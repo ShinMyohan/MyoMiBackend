@@ -37,14 +37,14 @@ public class QnaService {
 	private final ProductRepository pr;
 
 
-	/* TODO : 1.회원아이디로 나의상품문의 불러오기
-	 * 		  2.회원이 상품문의 작성하기 
-	 *        3.회원이 나의상품문의 수정하기
-	 *        4.회원이 나의상품문의 삭제하기
-	 *        5.셀러가 상품문의 답변달기
-	 *        6.상품별 상품문의 조회하기
-	 *        7.셀러가 나의스토어 상품문의 불러오기
-	 *        8.회원 상품 상세보기 
+	/* TODO : 1.회원아이디로 나의상품문의 불러오기@
+	 * 		  2.회원이 상품문의 작성하기 @
+	 *        3.회원이 나의상품문의 수정하기@
+	 *        4.회원이 나의상품문의 삭제하기@
+	 *        5.셀러가 상품문의 답변달기@
+	 *        6.상품별 상품문의 조회하기@
+	 *        7.셀러가 나의스토어 상품문의 불러오기@
+	 *        8.회원 상품문의 상세보기 
 	 */
 
 	//회원문의작성
@@ -70,7 +70,7 @@ public class QnaService {
 
 	//회원의 나의상품문의 조회
 	@Transactional
-	public List<QnaUReadResponseDto> findUserQnaList(Authentication user,Pageable pageable){
+	public List<QnaUReadResponseDto> getAllUserQnaList(Authentication user,Pageable pageable){
 		String username = user.getName();
 		Optional<User> optU = ur.findById(username);
 		List<Qna> qnas = qr.findAllByUserId(optU.get().getId(),pageable);
@@ -101,7 +101,7 @@ public class QnaService {
 
 	//상품별 상품문의 조회하기
 	@Transactional
-	public List<QnaPReadResponseDto> findPQnaList(Product prodNum,Pageable pageable){
+	public List<QnaPReadResponseDto> getAllQnaProductList(Product prodNum,Pageable pageable){
 		Long pd = prodNum.getProdNum();  //id
 		List<Qna> qnas = qr.findAllByProdNum(pd,pageable);
 		List<QnaPReadResponseDto> list = new ArrayList<>();
@@ -148,7 +148,7 @@ public class QnaService {
 
 	//회원이 나의상품문의 삭제
 	@Transactional
-	public void deleteQna(Long qnaNum, Authentication user) {
+	public void removeQna(Long qnaNum, Authentication user) {
 		String username = user.getName();
 		Qna qna = qr.findById(qnaNum).get();
 
@@ -165,7 +165,7 @@ public class QnaService {
 
 	//셀러가 나의스토어 상품문의 조회
 	@Transactional
-	public List<QnaUReadResponseDto> findSellerQnaList(Authentication user,Pageable pageable){
+	public List<QnaUReadResponseDto> getAllSellerQnaList(Authentication user,Pageable pageable){
 		String username = user.getName();
 		List<Qna> qnas = qr.findAllBySellerId(username,pageable);
 		List<QnaUReadResponseDto> list = new ArrayList<>();

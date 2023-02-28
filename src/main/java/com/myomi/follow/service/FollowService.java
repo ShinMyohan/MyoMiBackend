@@ -30,10 +30,10 @@ public class FollowService {
 	private final UserRepository ur;
 	private final SellerRepository sr;
 	
-	/* TODO : 1.팔로우 하기
-	 *        2.언팔로우 하기(마이페이지, 다중삭제)
-	 *        3.팔로우 목록 조회(페이징)
-	 *        4.언팔로우 하기(스토어)
+	/* TODO : 1.팔로우 하기@
+	 *        2.언팔로우 하기(마이페이지, 다중삭제)@
+	 *        3.팔로우 목록 조회(페이징)@
+	 *        4.언팔로우 하기(스토어)@
 	 */
 	
 	//팔로우 하기
@@ -53,7 +53,7 @@ public class FollowService {
 	
 	//언팔로우 하기 (마이페이지, 다중삭제)
 	@Transactional
-	public void deleteMypageFollow(List<FollowDeleteRequestDto> requestDto ,Authentication user) {
+	public void removeMypageFollow(List<FollowDeleteRequestDto> requestDto ,Authentication user) {
 		String userId = user.getName();
 		for (FollowDeleteRequestDto follow : requestDto) {
 			fr.deleteFollowByUserIdAndSellerId(userId, follow.getSellerId());
@@ -62,7 +62,7 @@ public class FollowService {
 	
 	//3.팔로우 목록 조회(페이징)
 	@Transactional
-	public List<FollowReadResponseDto> findFollowList(Authentication user,Pageable pageable){
+	public List<FollowReadResponseDto> getAllUserFollowList(Authentication user,Pageable pageable){
 		String userId = user.getName();
 		Optional<User> optU = ur.findById(userId);
 		List<Follow> follows = fr.findAllByUserId(optU.get().getId(),pageable);
@@ -84,7 +84,7 @@ public class FollowService {
 	
 	//4.언팔로우 하기 
 	@Transactional
-	public void deleteFollow(String sId ,Authentication user) {
+	public void removeStoreFollow(String sId ,Authentication user) {
 		String userId = user.getName();
 		Optional<Follow> follow = fr.findByUserIdAndSellerId(userId, sId);
 		if(follow.isEmpty()) {

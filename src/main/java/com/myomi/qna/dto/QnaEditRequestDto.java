@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class QnaEditRequestDto {
-	private Long qnaNum;
+//	private Long qnaNum;
 	@JsonIgnore
 	private User userId;
 	@JsonIgnore

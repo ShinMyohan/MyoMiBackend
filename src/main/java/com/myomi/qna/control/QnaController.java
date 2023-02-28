@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RestController
-@RequestMapping
 @RequiredArgsConstructor
 public class QnaController {
 	private final QnaService qnaService;
@@ -36,44 +35,44 @@ public class QnaController {
 	
 
     //문의 작성
-	@PostMapping("productDetail/{pNum}")
-	public ResponseEntity<QnaAddRequestDto> qnaAdd(@RequestBody QnaAddRequestDto qnaAddRequestDto, @PathVariable Long prodNum, Authentication user) {		
+	@PostMapping("product/{prodNum}")
+	public ResponseEntity<QnaAddRequestDto> qnaSave(@RequestBody QnaAddRequestDto qnaAddRequestDto, @PathVariable Long prodNum, Authentication user) {		
 		return qnaService.addQna(qnaAddRequestDto, prodNum, user);
 	}
 	
 	//회원 문의 조회
-	@GetMapping("myPage/qna/detail")
+	@GetMapping("mypage/qna/list")
 	public List<QnaUReadResponseDto> qnaList(Authentication user, @PageableDefault(size=5) Pageable pageable){
-		return qnaService.findUserQnaList(user,pageable);
+		return qnaService.getAllUserQnaList(user,pageable);
 	}
 	
 	//상품별 문의 조회
-	@GetMapping("productDetail/{pNum}")
-	public List<QnaPReadResponseDto> qnaByProdList(@PathVariable Product pNum,@PageableDefault(size=5) Pageable pageable){
-		return qnaService.findPQnaList(pNum,pageable);
+	@GetMapping("product/list/{prodNum}")
+	public List<QnaPReadResponseDto> qnaAllByProdList(@PathVariable Product prodNum,@PageableDefault(size=5) Pageable pageable){
+		return qnaService.getAllQnaProductList(prodNum,pageable);
 	}
 	
 	//회원 문의 수정
-	@PutMapping("myPage/qna/{qNum}")
+	@PutMapping("mypage/qna/detail/{qnaNum}")
 	public void qnaModify(@RequestBody QnaEditRequestDto requestDto, @PathVariable Long qnaNum, Authentication user) {
 		qnaService.modifyQna(requestDto,qnaNum,user);
 	}
 	
 	//회원 문의 삭제
-	@DeleteMapping("myPage/qna/{qNum}")
+	@DeleteMapping("mypage/qna/{qnaNum}")
 	public void qnaDelete (@PathVariable Long qnaNum, Authentication user) {
-		qnaService.deleteQna(qnaNum,user);
+		qnaService.removeQna(qnaNum,user);
 	}
 	
 	//셀러가 스토어 상품문의 조회하기
-	@GetMapping("seller/qna")
-	public List<QnaUReadResponseDto> qnaSellerList(Authentication user,@PageableDefault(size=5) Pageable pageable){
-		return qnaService.findSellerQnaList(user,pageable);
+	@GetMapping("sellerpage/qna/list")
+	public List<QnaUReadResponseDto> qnaAllBySellerList(Authentication user,@PageableDefault(size=5) Pageable pageable){
+		return qnaService.getAllSellerQnaList(user,pageable);
 	}
 	
 	//셀러가 상품문의 답변하기
-	@PutMapping("seller/{qNum}")
-	public void qnaAnsAdd(@RequestBody QnaAnsRequestDto requestDto, @PathVariable Long qnaNum, Authentication user) {
+	@PutMapping("sellerpage/qna/{qnaNum}")
+	public void qnaAnsSave(@RequestBody QnaAnsRequestDto requestDto, @PathVariable Long qnaNum, Authentication user) {
 		qnaService.addAnsQna(requestDto,qnaNum,user);
 	}
 	
