@@ -86,6 +86,11 @@ public class SecurityConfig {
                 .antMatchers("/review/add","/review/{reviewNum}").hasRole("USER")
                 .antMatchers("/user/info", "/user/modify").hasAnyRole("USER","SELLER")
                 .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll()
+				.antMatchers("/cart").hasRole("USER")
+				.antMatchers("/order/**").hasRole("USER")
+                .antMatchers("/user/test", "/user/modify").hasRole("USER")
+                .antMatchers("/user/info").hasAnyRole("USER","SELLER")
+                .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll ()
                 .anyRequest().authenticated()
                 .and()
                 //OAuth

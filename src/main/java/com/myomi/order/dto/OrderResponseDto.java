@@ -32,7 +32,7 @@ public class OrderResponseDto { // 주문 기본, 상세, 배송정보 한번에
     // QueryDsl용 변수
     private Long orderNum; // 주문 번호
     private String pName; // 상품 이름
-    private Long rNum; // 리뷰 번호
+    private Long reviewNum; // 리뷰 번호
 
     @Builder
     public OrderResponseDto(User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint,
@@ -49,9 +49,8 @@ public class OrderResponseDto { // 주문 기본, 상세, 배송정보 한번에
         this.delivery = delivery;
     }
 
-    public OrderResponseDto toDto(String userId, Order order) {
+    public OrderResponseDto toDto(Order order) {
         return OrderResponseDto.builder()
-                .user(User.builder().id(userId).build())
                 .createdDate(LocalDateTime.now())
                 .msg(order.getMsg())
                 .couponNum(order.getCouponNum())

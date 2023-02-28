@@ -1,13 +1,10 @@
 //
 //package com.myomi.repository;
 //
-//<<<<<<< HEAD
 //import com.myomi.cart.entity.Cart;
 //import com.myomi.cart.repository.CartRepository;
 //import com.myomi.product.entity.Product;
 //import com.myomi.user.entity.User;
-//=======
-//>>>>>>> develop
 //import org.junit.jupiter.api.Test;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

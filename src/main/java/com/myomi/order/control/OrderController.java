@@ -1,5 +1,6 @@
 package com.myomi.order.control;
 
+<<<<<<< HEAD
 import java.io.IOException;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+=======
+import com.myomi.exception.FindException;
+>>>>>>> develop
 import com.myomi.order.dto.OrderRequestDto;
 import com.myomi.order.dto.OrderResponseDto;
 import com.myomi.order.dto.PaymentRequestDto;
@@ -32,7 +36,7 @@ public class OrderController {
 
     @GetMapping("/list")
     public List<OrderResponseDto> orderList(Authentication user) {
-        return orderService.findOrderListByUserId(user);
+        return orderService.getOrderListByUserId(user);
     }
 
     @PostMapping("")
@@ -41,18 +45,18 @@ public class OrderController {
     }
 
     @GetMapping("/{num}")
-    public OrderResponseDto orderDetails(Authentication user, @PathVariable Long num) {
-        return orderService.findOrderByUserId(user, num);
+    public OrderResponseDto orderDetails(Authentication user, @PathVariable Long num) throws FindException {
+        return orderService.getOrderByUserId(user, num);
     }
 
     @PutMapping("/{num}")
-    public void orderModifyCanceledDate(Authentication user, @PathVariable Long num) {
+    public void orderModifyCanceledDate(Authentication user, @PathVariable Long num) throws FindException {
         orderService.modifyOrderCanceledDate(user, num);
     }
 
     // 결제
     @PutMapping("/payment")
-    public ResponseEntity<String> paymentComplete(@RequestBody PaymentRequestDto paymentRequestDto, Authentication user) throws IOException {
+    public ResponseEntity<String> paymentComplete(@RequestBody PaymentRequestDto paymentRequestDto, Authentication user) throws IOException, FindException {
         return orderService.payment(paymentRequestDto, user);
 //        String token = orderService.getToken();
 //        System.out.println("토큰 : " + token);
@@ -109,7 +113,6 @@ public class OrderController {
             orderService.paymentCancel(token, paymentRequestDto.getImpUid(), amount, "관리자 취소");
         }
 //        adminService.orderCancel(orderCancelDto);
-
         return ResponseEntity.ok().body("주문취소완료");
     }
 

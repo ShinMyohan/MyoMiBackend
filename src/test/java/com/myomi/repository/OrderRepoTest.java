@@ -115,6 +115,35 @@
 ////        });
 ////    }
 //=======
+
+package com.myomi.repository;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.myomi.order.entity.Order;
+import com.myomi.order.repository.OrderRepository;
+import com.myomi.user.repository.UserRepository;
+
+@SpringBootTest
+public class OrderRepoTest {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private OrderRepository or;
+    
+    @Autowired
+    private UserRepository ur;
+
 //    @Test // 주문 추가
 //    @DisplayName("주문 추가")
 //    void testSave() {
@@ -182,7 +211,7 @@
 //
 //        });
 //    }
-//>>>>>>> develop
+//
 //
 //    @Test
 //    @Transactional
@@ -197,3 +226,17 @@
 //
 //}
 //
+
+    @Test
+    @Transactional
+    void testDeleteByNum() {
+        Optional<Order> o = or.findById(1L); //optA라는 엔티티객체와 매핑
+        assertTrue(o.isPresent()); // 지우기전에 진짜 있는지 확인하기
+        String userId = o.get().getUser().getId();
+        assertEquals("id6", userId);
+        Order order = o.get();
+        or.delete(order);
+    }
+
+}
+

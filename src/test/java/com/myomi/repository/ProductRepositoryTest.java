@@ -26,6 +26,13 @@
 //	@Autowired
 //	private UserRepository userRepository;
 //	
+//
+//	@Autowired
+//	private ProductRepository pr;
+//
+//	@Autowired
+//	private UserRepository userRepository;
+//
 //	@Autowired
 //	private SellerRepository sr;
 //
@@ -34,6 +41,7 @@
 //		Optional<User> u = userRepository.findById("id1");
 //		Seller seller = u.get().getSeller();
 //		
+//
 //		Product product = Product.builder()
 //				.seller(seller)
 //				.category("도시락")
@@ -44,7 +52,6 @@
 //				.status(0)
 //				.detail("굿")
 //				.build();
-//		
 //		seller.addProduct(product);
 //		pr.save(product);
 //	}
@@ -56,7 +63,6 @@
 //		List<Product> prods = pr.findAllBySellerId(seller.get().getId());
 //		for(Product p : prods) {
 //			logger.info("상품명: " + p.getName() + "상품 가격:" + p.getOriginPrice());
-//			
 //		}
 //		logger.info("--------------------------");
 //	}
