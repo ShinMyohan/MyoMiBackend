@@ -13,39 +13,44 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myomi.board.dto.BoardReadResponseDto.BoardReadResponseDtoBuilder;
 import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
+@Setter
+@Getter
+@NoArgsConstructor 
 @Entity
 @Table(name="board")
 @SequenceGenerator(
 name = "BOARD_SEQ_GENERATOR",
 sequenceName = "BOARD_SEQ", 
 initialValue = 1, allocationSize = 1 )
-@DynamicInsert
-@DynamicUpdate
+//@DynamicInsert
+//@DynamicUpdate
 public class Board {
    @Id
    @Column(name="num", updatable =  false)
    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-   generator = "BOARD_SEQ_GENERATOR")
-   private Long bNum;
+                   generator = "BOARD_SEQ_GENERATOR")
+   private Long boardNum;
    
-   @ManyToOne
+  
+   @ManyToOne (fetch = FetchType.LAZY)
    @JoinColumn(name="user_id", nullable = false,
                                updatable =  false)
    private User user;
@@ -63,15 +68,46 @@ public class Board {
    private String content;
    
    @Column(name = "created_date", updatable =  false)
+   @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
    private LocalDateTime createdDate;
    
    @Column(name = "hits", updatable =  false)
-   @ColumnDefault("'0'")
+ //  @ColumnDefault("'0'")
    private Long hits;
    
-   @OneToMany(fetch = FetchType.EAGER ,
+   @JsonIgnore
+   @OneToMany(
 		      cascade = CascadeType.REMOVE, 
 		      mappedBy = "board")
    private List<Comment> comments;
+
+   
+    @Builder
+    public Board(Long boardNum, User user, @NotNull String category, @NotNull String title, @NotNull String content,
+		LocalDateTime createdDate, Long hits) {
+	this.boardNum = boardNum;
+	this.user = user;
+	this.category = category;
+	this.title = title;
+	this.content = content;
+	this.createdDate = createdDate;
+	this.hits = hits;
+	//this.comments = comments;
+}
+    
+    //더티체킹 
+    public void update(String category, String title, String content) {
+		this.category = category;
+		this.title = title;
+		this.content = content;
+    }
+    
+    @PrePersist
+    public void prePersist() {
+        this.hits = this.hits == null ? 0 : this.hits;
+        //hits가 null값이면 자동으로 0으로 셋팅 (=defaultColumn)
+        //defaultColumn 사용하면 DynamicInsert없이 셋팅이 안됨 
+    }
+
    
 }

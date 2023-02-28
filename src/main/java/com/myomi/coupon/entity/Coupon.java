@@ -9,23 +9,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
+@Setter @Getter @NoArgsConstructor
 @Entity
 @Table(name="coupon")
 @SequenceGenerator(
@@ -33,15 +31,27 @@ name = "COUPON_SEQ_GENERATOR",
 sequenceName = "COUPON_SEQ", 
 initialValue = 1, allocationSize = 1 )
 
-@DynamicUpdate
-@DynamicInsert
+/**
+ * @쿠폰sort
+ * 회원가입 쿠폰 : 0
+ * 골드 : 1
+ * 플래티넘 : 2
+ * 다이아몬드 : 3
+ */
+
+/**
+ * @쿠폰status
+ * 사용 전 : 0
+ * 사용됨 : 1
+ * 만료됨 : 2 
+ */
 public class Coupon {
 	@Id
 	@Column(name="num")
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COUPON_SEQ_GENERATOR") 
-	private Long CpNum;
+	private Long couponNum;
 	
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false
@@ -72,4 +82,29 @@ public class Coupon {
 	@ColumnDefault("'0'")
 	private int status;
 	//status:0 -> 사용 전 
+
+	@Builder
+	public Coupon(User user, int sort, int percentage, LocalDateTime createdDate, LocalDateTime usedDate, int status,
+			Long couponNum) {
+		this.user = user;
+		this.sort = sort;
+		this.percentage = percentage;
+		this.createdDate = createdDate;
+		this.usedDate = usedDate;
+		this.status = status;
+		this.couponNum = couponNum;
+	}
+
+	//더티체킹
+	public void update (LocalDateTime usedDate, int status) {
+		this.usedDate = usedDate;
+		this.status = status;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		this.status = 0 ;
+	}
+	
+	
 }
