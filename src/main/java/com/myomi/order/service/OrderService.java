@@ -6,6 +6,7 @@ import com.myomi.cart.entity.Cart;
 import com.myomi.cart.repository.CartRepository;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
+import com.myomi.exception.FindException;
 import com.myomi.order.dto.OrderDetailRequestDto;
 import com.myomi.order.dto.OrderRequestDto;
 import com.myomi.order.dto.OrderResponseDto;
@@ -71,7 +72,7 @@ public class OrderService {
 //        try {
         // 상품이 있는지 확인
         for (OrderDetailRequestDto od : requestDto.getOrderDetails()) {
-            Product product = productRepository.findByProdNum(od.getProduct().getProdNum())
+            Product product = productRepository.findById(od.getProduct().getProdNum())
                     .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
             if (product.getStatus() != 0) {
                 log.info("품절된 상품입니다.");
@@ -114,7 +115,7 @@ public class OrderService {
         // 주문 가능한 상품인지 확인
         for (OrderDetailRequestDto orderDetail : requestDto.getOrderDetails()) {
             // 주문 상세 등록
-            Optional<Product> prod = productRepository.findByProdNum(orderDetail.getProduct().getProdNum());
+            Optional<Product> prod = productRepository.findById(orderDetail.getProduct().getProdNum());
             if (prod.isPresent() && prod.get().getStatus() == 0) {
                 // 연관관계 등록
                 orderDetail.toEntity(orderDetail).registerOrderAndProduct(order, prod.get());
@@ -135,22 +136,24 @@ public class OrderService {
 
     // 회원 정보로 주문 목록 확인
     @Transactional
-    public List<OrderResponseDto> findOrderListByUserId(Authentication user) {
+    public List<OrderResponseDto> getOrderListByUserId(Authentication user) {
         return orderRepository.findAllByUserId(user.getName());
     }
 
     // 회원 정보로 주문 상세 조회
     @Transactional
-    public OrderResponseDto findOrderByUserId(Authentication user, Long num) {
-        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num);
+    public OrderResponseDto getOrderByUserId(Authentication user, Long num) throws FindException {
+        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num)
+                .orElseThrow(() -> new FindException("해당 주문번호가 없습니다."));
         OrderResponseDto orderResponseDto = new OrderResponseDto();
-        return orderResponseDto.toDto(user.getName(), order);
+        return orderResponseDto.toDto(order);
     }
 
     // 배송일 3일 전에 주문 취소 가능(cancledDate update), 일자 계산
     @Transactional
-    public void modifyOrderCanceledDate(Authentication user, Long num) {
-        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num);
+    public void modifyOrderCanceledDate(Authentication user, Long num) throws FindException {
+        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num)
+                .orElseThrow(() -> new FindException("해당 주문번호가 없습니다."));
         String receiveDate = order.getDelivery().getReceiveDate();
         LocalDateTime now = LocalDateTime.now();
 
@@ -159,20 +162,21 @@ public class OrderService {
         LocalDateTime receiveDay = receive.atStartOfDay();
         int betweenDays = (int) Duration.between(now, receiveDay).toDays();
 
-        if (betweenDays >= 3) {
+        if (betweenDays >= 2) {
             order.updateCanceledDate(num);
         } else {
             log.info("배송일 3일전 까지만 취소 가능합니다");
         }
     }
 
+
     // 결제일 업데이트
-    public void updatePayCreatedDate(Order order) {
+    public void modifyPayCreatedDate(Order order) {
         order.updatePayCreatedDate(order.getOrderNum());
     }
 
     //-------------------------------------------------------------------------
-    public ResponseEntity<String> payment(PaymentRequestDto paymentRequestDto, Authentication user) throws IOException {
+    public ResponseEntity<String> payment(PaymentRequestDto paymentRequestDto, Authentication user) throws IOException, FindException {
         String token = getToken();
         System.out.println("토큰 : " + token);
 
@@ -180,7 +184,8 @@ public class OrderService {
         System.out.println("paymentRequestDto.getMerchant_uid() : " + paymentRequestDto.getTotalPrice());
 
         // DB 저장된 주문 정보
-        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), paymentRequestDto.getMerchant_uid()); // 주문 저장시에, 주문번호 가져오기
+        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), paymentRequestDto.getMerchant_uid())
+                .orElseThrow(() -> new FindException("해당 주문번호가 없습니다.")); // 주문 저장시에, 주문번호 가져오기
         // 결제 완료된 금액
         int amount = paymentInfo(paymentRequestDto.getImpUid(), token);
 
@@ -197,9 +202,8 @@ public class OrderService {
             }
 
 
-            updatePayCreatedDate(order);
+            modifyPayCreatedDate(order);
             return new ResponseEntity<>("주문이 완료되었습니다", HttpStatus.OK);
-
         } catch (Exception e) {
             paymentCancel(token, paymentRequestDto.getImpUid(), amount, "결제 에러");
             return new ResponseEntity<String>("결제 에러", HttpStatus.BAD_REQUEST);
