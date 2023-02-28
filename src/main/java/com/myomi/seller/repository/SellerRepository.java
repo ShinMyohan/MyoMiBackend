@@ -1,6 +1,9 @@
 package com.myomi.seller.repository;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.repository.CrudRepository;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +24,7 @@ public interface SellerRepository extends CrudRepository<Seller, String>{
 	@Query("UPDATE Seller s SET s.status =3 WHERE s.sellerId.id =:userId")
 	public void updateSellerId(@Param("userId")String userId);
 
+	//특정 셀러 찾기
+	Optional<Seller> findById(String sellerId);
 }
 

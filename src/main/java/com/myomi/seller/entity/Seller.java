@@ -6,15 +6,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -41,48 +40,39 @@ public class Seller {
 	private String id;
 	
 	@MapsId
-	@OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
-	@JoinColumn(name = "seller_id", insertable = false)
+	@OneToOne
+//	(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
+//	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JoinColumn(name = "seller_id"
+//	, insertable = false
+	)
+	@JsonIgnore
 	private User sellerId;
 	
 	@Column(name = "company_name")
-	@NotNull
 	private String companyName;
 	
 	@Column(name = "company_num")
-	@NotNull
 	private String companyNum;
 	
 	@Column(name = "internet_num")
-	@NotNull
 	private String internetNum;
 	
 	@Column(name = "addr")
-	@NotNull
 	private String addr;
 	
 	@Column(name = "manager")
-	@NotNull
 	private String manager;
 	
-	@Column(name = "bank_account")
-	@NotNull
-	private String bank_account;
-	
-	@ColumnDefault("'0'")
 	@Column(name = "status")
 	private int status;
 	
-	@ColumnDefault("'0'")
 	@Column(name = "follow_cnt")
 	private Long followCnt;
 	
-	@OneToMany(mappedBy = "sellerId")
-	private List<Follow> follows;
-	
-	@OneToMany(mappedBy ="seller",cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	@OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE)
 	private List<Product> products;
-
 	
 	
 	@Builder
@@ -102,5 +92,10 @@ public class Seller {
 		this.follows = follows;
 		this.products = products;
 	}
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "sellerId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private List<Follow> follows;
+
 	
 }

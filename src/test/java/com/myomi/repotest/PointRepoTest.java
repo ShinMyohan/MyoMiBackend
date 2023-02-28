@@ -15,7 +15,7 @@ import com.myomi.point.entity.PointDetailEmbedded;
 import com.myomi.point.repository.PointDetailRepository;
 import com.myomi.point.repository.PointRepository;
 import com.myomi.user.entity.User;
-import com.myomi.user.entity.UserRepository;
+import com.myomi.user.repository.UserRepository;
 
 @SpringBootTest
 class PointRepoTest {

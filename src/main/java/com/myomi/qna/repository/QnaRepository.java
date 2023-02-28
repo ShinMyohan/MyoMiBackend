@@ -6,13 +6,18 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import com.myomi.product.entity.Product;
 import com.myomi.qna.entity.Qna;
 
 
 public interface QnaRepository extends CrudRepository<Qna, Long> {
+
 	
 	//상품별 문의 조회
 	@EntityGraph(attributePaths = "userId")
@@ -29,4 +34,6 @@ public interface QnaRepository extends CrudRepository<Qna, Long> {
 	public List<Qna> findAllBySellerId(@Param("user")String user,Pageable pageable);
 
 	
+
+	public List<Qna> findByProdNum(Product prodNum);
 }

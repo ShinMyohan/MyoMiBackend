@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.admin.entity.Admin;
 
 import lombok.AllArgsConstructor;
@@ -38,7 +37,7 @@ public class Notice {
 	@Id
 	@Column(name = "num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_SEQ_GENERATOR")
-	private Long nNum;
+	private Long noticeNum;
 
 	@ManyToOne
 	@JoinColumn(name = "admin_id",updatable = false)
