@@ -12,20 +12,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.user.entity.User;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
+@Setter @Getter @NoArgsConstructor
 @Entity
-@DynamicInsert
-@DynamicUpdate
+//@DynamicInsert
+//@DynamicUpdate
 public class Point {
 	@Id
 	@Column(name = "user_id")
@@ -34,12 +32,25 @@ public class Point {
 	@MapsId
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", insertable = false)
+	@JsonIgnore
 	private User userId;
 	
 	@Column(name = "total_point")
-	@Min(0)
+	@Min(0) //최소값 
 	private int totalPoint;
 	
 	@OneToMany(mappedBy = "point")
 	private List<PointDetail> pointDetails;
+
+	
+	@Builder
+	public Point(String id, User userId, @Min(0) int totalPoint, List<PointDetail> pointDetails) {
+		
+		this.id = id;
+		this.userId = userId;
+		this.totalPoint = totalPoint;
+		this.pointDetails = pointDetails;
+	}
+	
+	
 }

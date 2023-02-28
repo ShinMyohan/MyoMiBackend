@@ -25,6 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
 import com.myomi.cart.entity.Cart;
 import com.myomi.comment.entity.Comment;
@@ -37,17 +38,23 @@ import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
 
+<<<<<<< HEAD
+=======
+import lombok.AccessLevel;
+>>>>>>> develop
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="users")
 //@DynamicInsert
 //@DynamicUpdate
-public class User implements UserDetails {
+public class User implements UserDetails
+//, Persistable<String> 
+{
 	@Id
 	@NotNull
 	@Column(name = "id", updatable = false, unique = true, nullable = false)
@@ -57,21 +64,26 @@ public class User implements UserDetails {
 	@Column(name = "pwd", nullable = false)
 	private String pwd;
 	
+	
 	@ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
     private List<String> roles = new ArrayList<>();
  
+	
+//	@OneToOne(mappedBy = "roles")
+//	private UserRole role;
+//	@Enumerated(EnumType.STRING)
+	private int role;
+	
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
+       return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
  
-    @Column(name = "role")
-//	@Enumerated(EnumType.STRING)
-	private int role;
-    
     @Override
     public String getUsername() {
         return id;
@@ -118,53 +130,71 @@ public class User implements UserDetails {
 	
 	@Column(name = "created_date")
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
-//	@ColumnDefault(value = "SYSDATE")
+
 	private LocalDateTime createdDate;
 	
 	@Column(name = "signout_date")
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private Date signoutDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	
+	@ManyToOne(
+			fetch = FetchType.LAZY, 
+			cascade = CascadeType.ALL)
 	@JoinColumn(name = "membership_num")
 	private Membership membership;
 	
 	@OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private Point point;
 	
 	@OneToOne(mappedBy = "sellerId", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private Seller seller;
+	
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Board> boards;
 	
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Comment> comments;
 
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Review> reviews;
+	
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	private List<Order> orders;
 	
+	
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Qna> qnas;
+	
 	
 	@OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Follow> follows;
 	
+	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
+	
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Coupon> coupons;
 	
+
+	private String provider;
+	
 	@Builder
-	public User(String id, String pwd, int role, List<String> roles, String name, String tel, String email, 
-			String addr, LocalDateTime createdDate, Membership membership, Point point, Seller seller, 
-			List<Board> boards, List<Comment> comments, List<Review> reviews,
-			List<Order> orders, List<Qna> qnas, List<Follow> follows,
-			List<Cart> cart, List<Coupon> coupons) {
+	public User(String id, String pwd,
+			int role,
+			List<String> roles,
+			String name, String tel, String email, 
+			String addr, LocalDateTime createdDate, Membership membership
+			) {
+
 		this.id = id;
 		this.pwd = pwd;
 		this.role = role;
@@ -175,15 +205,20 @@ public class User implements UserDetails {
 		this.addr = addr;
 		this.createdDate = createdDate;
 		this.membership = membership;
-		this.point = point;
-		this.seller = seller;
-		this.boards = boards;
-		this.comments = comments;
-		this.reviews = reviews;
-		this.orders = orders;
-		this.qnas = qnas;
-		this.follows = follows;
-		this.cart = cart;
-		this.coupons = coupons;
+
+
 	}
+	
+	//for OAuth!
+//	public User update(String name, String provider) {
+//        this.name = name;
+//        this.provider = provider;
+//        return this;
+//    }
+//
+//    public String getRoleKey() {
+////        return this.roles.getKey();
+//    	return this.getRoleKey();
+//    }
+
 }

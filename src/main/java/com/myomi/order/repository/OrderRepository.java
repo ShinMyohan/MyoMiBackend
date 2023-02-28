@@ -1,6 +1,7 @@
 package com.myomi.order.repository;
 
 import java.util.List;
+<<<<<<< HEAD
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,13 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     
     //select f from follow f join f.sellerId where f.id.uId=:userId
     //select user_id, seller_id from follow where seller_id=:sellerId AND user_id=userId",nativeQuery=true
+=======
+
+import org.springframework.data.repository.CrudRepository;
+
+import com.myomi.order.entity.Order;
+
+public interface OrderRepository extends CrudRepository<Order, Long> {
+    public List<Order> findAllByUserId(String userId);
+
 }

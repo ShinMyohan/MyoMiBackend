@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class PointDetailEmbedded implements Serializable {
@@ -25,6 +25,12 @@ public class PointDetailEmbedded implements Serializable {
 	//회원아이디
 	@Column(name = "user_id")
 	private String uId;
+
+	@Builder
+	public PointDetailEmbedded(LocalDateTime createdDate, String uId) {
+		this.createdDate = createdDate;
+		this.uId = uId;
+	}
 	
 	
 }

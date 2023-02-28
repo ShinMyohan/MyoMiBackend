@@ -9,7 +9,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+<<<<<<< HEAD
 //import com.myomi.chat.entity.ChatRoom;
+=======
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+>>>>>>> develop
 import com.myomi.notice.entity.Notice;
 
 import lombok.Builder;

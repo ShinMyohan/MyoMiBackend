@@ -10,7 +10,10 @@ import javax.persistence.Table;
 
 import com.myomi.product.entity.Product;
 
+<<<<<<< HEAD
 import lombok.Builder;
+=======
+>>>>>>> develop
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +33,7 @@ public class OrderDetail {
     @ManyToOne
     @JoinColumn(name = "order_num")
     private Order order;
+
     @MapsId("prodNum") // 복합키
     @ManyToOne
     @JoinColumn(name = "prod_num")
