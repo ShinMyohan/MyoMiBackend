@@ -1,5 +1,28 @@
 package com.myomi.order.service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.myomi.cart.entity.Cart;
@@ -17,26 +40,10 @@ import com.myomi.product.entity.Product;
 import com.myomi.product.repository.ProductRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.io.*;
-import java.net.URL;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +78,7 @@ public class OrderService {
 //        try {
         // 상품이 있는지 확인
         for (OrderDetailRequestDto od : requestDto.getOrderDetails()) {
-            Product product = productRepository.findByProdNum(od.getProduct().getProdNum())
+            Product product = productRepository.findById(od.getProduct().getProdNum())
                     .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
             if (product.getStatus() != 0) {
                 log.info("품절된 상품입니다.");
@@ -114,7 +121,7 @@ public class OrderService {
         // 주문 가능한 상품인지 확인
         for (OrderDetailRequestDto orderDetail : requestDto.getOrderDetails()) {
             // 주문 상세 등록
-            Optional<Product> prod = productRepository.findByProdNum(orderDetail.getProduct().getProdNum());
+            Optional<Product> prod = productRepository.findById(orderDetail.getProduct().getProdNum());
             if (prod.isPresent() && prod.get().getStatus() == 0) {
                 // 연관관계 등록
                 orderDetail.toEntity(orderDetail).registerOrderAndProduct(order, prod.get());

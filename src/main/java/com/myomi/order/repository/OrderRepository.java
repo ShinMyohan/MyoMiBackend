@@ -1,11 +1,5 @@
 package com.myomi.order.repository;
 
-import com.myomi.order.entity.Order;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,13 +8,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.myomi.order.dto.OrderResponseDto;
 import com.myomi.order.entity.Order;
-import com.myomi.order.entity.OrderDetail;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long> {
-    public List<Order> findAllByUserId(String userId);
+	public List<OrderResponseDto> findAllByUserId(String userId);
     
+	public Order findByUserIdAndOrderNum(String userId, Long num);
+	
     //@Query("select o from Order o join o.orderDetail where o.orderDetail.product.prodNum=:prodNum and o.user.id=:userId")
     @Query(value = "select o.* from orders o join orders_detail od on o.num=od.order_num where od.prod_num=:prodNum and o.user_id=:userId", nativeQuery = true)
     public Optional<Order>findByProdNumAndUserId(@Param("prodNum")Long prodNum, @Param("userId")String userId);

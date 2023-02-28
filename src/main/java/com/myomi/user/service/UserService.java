@@ -89,9 +89,9 @@ public class UserService {
     	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
     		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
     	}
-//    	Membership m = new Membership();
-//    	m.setMNum(0);
-//    	m.setMLevel("일반");
+    	Membership m = new Membership();
+    	m.setMNum(0);
+    	m.setMLevel("일반");
     	
     	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
 //    	String encPwd = new BCryptPasswordEncoder().encode(userSignUpReqeustDto.getPwd());
@@ -108,7 +108,7 @@ public class UserService {
 				.email(userSignUpReqeustDto.getEmail())
 				.addr(userSignUpReqeustDto.getAddr())
 				.createdDate(date)
-//				.membership(m)
+				.membership(m)
     			.build();
 
     	log.info("\n" + "아이디: "+user.getId() +" 패스워드: "+ user.getPwd() +" 유저 권한: "+ user.getRole() +" 유저이름: "+ user.getName() + "\n"

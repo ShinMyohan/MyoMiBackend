@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.myomi.review.dto.ReviewDetailResponseDto;
 import com.myomi.review.dto.ReviewReadResponseDto;
 import com.myomi.review.dto.ReviewSaveRequestDto;
@@ -63,10 +64,14 @@ public class ReviewController {
 	//리뷰작성
 	@PostMapping("add")
 	public void reviewsave(@RequestBody ReviewSaveRequestDto reviewSaveDto,
-					Long orderNum,
-					Long prodNum, 
-			Authentication user) {
-		service.addReview(reviewSaveDto,user,orderNum,prodNum);
+					Authentication user
+//					,		
+//					Long orderNum,
+//					Long prodNum
+			) {
+		service.addReview(reviewSaveDto,user
+//				,orderNum,prodNum
+				);
 	}
 	
 	//판매자리뷰
