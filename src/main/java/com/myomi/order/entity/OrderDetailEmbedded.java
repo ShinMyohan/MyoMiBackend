@@ -1,9 +1,14 @@
 package com.myomi.order.entity;
 
-import lombok.*;
+import java.io.Serializable;
 
 import javax.persistence.Embeddable;
-import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -12,7 +17,7 @@ import java.io.Serializable;
 @Embeddable
 public class OrderDetailEmbedded implements Serializable{
 	// 주문 번호
-	private Long oNum;
+	private Long orderNum;
 	// 상품 번호
-	private Long pNum;
+	private Long prodNum;
 }

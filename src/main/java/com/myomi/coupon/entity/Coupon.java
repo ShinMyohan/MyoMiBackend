@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -41,7 +40,7 @@ public class Coupon {
 	@GeneratedValue(
 				strategy = GenerationType.SEQUENCE,
 				generator = "COUPON_SEQ_GENERATOR") 
-	private Long CpNum;
+	private Long couponNum;
 	
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false

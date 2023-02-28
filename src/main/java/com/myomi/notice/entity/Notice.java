@@ -37,7 +37,7 @@ public class Notice {
 	@Id
 	@Column(name = "num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_SEQ_GENERATOR")
-	private Long ntNum;
+	private Long noticeNum;
 
 	@ManyToOne
 	@JoinColumn(name = "admin_id",updatable = false)

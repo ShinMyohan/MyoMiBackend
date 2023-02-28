@@ -1,4 +1,4 @@
-package com.myomi.config;
+package com.myomi.common.config;
 
 import java.util.Arrays;
 import java.util.List;

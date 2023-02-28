@@ -1,13 +1,20 @@
 package com.myomi.order.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-import javax.persistence.*;
 
 @Setter
 @Getter
@@ -19,7 +26,7 @@ import javax.persistence.*;
 public class Delivery {
     @Id
     @Column(name = "order_num")
-    private Long oNum;
+    private Long orderNum;
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)

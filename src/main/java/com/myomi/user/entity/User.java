@@ -127,7 +127,6 @@ public class User implements UserDetails
 	
 	@Column(name = "created_date")
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
-//	@ColumnDefault(value = "SYSDATE")
 	private LocalDateTime createdDate;
 	
 	@Column(name = "signout_date")
@@ -138,7 +137,6 @@ public class User implements UserDetails
 	@ManyToOne(
 			fetch = FetchType.LAZY, 
 			cascade = CascadeType.ALL)
-//	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "membership_num")
 	private Membership membership;
 	
@@ -203,15 +201,15 @@ public class User implements UserDetails
 		this.membership = membership;
 	}
 	
-	public User update(String name, String provider) {
-        this.name = name;
-        this.provider = provider;
-        return this;
-    }
-
-    public String getRoleKey() {
-//        return this.roles.getKey();
-    	return this.getRoleKey();
-    }
-
+	//for OAuth!
+//	public User update(String name, String provider) {
+//        this.name = name;
+//        this.provider = provider;
+//        return this;
+//    }
+//
+//    public String getRoleKey() {
+////        return this.roles.getKey();
+//    	return this.getRoleKey();
+//    }
 }

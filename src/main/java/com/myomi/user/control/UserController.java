@@ -69,3 +69,4 @@ public class UserController {
     	return userService.updateUserInfo(userDto, user);
     }
 }
+

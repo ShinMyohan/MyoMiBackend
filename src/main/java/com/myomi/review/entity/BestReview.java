@@ -36,7 +36,7 @@ import lombok.Setter;
 public class BestReview implements Serializable {
 	@Id
 	@Column(name = "review_num")
-	private Long rNum;
+	private Long reviewNum;
 
 	@MapsId
 	@OneToOne(cascade = CascadeType.ALL)

@@ -22,15 +22,8 @@ public interface ProductRepository extends CrudRepository<Product, Long>{
 			+ " LEFT JOIN best_review br ON r.num = br.review_num"
 			+ " where p.num = ?", nativeQuery = true)
 	Optional<Product> findProdInfo(Long prodNum);
-	
-
-	
+	//기본으로 status가 판매중인 상품만 보이게. 
+	List<Product> findAllByStatusOrderByWeek(int status);
+	//키워드로 상품찾기
+	List<Product> findAllByNameContaining(String keyword);
 }
-
-
-//select p.* , r.user_id, r.sort, r.title, r.content, r.created_date, r.stars
-//from product p 
-//FULL OUTER JOIN orders_detail od ON p.num = od.prod_num
-//FULL OUTER join review r ON od.order_num = r.order_num
-//LEFT JOIN best_review br ON r.num = br.review_num
-//where p.num=2;

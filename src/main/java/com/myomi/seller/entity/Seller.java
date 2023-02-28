@@ -75,9 +75,4 @@ public class Seller {
 	@OneToMany(mappedBy = "sellerId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Follow> follows;
 	
-	
-//	public void addProduct(Product prod) {
-//		prod.registerSeller(this);
-//		products.add(prod);
-//	}
 }

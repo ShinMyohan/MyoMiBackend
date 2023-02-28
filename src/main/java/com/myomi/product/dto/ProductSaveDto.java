@@ -1,6 +1,7 @@
 package com.myomi.product.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -17,17 +18,21 @@ public class ProductSaveDto {
 	private String category;
 	
 	@NotBlank
+	@Size(min = 1, max = 20, message = "최대 30자까지 입력할 수 있습니다.")
 	private String name;
 	
 	@NotBlank
+	@Pattern(regexp = "^[0-9]*$")
 	private Long originPrice;
 	
+	@Pattern(regexp = "^[0-9]*$")
 	private int percentage;
 	
 	@NotBlank
+	@Pattern(regexp = "^[0-6]*$")
 	private int week;
 	
-	@Size(max = 60, message = "상품 특이사항을 입력해주세요.")
+	@Size(max = 60, message = "최대 30자까지 입력할 수 있습니다.")
 	private String detail;
 	
 	//상품 등록시 사용

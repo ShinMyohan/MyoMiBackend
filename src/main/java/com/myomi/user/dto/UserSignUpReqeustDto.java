@@ -7,8 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.myomi.membership.entity.Membership;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserSignUpReqeustDto {
 	private LocalDateTime date = LocalDateTime.now(); 
-	private Membership m = new Membership();
+//	private Membership m = new Membership();
 	
 	@NotBlank(message = "사용자 아이디는 필수 입력 값입니다.")
 	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{5,30}$", message = "아이디는 특수문자를 제외한 5자이상이여야 합니다")

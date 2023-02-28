@@ -42,7 +42,7 @@ public class Review {
 	@Id
 	@Column(name = "num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REVIEW_SEQ_GENERATOR")
-	private Long rvNum;
+	private Long reviewNum;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id",updatable = false)

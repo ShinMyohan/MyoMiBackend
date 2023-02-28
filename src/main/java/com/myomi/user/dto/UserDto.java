@@ -85,7 +85,6 @@ public class UserDto {
 	@Builder
 	public UserDto(String id, String pwd,
 			int role,
-//			UserRole role,
 			List<String> roles,
 			String name, String tel, String email, 
 			String addr, LocalDateTime createdDate,

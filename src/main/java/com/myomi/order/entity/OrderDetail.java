@@ -25,12 +25,12 @@ public class OrderDetail {
     @EmbeddedId
     private OrderDetailEmbedded id = new OrderDetailEmbedded();
 
-    @MapsId("oNum")
+    @MapsId("orderNum")
     @ManyToOne
     @JoinColumn(name = "order_num")
     private Order order;
 
-    @MapsId("pNum") // 복합키
+    @MapsId("prodNum") // 복합키
     @ManyToOne
     @JoinColumn(name = "prod_num")
     private Product product;

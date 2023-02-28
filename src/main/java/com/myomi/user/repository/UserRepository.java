@@ -17,5 +17,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 	//등록된 아이디인지 중복체크
 	boolean existsUserById(String id);
 	//이메일로 유저 찾기
-	User findByEmail(String email); //오오쓰
+	Optional<User> findByEmail(String email);
+	//OAuth 시 필요
+	User findByIdAndPwd(String email, String password);
 }

@@ -1,5 +1,6 @@
 package com.myomi.product.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -81,6 +82,9 @@ public class Product {
 	@ColumnDefault("9") //default 9
 	private int fee;
 
+	@Column(name = "modified_date")
+	private LocalDateTime modifiedDate;
+	
 	@OneToMany(mappedBy = "product"
 //			, fetch = FetchType.LAZY
 			)

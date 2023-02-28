@@ -13,10 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.myomi.jwt.filter.JwtAuthenticationFilter;
 import com.myomi.jwt.provider.JwtTokenProvider;
-import com.myomi.oauth.CustomOAuth2UserService;
-import com.myomi.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.myomi.oauth.OAuth2AuthenticationFailureHandler;
-import com.myomi.oauth.OAuth2AuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,16 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtTokenProvider jwtTokenProvider;
-	private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 	
-    @Bean
-    public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
-    }
-
-    
 	@Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -67,17 +54,10 @@ public class SecurityConfig {
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-	                .oauth2Login()
-//                .authorizationEndpoint().baseUri("/oauth2/authorize")
-//                .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/login/oauth2/code/**")
-//                .and()
-//                .userInfoEndpoint().userService(customOAuth2UserService)
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler)
-//                .failureHandler(oAuth2AuthenticationFailureHandler)
+                .oauth2Login()
+//                .userInfoEndpoint()
+//	            .userService(customOAuth2UserService)
+//	        	.and()	
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/**").permitAll()
@@ -87,10 +67,11 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v2/api-docs/**").permitAll()
+                .antMatchers("/api/v1/**").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
-                .antMatchers(HttpMethod.GET, "/product/list/{seller}", "/product/{prodNum}").permitAll()
+                .antMatchers(HttpMethod.GET, "/product/list/*", "/product/{prodNum}").permitAll()
                 .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
                 .antMatchers("/product/add").hasRole("SELLER")
                 .antMatchers("/user/test", "/user/modify").hasRole("USER")
