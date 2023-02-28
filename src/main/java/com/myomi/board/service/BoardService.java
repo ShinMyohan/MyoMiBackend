@@ -1,6 +1,5 @@
 package com.myomi.board.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +16,6 @@ import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
-import com.myomi.comment.dto.CommentDto;
-import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
 import com.myomi.exception.AddException;
 import com.myomi.exception.RemoveException;
@@ -41,7 +38,7 @@ public class BoardService {
 
 
 	//글 리스트 출력 
-	public List<BoardReadResponseDto> findBoard(Pageable pageable) {
+	public List<BoardReadResponseDto> getBoard(Pageable pageable) {
 		//  Sort sort = sort.by(Direction.DESC,"createdDate");
 		List <Board> list = br.findAll(pageable);
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
@@ -62,7 +59,7 @@ public class BoardService {
 	}
 
 	//제목으로 검색 
-	public List<BoardReadResponseDto> findByTitle(String keyword, Pageable pageable) {
+	public List<BoardReadResponseDto> getByTitle(String keyword, Pageable pageable) {
 		List<Board> list = br.findByTitleContaining(keyword, pageable);
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
@@ -82,7 +79,7 @@ public class BoardService {
 	}
 
 	//제목, 카테고리로 검색 
-	public List<BoardReadResponseDto> findByCategoryAndTitle(String category, String title, Pageable pageable) {
+	public List<BoardReadResponseDto> getByCategoryAndTitle(String category, String title, Pageable pageable) {
 		List<Board> list = br.findByCategoryContainingAndTitleContaining(category, title, pageable);
 		List <BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
@@ -96,6 +93,7 @@ public class BoardService {
 					.hits(board.getHits())
 					.build();
 			boardList.add(dto);
+			
 		}
 		return boardList;
 
@@ -104,16 +102,18 @@ public class BoardService {
 	//글 상세보기 
 	@Transactional
 	public BoardReadResponseDto detailBoard(Long boardNum) {
-		Board board = br.findBoardById(boardNum);
+		Optional<Board> board= br.findById(boardNum);
+		br.updateHits(boardNum);
+		
 		BoardReadResponseDto dto = BoardReadResponseDto.builder()
-				.boardNum(board.getBoardNum())
-				.user(board.getUser())
-				.category(board.getCategory())
-				.title(board.getTitle())
-				.content(board.getContent())
-				.createdDate(board.getCreatedDate())
-				.hits(board.getHits())
-				.comments(board.getComments())
+				.boardNum(board.get().getBoardNum())
+				.user(board.get().getUser())
+				.category(board.get().getCategory())
+				.title(board.get().getTitle())
+				.content(board.get().getContent())
+				.createdDate(board.get().getCreatedDate())
+				.hits(board.get().getHits())
+				.comments(board.get().getComments())
 				.build();
 
 		return dto;
@@ -130,14 +130,12 @@ public class BoardService {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-
-
 	//글 수정 
 	@Transactional
-	public BoardDetailResponseDto modifyBoard(BoardReadResponseDto editDto, Long bNum, Authentication user)
+	public BoardDetailResponseDto modifyBoard(BoardReadResponseDto editDto, Long boardNum, Authentication user)
 	   										throws AddException{
 		String username = user.getName();
-		Board board = br.findById(bNum).get();
+		Board board = br.findById(boardNum).get();
 		if (board.getUser().getId().equals(username)) {
 			board.update(editDto.getCategory(), editDto.getContent(), editDto.getTitle());
 		}else {
@@ -145,7 +143,6 @@ public class BoardService {
 		}
 		return new BoardDetailResponseDto(board);
 	}
-
 
 	//글 삭제 
 	@Transactional
@@ -181,50 +178,7 @@ public class BoardService {
 		}
 
 
-	//-------------------댓글--------------------
-
-	//댓글 작성 
-	@Transactional
-	public ResponseEntity<CommentDto> addComment(CommentDto cDto, Authentication user, Long boardNum){
-		LocalDateTime date = LocalDateTime.now();
-		String username = user.getName();
-		Optional<Board> optB = br.findById(boardNum);
-		Optional<User> optU = ur.findById(username);
-		Comment comment = cDto.toEntity(optU.get(), optB.get());
-		cr.save(comment);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	//댓글 수정
-	@Transactional
-	public CommentDto modifyComment (CommentDto cDto, Authentication user, Long boardNum,
-			Long commentNum) throws AddException{
-		String username = user.getName();
-		Optional<Board> optB = br.findById(boardNum);
-		Optional<Comment> optC = cr.findById(commentNum);
-		Comment comment = optC.get();
-		if (comment.getUser().getId().equals(username)) {
-			comment.update(cDto.getContent());
-		}else {
-			throw new AddException("작성자만 수정 가능합니다.");
-		}
-		return cDto;
-	}
-
-	//댓글 삭제
-	@Transactional
-	public void deleteComment (Authentication user, Long boardNum,
-			Long commentNum) throws RemoveException{
-		String username = user.getName();
-		Optional<Board> optB = br.findById(boardNum);
-		Optional<Comment> optC = cr.findById(commentNum);
-		Comment comment = optC.get();
-		if (comment.getUser().getId().equals(username)) {
-			cr.delete(comment);
-		}else {
-			throw new RemoveException("작성자만 삭제 가능합니다.");
-		}
-	}
+	
 }
 
 
