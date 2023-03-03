@@ -17,9 +17,9 @@ public class OrderResponseDto { // 주문 기본, 상세, 배송정보 한번에
     private User user;
     private String msg;
     private Long couponNum;
-    private Long usedPoint;
+    private int usedPoint;
     private Long totalPrice;
-    private Long savePoint;
+    private int savePoint;
     private LocalDateTime createdDate;
     private LocalDateTime payCreatedDate;
     private LocalDateTime canceledDate;
@@ -35,8 +35,8 @@ public class OrderResponseDto { // 주문 기본, 상세, 배송정보 한번에
     private Long reviewNum; // 리뷰 번호
 
     @Builder
-    public OrderResponseDto(User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint,
-                            Long savePoint, Long totalPrice, List<OrderDetail> orderDetail,
+    public OrderResponseDto(User user, LocalDateTime createdDate, String msg, Long couponNum, int usedPoint,
+                            int savePoint, Long totalPrice, List<OrderDetail> orderDetail,
                             Delivery delivery) {
         this.user = user;
         this.createdDate = createdDate;

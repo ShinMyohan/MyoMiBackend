@@ -6,22 +6,24 @@ import com.myomi.user.entity.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+//@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 public class OrderRequestDto {
     private String msg;
     private Long couponNum;
-    private Long usedPoint;
+    private int usedPoint;
     private Long totalPrice;
-    private Long savePoint;
+    private int savePoint;
     private LocalDateTime createdDate;
     private LocalDateTime payCreatedDate;
     private LocalDateTime canceledDate;
     private String impUid;
 
     // 주문정보
-    private List<OrderDetailRequestDto> orderDetails;
+    private List<OrderDetailRequestDto> orderDetails = new ArrayList<>();
     // 배송정보
     private Delivery delivery;
 

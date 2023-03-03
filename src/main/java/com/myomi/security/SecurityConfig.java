@@ -1,5 +1,8 @@
 package com.myomi.security;
 
+import com.myomi.jwt.filter.JwtAuthenticationFilter;
+import com.myomi.jwt.provider.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,11 +13,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.myomi.jwt.filter.JwtAuthenticationFilter;
-import com.myomi.jwt.provider.JwtTokenProvider;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * SecurityConfig는 Spring Security 설정을 위한 클래스.
@@ -46,7 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
-                .csrf().disable()     
+                .csrf().disable()
 
                 .cors()
                 .and()
@@ -59,7 +57,7 @@ public class SecurityConfig {
                 .oauth2Login()
 //                .userInfoEndpoint()
 //	            .userService(customOAuth2UserService)
-//	        	.and()	
+//	        	.and()
                 .and()
                 .authorizeRequests()
 
@@ -86,7 +84,7 @@ public class SecurityConfig {
                 .antMatchers("/review/add","/review/{reviewNum}").hasRole("USER")
                 .antMatchers("/user/info", "/user/modify").hasAnyRole("USER","SELLER")
                 .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll()
-				.antMatchers("/cart").hasRole("USER")
+				.antMatchers("/cart/**").hasRole("USER")
 				.antMatchers("/order/**").hasRole("USER")
                 .antMatchers("/user/test", "/user/modify").hasRole("USER")
                 .antMatchers("/user/info").hasAnyRole("USER","SELLER")

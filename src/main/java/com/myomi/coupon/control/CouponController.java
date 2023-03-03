@@ -1,27 +1,21 @@
 package com.myomi.coupon.control;
 
-import java.util.List;
-
+import com.myomi.coupon.dto.CouponDto;
+import com.myomi.coupon.service.CouponService;
+import com.myomi.exception.FindException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myomi.coupon.dto.CouponDto;
-import com.myomi.coupon.service.CouponService;
-import com.myomi.exception.AddException;
-import com.myomi.exception.FindException;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,14 +33,14 @@ public class CouponController {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
-    @ApiOperation(value = "쿠폰 | 쿠폰 사용 ")
-	//임시로 만들어둠 .. 
-	@PutMapping("coupon/{couponNum}")
-	public ResponseEntity<?> couponModify (@RequestBody CouponDto dto,
-							@PathVariable Long couponNum) throws AddException{
-		service.modifyCoupon(dto,couponNum);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+//    @ApiOperation(value = "쿠폰 | 쿠폰 사용 ")
+//	//임시로 만들어둠 ..
+//	@PutMapping("coupon/{couponNum}")
+//	public ResponseEntity<?> couponModify (@RequestBody CouponDto dto,
+//							@PathVariable Long couponNum) throws AddException{
+//		service.modifyCoupon(dto,couponNum);
+//		return new ResponseEntity<>(HttpStatus.OK);
+//	}
 	
 	
 }

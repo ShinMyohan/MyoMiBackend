@@ -1,18 +1,5 @@
 package com.myomi.point.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-
 import com.myomi.point.dto.PointDetailDto;
 import com.myomi.point.dto.PointDto;
 import com.myomi.point.entity.Point;
@@ -22,10 +9,20 @@ import com.myomi.point.repository.PointDetailRepository;
 import com.myomi.point.repository.PointRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +75,28 @@ public class PointDetailService {
 	    pdr.save(pd);
 	    return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@Transactional
+	public void savePoint (int amount, int sort, Authentication user){
+		LocalDateTime date = LocalDateTime.now();
+		String username = user.getName();
+		Optional<User> optU = ur.findById(username);
+		PointDetail pd = new PointDetail();
+		PointDetailEmbedded pde = new PointDetailEmbedded();
+		pde = PointDetailEmbedded.builder()
+				.createdDate(date)
+				.uId(username)
+				.build();
+		pd = PointDetail.builder()
+				.amount(amount)
+				.sort(sort)
+				.pointEmbedded(pde)
+				.build();
+
+		pdr.save(pd);
+//		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	
 	//총 보유 포인트
 	@Transactional

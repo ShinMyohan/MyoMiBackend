@@ -1,50 +1,25 @@
 package com.myomi.order.service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.myomi.cart.entity.Cart;
-import com.myomi.cart.repository.CartRepository;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.exception.FindException;
 import com.myomi.order.dto.OrderDetailRequestDto;
 import com.myomi.order.dto.OrderRequestDto;
 import com.myomi.order.dto.OrderResponseDto;
-import com.myomi.order.dto.PaymentRequestDto;
 import com.myomi.order.entity.Order;
-import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.entity.Product;
 import com.myomi.product.repository.ProductRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
-
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +28,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private final CartRepository cartRepository;
     private final CouponRepository couponRepository;
 
     /* TODO: 1. 주문서 작성 (배송, 상세) (OK)
@@ -69,7 +43,7 @@ public class OrderService {
 
     // 주문서 작성
     @Transactional
-    public Long addOrder(Authentication user, OrderRequestDto requestDto) {
+    public Long addOrder(Authentication user, OrderRequestDto requestDto) { // TODO: 수령일 4일전에부터 신청가능
         User u = userRepository.findById(user.getName())
                 .orElseThrow(() -> new IllegalArgumentException("로그인한 사용자만 이용 가능합니다."));
 
@@ -79,7 +53,7 @@ public class OrderService {
 //        try {
         // 상품이 있는지 확인
         for (OrderDetailRequestDto od : requestDto.getOrderDetails()) {
-            Product product = productRepository.findById(od.getProduct().getProdNum())
+            Product product = productRepository.findById(od.getProdNum())
                     .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다."));
             if (product.getStatus() != 0) {
                 log.info("품절된 상품입니다.");
@@ -91,7 +65,7 @@ public class OrderService {
 
         if (requestDto.getCouponNum() != 0) {
             // 사용 가능한 쿠폰인지 확인
-            Coupon coupon = couponRepository.findByCouponNumAndUserId(requestDto.getCouponNum(), u.getName())
+            Coupon coupon = couponRepository.findByCouponNumAndUserId(requestDto.getCouponNum(), u.getId())
                     .orElseThrow(() -> new IllegalArgumentException("사용 가능한 쿠폰이 없습니다."));
             if (coupon.getStatus() != 0) {
                 throw new IllegalArgumentException("사용할 수 없는 쿠폰입니다.");
@@ -108,7 +82,8 @@ public class OrderService {
             realPrice -= requestDto.getUsedPoint();
         }
 
-        if (realPrice * 0.01 != requestDto.getSavePoint()) {
+        if ((int) (realPrice * 0.01) != requestDto.getSavePoint()) {
+            log.info("realPrice * 0.01 :" + (int) (realPrice * 0.01) + " , requestDto.getSavePoint() : " + requestDto.getSavePoint());
             throw new IllegalArgumentException("적립 예정 금액이 다릅니다.");
         }
 
@@ -122,7 +97,7 @@ public class OrderService {
         // 주문 가능한 상품인지 확인
         for (OrderDetailRequestDto orderDetail : requestDto.getOrderDetails()) {
             // 주문 상세 등록
-            Optional<Product> prod = productRepository.findById(orderDetail.getProduct().getProdNum());
+            Optional<Product> prod = productRepository.findById(orderDetail.getProdNum());
             if (prod.isPresent() && prod.get().getStatus() == 0) {
                 // 연관관계 등록
                 orderDetail.toEntity(orderDetail).registerOrderAndProduct(order, prod.get());
@@ -155,180 +130,4 @@ public class OrderService {
         OrderResponseDto orderResponseDto = new OrderResponseDto();
         return orderResponseDto.toDto(order);
     }
-
-    // 배송일 3일 전에 주문 취소 가능(cancledDate update), 일자 계산
-    @Transactional
-    public void modifyOrderCanceledDate(Authentication user, Long num) throws FindException {
-        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num)
-                .orElseThrow(() -> new FindException("해당 주문번호가 없습니다."));
-        String receiveDate = order.getDelivery().getReceiveDate();
-        LocalDateTime now = LocalDateTime.now();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate receive = LocalDate.parse(receiveDate, formatter);
-        LocalDateTime receiveDay = receive.atStartOfDay();
-        int betweenDays = (int) Duration.between(now, receiveDay).toDays();
-
-        if (betweenDays >= 2) {
-            order.updateCanceledDate(num);
-        } else {
-            log.info("배송일 3일전 까지만 취소 가능합니다");
-        }
-    }
-
-
-    // 결제일 업데이트
-    public void modifyPayCreatedDate(Order order) {
-        order.updatePayCreatedDate(order.getOrderNum());
-    }
-
-    //-------------------------------------------------------------------------
-    public ResponseEntity<String> payment(PaymentRequestDto paymentRequestDto, Authentication user) throws IOException, FindException {
-        String token = getToken();
-        System.out.println("토큰 : " + token);
-
-        System.out.println("paymentRequestDto.getMerchant_uid() : " + paymentRequestDto.getMerchant_uid());
-        System.out.println("paymentRequestDto.getMerchant_uid() : " + paymentRequestDto.getTotalPrice());
-
-        // DB 저장된 주문 정보
-        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), paymentRequestDto.getMerchant_uid())
-                .orElseThrow(() -> new FindException("해당 주문번호가 없습니다.")); // 주문 저장시에, 주문번호 가져오기
-        // 결제 완료된 금액
-        int amount = paymentInfo(paymentRequestDto.getImpUid(), token);
-
-        try {
-            // 클라이언트에서 가져온 금액과 DB 금액이 다를 때
-            if (amount != order.getTotalPrice()) {
-                paymentCancel(token, paymentRequestDto.getImpUid(), amount, "결제 금액 오류");
-                return new ResponseEntity<String>("결제 금액 오류, 결제 취소", HttpStatus.BAD_REQUEST);
-            }
-            // 주문한 목록이 장바구니에 있다면 삭제
-            for (OrderDetail orderDetail : order.getOrderDetails()) {
-                Cart cart = Cart.builder().product(orderDetail.getProduct()).build();
-                cartRepository.deleteCartByUserIdAndProduct(user.getName(), cart.getProduct().getProdNum());
-            }
-
-
-            modifyPayCreatedDate(order);
-            return new ResponseEntity<>("주문이 완료되었습니다", HttpStatus.OK);
-        } catch (Exception e) {
-            paymentCancel(token, paymentRequestDto.getImpUid(), amount, "결제 에러");
-            return new ResponseEntity<String>("결제 에러", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    // 결제
-    @Value("${imp_key}")
-    private String impKey;
-
-    @Value("${imp_secret}")
-    private String impSecret;
-
-    @Data
-    private class Response {
-        private PaymentInfo response;
-    }
-
-    @Data
-    private class PaymentInfo {
-        private int amount;
-    }
-
-    // 토큰 얻기
-    public String getToken() throws IOException {
-        HttpsURLConnection conn = null;
-
-        URL url = new URL("https://api.iamport.kr/users/getToken");
-        conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-type", "application/json");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setDoOutput(true);
-
-        JsonObject json = new JsonObject();
-        json.addProperty("imp_key", impKey);
-        json.addProperty("imp_secret", impSecret);
-
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-        bw.write(json.toString());
-        bw.flush();
-        bw.close();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-        Gson gson = new Gson();
-        String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
-        System.out.println(response);
-        String token = gson.fromJson(response, Map.class).get("access_token").toString();
-
-        br.close();
-        conn.disconnect();
-
-        return token;
-    }
-
-    // 결제 정보
-    public int paymentInfo(String imp_uid, String access_token) throws IOException {
-        HttpsURLConnection conn = null;
-        System.out.println("imp_uid : " + imp_uid);
-        URL url = new URL("https://api.iamport.kr/payments/" + imp_uid);
-
-        conn = (HttpsURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Authorization", access_token);
-        conn.setDoOutput(true);
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-        Gson gson = new Gson();
-        Response response = gson.fromJson(br.readLine(), Response.class);
-
-        br.close();
-        conn.disconnect();
-
-        return response.getResponse().getAmount();
-    }
-
-    // 결제 취소
-    public void paymentCancel(String access_token, String imp_uid, int amount, String reason) throws IOException {
-        System.out.println("결제 취소");
-
-        System.out.println(access_token);
-
-        System.out.println(imp_uid);
-
-        HttpsURLConnection conn = null;
-        URL url = new URL("https://api.iamport.kr/payments/cancel");
-
-        conn = (HttpsURLConnection) url.openConnection();
-
-        conn.setRequestMethod("POST");
-
-        conn.setRequestProperty("Content-type", "application/json");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("Authorization", access_token);
-
-        conn.setDoOutput(true);
-
-        JsonObject json = new JsonObject();
-
-        json.addProperty("reason", reason);
-        json.addProperty("imp_uid", imp_uid);
-        json.addProperty("amount", amount);
-        json.addProperty("checksum", amount);
-
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-
-        bw.write(json.toString());
-        bw.flush();
-        bw.close();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-
-        br.close();
-        conn.disconnect();
-
-
-    }
-
-
 }

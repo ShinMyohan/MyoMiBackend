@@ -28,7 +28,7 @@ public class CartService {
                5. 장바구니 수량 변경
     */
 
-    @Transactional //TODO: 화면에 보여줄 정보 추리기, 주문 화면에 보여줄 정보 / 상품에서 바로구매시 가져올 정보
+    @Transactional
     public List<CartReadResponseDto> getCartList(Authentication user) {
         List<Cart> carts = cartRepository.findByUserId(user.getName());
         List<CartReadResponseDto> list = new ArrayList<>();
@@ -67,8 +67,8 @@ public class CartService {
 
     @Transactional
     public void removeCart(Authentication user, List<CartDeleteRequestDto> requestDto) {
-        for (CartDeleteRequestDto cart : requestDto) {
-            cartRepository.deleteCartByUserIdAndProduct(user.getName(), cart.getProduct().getProdNum());
+        for (CartDeleteRequestDto dto : requestDto) {
+            cartRepository.deleteCartByUserIdAndProduct(user.getName(), dto.getProdNum());
         }
     }
 }
