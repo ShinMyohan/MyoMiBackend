@@ -50,7 +50,7 @@ public class ProductReadOneDto {
 	public ProductReadOneDto toDto(Product product, List<Review> review) {
 		return ProductReadOneDto.builder()
 			.prodNum(product.getProdNum())
-			.seller(product.getSeller().getId())
+			.seller(product.getSeller().getCompanyName())
 			.category(product.getCategory())
 			.name(product.getName())
 			.originPrice(product.getOriginPrice())

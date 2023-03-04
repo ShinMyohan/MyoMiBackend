@@ -99,12 +99,14 @@ public class Product {
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
 	
+	private String productImgUrl;
+	
 	@Builder
 	public Product(
 			Long prodNum,
 			Seller seller, String category, String name,
 			Long originPrice, int percentage, int week, int status,
-			String detail, int fee, List<OrderDetail> orderDetails) {
+			String detail, int fee, List<OrderDetail> orderDetails, String productImgUrl) {
 		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
@@ -116,8 +118,12 @@ public class Product {
 		this.detail = detail;
 		this.fee = fee;
 		this.orderDetails = orderDetails;
+		this.productImgUrl = productImgUrl;
 	}
 	
 	//상품 등록한 셀러
 	public void registerSeller(Seller seller) {this.seller = seller;}
+	public void addProductImgUrl(String productImgUrl) {
+		this.productImgUrl = productImgUrl;
+	}
 }

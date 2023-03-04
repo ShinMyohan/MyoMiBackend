@@ -54,6 +54,7 @@ public class ProductDto {
 	//상품 리스트 조회시
 	public ProductDto toDto(Product product) {
 		return ProductDto.builder()
+				.prodNum(product.getProdNum())
 				.seller(product.getSeller())
 				.category(product.getCategory())
 				.name(product.getName())
