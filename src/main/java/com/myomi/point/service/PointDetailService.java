@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,4 +94,24 @@ public class PointDetailService {
 		
 	}
 	
+	@Transactional
+	public void savePoint (int amount, int sort, Authentication user){
+		LocalDateTime date = LocalDateTime.now();
+		String username = user.getName();
+		Optional<User> optU = ur.findById(username);
+		PointDetail pd = new PointDetail();
+		PointDetailEmbedded pde = new PointDetailEmbedded();
+		pde = PointDetailEmbedded.builder()
+				.createdDate(date)
+				.uId(username)
+				.build();
+		pd = PointDetail.builder()
+				.amount(amount)
+				.sort(sort)
+				.pointEmbedded(pde)
+				.build();
+
+		pdr.save(pd);
+//		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

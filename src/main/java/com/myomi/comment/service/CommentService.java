@@ -45,7 +45,8 @@ public class CommentService {
 		List<CommentDto> commentList = new ArrayList<>();
 		for (Comment cmt : list) {
 			CommentDto cDto = CommentDto.builder()
-					.board(cmt.getBoard())
+				    .userName(username)
+					.boardNum(cmt.getBoard().getBoardNum())
 					.commentNum(cmt.getCommentNum())
 					.content(cmt.getContent())
 					.createdDate(cmt.getCreatedDate())
@@ -60,11 +61,21 @@ public class CommentService {
 	//댓글 작성 
 	@Transactional
 	public ResponseEntity<CommentDto> addComment(CommentDto cDto, Authentication user, Long boardNum){
-		LocalDateTime date = LocalDateTime.now();
 		String username = user.getName();
+		System.out.println("서비스아이디~~~~~~~: "+ username);
 		Optional<Board> optB = br.findById(boardNum);
 		Optional<User> optU = ur.findById(username);
-		Comment comment = cDto.toEntity(optU.get(), optB.get());
+		LocalDateTime date = LocalDateTime.now();
+		//System.out.println("서비스아이디222222222~~~~~~~: "+ optU.get());
+//		Comment comment = cDto.toEntity(optU.get(), optB.get());
+		Comment comment = Comment.builder()
+				.commentNum(cDto.getCommentNum())
+				.content(cDto.getContent())
+				.user(optU.get())
+				.board(optB.get())
+				.createdDate(date)
+				.parent(cDto.getParent())
+				.build();
 		cr.save(comment);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

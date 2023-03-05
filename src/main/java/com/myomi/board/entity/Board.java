@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,7 +25,6 @@ import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
 import lombok.Builder;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -70,10 +70,11 @@ public class Board {
    @Column(name = "hits", updatable =  false)
  //  @ColumnDefault("'0'")
    private Long hits;
-   
+ 
    @JsonIgnore
    @OneToMany(cascade = CascadeType.REMOVE, 
 		      mappedBy = "board")
+   @OrderBy("createdDate desc")
    private List<Comment> comments;
 
     @Builder

@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
+import com.myomi.comment.dto.CommentDto;
 import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
@@ -25,13 +26,15 @@ public class BoardReadResponseDto {
     @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
     private LocalDateTime createdDate;
     private Long hits;
-    private List<Comment> comments;
+    private String userName;
+    private List<CommentDto> comments;
     private List<Comment> reply;
     
     
     @Builder  
     public BoardReadResponseDto(Long boardNum, User user, String category, String title, String content,
-    		LocalDateTime createdDate, Long hits,Comment comment, List<Comment> comments, List<Comment> reply) {
+    		LocalDateTime createdDate, Long hits, String userName, List<CommentDto> comments, List<Comment> reply) {
+    	super();
     	this.boardNum = boardNum;
     	this.user = user;
     	this.category = category;
@@ -39,9 +42,11 @@ public class BoardReadResponseDto {
     	this.content = content;
     	this.createdDate = createdDate;
     	this.hits = hits;
+    	this.userName = userName;
     	this.comments = comments;
-        this.reply = reply;
+    	this.reply = reply;
     }
+  
 
     
     public Board toEntity(User user) {
@@ -54,5 +59,19 @@ public class BoardReadResponseDto {
     			.createdDate(date)
     			.build();
     }
+
+//    public Board toDto(User user){
+//    	LocalDateTime date = LocalDateTime.now();
+//    	return Board.builder()
+//    			.user(user)
+//    			.category(category)
+//    			.boardNum(boardNum)
+//    			.content(content)
+//    			.createdDate(date)
+//    			.hits(hits)
+//    			.title(title)
+//    			.build();
+//    }
+
 
 }

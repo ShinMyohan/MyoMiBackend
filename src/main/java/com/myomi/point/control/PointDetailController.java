@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class PointDetailController {
 	@ApiOperation(value = "마이페이지 | 포인트 목록 보기 ")
 	@GetMapping("mypage/pointDetail")
 	public ResponseEntity<?> myPointList(Authentication user,
-			@PageableDefault(size=4) Pageable pageable) {
+			@PageableDefault(sort = { "pointEmbedded.createdDate" }, direction = Direction.DESC)Pageable pageable) {
 		List<PointDetailDto> list = service.findMyPointList(user, pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
@@ -45,7 +46,7 @@ public class PointDetailController {
 
 	@GetMapping("point")
 	@ApiOperation(value = "포인트 | 총 포인트 보기 ")
-	public ResponseEntity<?> findTotalpoint (Authentication user) {
+	public ResponseEntity<?> getTotalpoint (Authentication user) {
 		PointDto dto = service.findTotalPoint(user);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}

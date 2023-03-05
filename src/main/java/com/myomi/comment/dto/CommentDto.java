@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
 import com.myomi.comment.entity.Comment;
+import com.myomi.user.dto.UserDto;
 import com.myomi.user.entity.User;
 
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class CommentDto {
 	private Long commentNum;
 	@JsonIgnore
 	private Board board;
+	private Long boardNum;
 	@JsonIgnore
 	private User user;
 	private String content;
@@ -26,14 +28,14 @@ public class CommentDto {
 	private LocalDateTime createdDate;
 	private String category;
 	private String title;
-	private String userId;
-	private int parent;
-    private List<Comment> reply;
-
+	private String userName;
+	private Long parent;
+	@JsonIgnore
+	private List<Comment> reply;
 
 	@Builder
-	public CommentDto(Long commentNum, Board board, User user, String content, LocalDateTime createdDate, String category,
-			String title,String userId, List<Comment> reply) {
+	public CommentDto(Long commentNum, Board board, User user, String content, LocalDateTime createdDate,
+			String category, String title, String userId, Long parent, List<Comment> reply, String userName, Long boardNum) {
 		super();
 		this.commentNum = commentNum;
 		this.board = board;
@@ -42,17 +44,17 @@ public class CommentDto {
 		this.createdDate = createdDate;
 		this.category = category;
 		this.title = title;
-		this.userId = userId;
+		this.userName = userName;
 		this.parent = parent;
 		this.reply = reply;
+		this.boardNum = boardNum;
 	}
-	
 
 	public Comment toEntity(User user, Board board) {
 		LocalDateTime date = LocalDateTime.now();
 		return Comment.builder()
 				.board(board)
-				.user(user)
+				.user(user)		
 				.content(content)
 				.createdDate(date)
 				.parent(parent)
@@ -60,6 +62,10 @@ public class CommentDto {
 	}
 
 
-	
-
 }
+
+
+
+
+
+

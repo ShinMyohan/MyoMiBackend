@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
+import com.myomi.comment.dto.CommentDto;
+import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
 import com.myomi.exception.AddException;
 import com.myomi.exception.RemoveException;
@@ -45,7 +48,7 @@ public class BoardService {
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
 					.boardNum(board.getBoardNum())
-					.user(board.getUser())
+					.userName(board.getUser().getName())
 					.category(board.getCategory())
 					.title(board.getTitle())
 					.content(board.getContent())
@@ -57,6 +60,7 @@ public class BoardService {
 		return boardList;
 
 	}
+	
 
 	//제목으로 검색 
 	public List<BoardReadResponseDto> getByTitle(String keyword, Pageable pageable) {
@@ -65,7 +69,7 @@ public class BoardService {
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
 					.boardNum(board.getBoardNum())
-					.user(board.getUser())
+					.userName(board.getUser().getName())
 					.category(board.getCategory())
 					.title(board.getTitle())
 					.content(board.getContent())
@@ -85,7 +89,7 @@ public class BoardService {
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
 					.boardNum(board.getBoardNum())
-					.user(board.getUser())
+					.userName(board.getUser().getName())
 					.category(board.getCategory())
 					.title(board.getTitle())
 					.content(board.getContent())
@@ -93,7 +97,7 @@ public class BoardService {
 					.hits(board.getHits())
 					.build();
 			boardList.add(dto);
-			
+
 		}
 		return boardList;
 
@@ -103,19 +107,35 @@ public class BoardService {
 	@Transactional
 	public BoardReadResponseDto detailBoard(Long boardNum) {
 		Optional<Board> board= br.findById(boardNum);
-		br.updateHits(boardNum);
+		br.updateHits(boardNum);//조회수 늘리기 
 		
+		List<Comment> list = board.get().getComments();
+		List<CommentDto> listCommentDTO = new ArrayList<>();
+		
+		for(Comment c : list) {
+			CommentDto cDto = CommentDto.builder()
+				    .boardNum(c.getBoard().getBoardNum())
+				    .userName(c.getUser().getName())
+				    .user(c.getUser())
+					.content(c.getContent())
+					.createdDate(c.getCreatedDate())
+					.commentNum(c.getCommentNum())
+					.parent(c.getParent())
+					.build();
+			listCommentDTO.add(cDto);
+		}
 		BoardReadResponseDto dto = BoardReadResponseDto.builder()
 				.boardNum(board.get().getBoardNum())
-				.user(board.get().getUser())
+				.userName(board.get().getUser().getName())
 				.category(board.get().getCategory())
 				.title(board.get().getTitle())
 				.content(board.get().getContent())
 				.createdDate(board.get().getCreatedDate())
 				.hits(board.get().getHits())
-				.comments(board.get().getComments())
+				.comments(listCommentDTO)
 				.build();
-
+		
+	
 		return dto;
 	}
 
@@ -133,11 +153,11 @@ public class BoardService {
 	//글 수정 
 	@Transactional
 	public BoardDetailResponseDto modifyBoard(BoardReadResponseDto editDto, Long boardNum, Authentication user)
-	   										throws AddException{
+			throws AddException{
 		String username = user.getName();
 		Board board = br.findById(boardNum).get();
 		if (board.getUser().getId().equals(username)) {
-			board.update(editDto.getCategory(), editDto.getContent(), editDto.getTitle());
+			board.update(editDto.getCategory(), editDto.getTitle(), editDto.getContent());
 		}else {
 			throw new AddException("작성자만 수정 가능합니다.");
 		}
@@ -157,28 +177,28 @@ public class BoardService {
 	}
 
 	//마이페이지에서 내가 작성한 글 보기 
-		@Transactional
-		public List<BoardReadResponseDto> findBoardListByUser (Authentication user,
-				Pageable pageable) {
-			String username = user.getName();
-			List<Board> list = br.findAllByUser(username, pageable);
-			List <BoardReadResponseDto> boardList = new ArrayList<>();
-			for (Board board : list) {
-				BoardReadResponseDto dto = BoardReadResponseDto.builder()
-						.boardNum(board.getBoardNum())
-						.category(board.getCategory())
-						.title(board.getTitle())
-						.createdDate(board.getCreatedDate())
-						.hits(board.getHits())
-						.build();
-				boardList.add(dto);
-			}
-			return boardList;
-	
+	@Transactional
+	public List<BoardReadResponseDto> findBoardListByUser (Authentication user,
+			Pageable pageable) {
+		String username = user.getName();
+		List<Board> list = br.findAllByUser(username, pageable);
+		List <BoardReadResponseDto> boardList = new ArrayList<>();
+		for (Board board : list) {
+			BoardReadResponseDto dto = BoardReadResponseDto.builder()
+					.boardNum(board.getBoardNum())
+					.category(board.getCategory())
+					.title(board.getTitle())
+					.createdDate(board.getCreatedDate())
+					.hits(board.getHits())
+					.build();
+			boardList.add(dto);
 		}
+		return boardList;
+
+	}
 
 
-	
+
 }
 
 

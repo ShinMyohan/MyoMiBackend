@@ -24,13 +24,14 @@ private Long couponNum;
 	private int percentage;
 	@JsonFormat(timezone="Asia/Seoul", pattern ="yyyy-MM-dd")
 	private LocalDateTime usedDate;
-	private int status;
+	private Integer status;
 	private String userId;
+	private Long count;
 	
 	
 	@Builder
 	public CouponDto(Long couponNum, User user, int sort, LocalDateTime createdDate, int percentage,
-			LocalDateTime usedDate, int status, String userId) {
+			LocalDateTime usedDate, Integer status, String userId, Long count) {
 		super();
 		this.couponNum = couponNum;
 		this.user = user;
@@ -40,6 +41,8 @@ private Long couponNum;
 		this.usedDate = usedDate;
 		this.status = status;
 		this.userId = userId;
+		this.count = count;
+		
 	}
 	
 	public Coupon toEntity(User user) {
