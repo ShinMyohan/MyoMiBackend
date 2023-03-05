@@ -106,7 +106,8 @@ public class Product {
 			Long prodNum,
 			Seller seller, String category, String name,
 			Long originPrice, int percentage, int week, int status,
-			String detail, int fee, List<OrderDetail> orderDetails, String productImgUrl) {
+			String detail, int fee,
+			Long reviewCnt, float stars, List<OrderDetail> orderDetails, String productImgUrl) {
 		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
@@ -117,6 +118,8 @@ public class Product {
 		this.status = status;
 		this.detail = detail;
 		this.fee = fee;
+		this.reviewCnt = reviewCnt;
+		this.stars = stars;
 		this.orderDetails = orderDetails;
 		this.productImgUrl = productImgUrl;
 	}
@@ -125,5 +128,10 @@ public class Product {
 	public void registerSeller(Seller seller) {this.seller = seller;}
 	public void addProductImgUrl(String productImgUrl) {
 		this.productImgUrl = productImgUrl;
+	}
+	
+	public void update(String detail, int status) {
+		this.detail = detail;
+		this.status = status;
 	}
 }

@@ -22,6 +22,9 @@ import com.myomi.product.dto.ProductSaveDto;
 import com.myomi.product.dto.ProductUpdateDto;
 import com.myomi.product.entity.Product;
 import com.myomi.product.repository.ProductRepository;
+import com.myomi.qna.dto.QnaPReadResponseDto;
+import com.myomi.qna.entity.Qna;
+import com.myomi.qna.repository.QnaRepository;
 import com.myomi.review.entity.Review;
 import com.myomi.review.repository.ReviewRepository;
 import com.myomi.s3.FileUtils;
@@ -41,6 +44,7 @@ public class ProductService {
 	private final ProductRepository productRepository;
 	private final SellerRepository sellerRepository;
 	private final ReviewRepository reviewRepository;
+	private final QnaRepository qnaRepository;
 	/**
 	 * TODO:
 	 * 1. 셀러 등록 후 상품 등록하기
@@ -64,7 +68,7 @@ public class ProductService {
 		
 		MultipartFile file = productSaveDto.getFile();
 		
-		Product product = new Product();
+		
 		if(file != null) {
 			InputStream inputStream = file.getInputStream();
 			
@@ -74,11 +78,14 @@ public class ProductService {
 			}
 		}
 //		else {
-			String fileUrl = s3Uploader.upload(file, "myomiImage", seller, productSaveDto);
+			String fileUrl = s3Uploader.upload(file, "상품이미지", seller
+					, productSaveDto
+					);
 			
-			product.addProductImgUrl(fileUrl);
+//			product.addProductImgUrl(fileUrl); //이거 안됨
+			
 //		}
-		product = productSaveDto.toEntity(productSaveDto, s);
+		Product product = productSaveDto.toEntity(productSaveDto, s, fileUrl);
 		//상품등록
 		productRepository.save(product);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -103,8 +110,8 @@ public class ProductService {
 	@Transactional
 	public ResponseEntity<?> getOneProd(Long prodNum) {
 		Optional<Product> product = productRepository.findProdInfo(prodNum);
-		product.get().getQnas(); //이방법이 훨씬 좋아
-//		List<Qna> qnas = qnaRepository.findByProdNum(optP.get());
+//		List<Qna> qnas = product.get().getQnas(); //이방법이 훨씬 좋아
+		List<Qna> qnas = qnaRepository.findByProdNumOrderByQnaNumDesc(product.get());
 		//리뷰 DTO 받으면 태리님 방식처럼 해보기 
 		List<Review> reviews = reviewRepository.findAllReviewByProd(prodNum);
 		
@@ -115,9 +122,15 @@ public class ProductService {
 		if(reviews.size() == 0) {	
 			log.info("상품에 대한리뷰가 없습니다.");
 		}
-		ProductReadOneDto dto = new ProductReadOneDto();
 		
-		return new ResponseEntity<>(dto.toDto(product.get(), reviews) , HttpStatus.OK);
+		List<QnaPReadResponseDto> qDto = new ArrayList<>();
+		for(Qna q : qnas) {
+			QnaPReadResponseDto qnaDto = new QnaPReadResponseDto();
+			qDto.add(qnaDto.toDto(q));
+		}
+		
+		ProductReadOneDto dto = new ProductReadOneDto();
+		return new ResponseEntity<>(dto.toDto(product.get(), reviews, qDto) , HttpStatus.OK);
 	}
 	
 	@Transactional //성공
@@ -125,9 +138,10 @@ public class ProductService {
 		Optional<Product> p = productRepository.findBySellerIdAndProdNum(seller.getName(), prodNum);
 //				.orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
 		
-		Product prod = productUpdateDto.toEntity(prodNum, productUpdateDto, p.get().getSeller());
+//		Product prod = productUpdateDto.toEntity(prodNum, productUpdateDto, p.get().getSeller());
+		
 		if(p != null) {
-			productRepository.save(prod);
+			p.get().update(productUpdateDto.getDetail(), productUpdateDto.getStatus());
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -176,5 +190,15 @@ public class ProductService {
 			list.add(dto.toDto(p));
 		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
+	// 셀러페이지
+	@Transactional
+	public ResponseEntity<?> getOneProdBySeller(Long prodNum, Authentication seller) {
+		Optional<Product> product = productRepository.findBySellerIdAndProdNum(seller.getName(),prodNum);
+
+		ProductDto dto = new ProductDto();
+		
+		return new ResponseEntity<>(dto.toDto(product.get()) , HttpStatus.OK);
 	}
 }

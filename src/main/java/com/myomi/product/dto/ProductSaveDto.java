@@ -19,10 +19,10 @@ public class ProductSaveDto {
 	
 	@Builder
 	public ProductSaveDto(String category,
-			@NotBlank @Size(min = 1, max = 20, message = "최대 30자까지 입력할 수 있습니다.") String name,
-			@NotBlank @Pattern(regexp = "^[0-9]*$") Long originPrice, @Pattern(regexp = "^[0-9]*$") int percentage,
-			@NotBlank @Pattern(regexp = "^[0-6]*$") int week,
-			@Size(max = 60, message = "최대 30자까지 입력할 수 있습니다.") String detail, MultipartFile file) {
+			 String name,
+			 Long originPrice,  int percentage,
+			 int week,
+			 String detail, MultipartFile file) {
 //		super();
 		this.category = category;
 		this.name = name;
@@ -68,18 +68,20 @@ public class ProductSaveDto {
 	
 	//상품 등록시 사용
 	public Product toEntity(ProductSaveDto productSaveDto
-			, Seller seller
+			, Seller seller, String fileUrl
 			) {
 		return Product.builder()
 				.seller(seller)
-				.category(category)
-				.name(name)
-				.originPrice(originPrice)
-				.percentage(percentage)
-				.week(week)
-				.detail(detail)
+				.category(productSaveDto.getCategory())
+				.name(productSaveDto.getName())
+				.originPrice(productSaveDto.getOriginPrice())
+				.percentage(productSaveDto.getPercentage())
+				.week(productSaveDto.getWeek())
+				.detail(productSaveDto.getDetail())
+				.reviewCnt(0L)
+				.stars(0)
 				.fee(9) //기본값 9로 넣어주려고 셋팅
-//				.productImgUrl(fileUrl)
+				.productImgUrl(fileUrl)
 				.build();
 	}
 	

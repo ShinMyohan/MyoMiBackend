@@ -13,7 +13,7 @@ public class MyomiJpaApplication {
 	
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			.allowedOrigins("http://192.168.0.18:5500")
+			.allowedOrigins("http://172.30.1.1:5500")
 			.allowCredentials(true)
 			//CORS 에러 방지를 위해 더 추가 (방식들을 ) 허용하겠다. 
 			.allowedMethods("GET","POST","PUT","DELETE");

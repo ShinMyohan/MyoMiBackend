@@ -3,7 +3,7 @@ package com.myomi.product.dto;
 import java.util.List;
 
 import com.myomi.product.entity.Product;
-import com.myomi.qna.entity.Qna;
+import com.myomi.qna.dto.QnaPReadResponseDto;
 import com.myomi.review.entity.Review;
 
 import lombok.Builder;
@@ -16,7 +16,8 @@ public class ProductReadOneDto {
 	private Long prodNum;
 //	@JsonIgnore //셀러 정보 가지고 올거면 쓰지말자
 //	private Seller seller;
-	private String seller;
+	private String sellerName;
+	private String sellerId;
 	private String category;
 	private String name;
 	private Long originPrice;
@@ -27,15 +28,21 @@ public class ProductReadOneDto {
 //	@JsonIgnore
 	private List<Review> reviews;
 //	@JsonIgnore
-	private List<Qna> qnas;
+//	private List<Qna> qnas;
+	private List<QnaPReadResponseDto> qnas;
+	private String productImgUrl;
 	
 	@Builder
-	public ProductReadOneDto(Long prodNum, String seller, String category,
+	public ProductReadOneDto(Long prodNum, String sellerName, String sellerId,String category,
 			String name, Long originPrice, int percentage, int week, 
 //			int status,
-			String detail, List<Review> reviews, List<Qna> qnas) {
+			String detail, List<Review> reviews, 
+//			List<Qna> qnas,
+			List<QnaPReadResponseDto> qnas,
+			String productImgUrl) {
 		this.prodNum = prodNum;
-		this.seller = seller;
+		this.sellerName = sellerName;
+		this.sellerId = sellerId;
 		this.category = category;
 		this.name = name;
 		this.originPrice = originPrice;
@@ -45,12 +52,14 @@ public class ProductReadOneDto {
 		this.detail = detail;
 		this.reviews = reviews;
 		this.qnas = qnas;
+		this.productImgUrl = productImgUrl;
 	}
 	
-	public ProductReadOneDto toDto(Product product, List<Review> review) {
+	public ProductReadOneDto toDto(Product product, List<Review> review, List<QnaPReadResponseDto> qnas) {
 		return ProductReadOneDto.builder()
 			.prodNum(product.getProdNum())
-			.seller(product.getSeller().getCompanyName())
+			.sellerName(product.getSeller().getCompanyName())
+			.sellerId(product.getSeller().getId())
 			.category(product.getCategory())
 			.name(product.getName())
 			.originPrice(product.getOriginPrice())
@@ -58,7 +67,8 @@ public class ProductReadOneDto {
 			.week(product.getWeek())
 			.detail(product.getDetail())
 			.reviews(review)
-			.qnas(product.getQnas())
+			.qnas(qnas)
+			.productImgUrl(product.getProductImgUrl())
 			.build();
 	}
 }

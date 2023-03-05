@@ -14,6 +14,8 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.myomi.product.dto.ProductSaveDto;
+import com.myomi.seller.entity.Seller;
+import com.myomi.seller.repository.SellerRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,19 +27,28 @@ import lombok.extern.slf4j.Slf4j;
 public class S3Uploader {
 	static { System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true"); }
     private final AmazonS3Client amazonS3Client;
+    private final SellerRepository sellerRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     // MultipartFile을 전달받아 File로 전환한 후 S3에 업로드
-    public String upload(MultipartFile multipartFile, String dirName, Authentication user, ProductSaveDto productSaveDto) throws IOException {
+    public String upload(MultipartFile multipartFile, String dirName, Authentication user
+    		, ProductSaveDto productSaveDto
+    		) throws IOException {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
-        return upload(uploadFile, dirName, user, productSaveDto);
+        return upload(uploadFile, dirName, user
+        		, productSaveDto
+        		);
     }
 
-    private String upload(File uploadFile, String dirName, Authentication user, ProductSaveDto productSaveDto) {
-        String fileName = dirName + "/" + productSaveDto.getName() + "/" + uploadFile.getName();
+    private String upload(File uploadFile, String dirName, Authentication user
+    		, ProductSaveDto productSaveDto
+    		) {
+        Optional<Seller> optS = sellerRepository.findById(user.getName());
+    	String fileName = dirName + "/" + optS.get().getCompanyName() + "/" + productSaveDto.getName() + "-"
+    			+ productSaveDto.getWeek() + "week/" + 1;
         String uploadImageUrl = putS3(uploadFile, fileName);
 
         removeNewFile(uploadFile);  // 로컬에 생성된 File 삭제 (MultipartFile -> File 전환 하며 로컬에 파일 생성됨)

@@ -44,9 +44,9 @@ public class ProductController {
 	public ResponseEntity<?> productSave(
 			String name,
 			String category,
-			String week,
-			String percentage,
-			String originPrice,
+			int week,
+			int percentage,
+			Long originPrice,
 			String detail,
 			//ProductSaveDto productSaveDto, 
 //			String productSaveDto,
@@ -72,6 +72,9 @@ public class ProductController {
 			.name(name)
 			.category(category)
 			.detail(detail)
+			.originPrice(originPrice)
+			.percentage(percentage)
+			.week(week)
 			.file(file)
 			.build();
 		log.info("문자열 확인: " + file.getOriginalFilename());
@@ -82,7 +85,7 @@ public class ProductController {
 	//셀러 - 특정 판매자 상품 리스트 조회
 	@ApiOperation(value = "사용자| 판매자 상품 리스트 조회")
 	@ResponseBody
-	@GetMapping(value = "list/{seller}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "list/seller/{seller}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ProductDto> productList(@PathVariable String seller){
 		return productService.getProductBySellerId(seller);
 	}
@@ -128,5 +131,14 @@ public class ProductController {
 	@GetMapping(value = "list/{keyword}")
 	public ResponseEntity<?> productAllByKeyword(String keyword) {
 		return new ResponseEntity<>(productService.getAllProduct(keyword),HttpStatus.OK);
+	}
+	
+	//------셀러 페이지
+	//셀러 - 본인 판매 상품 정보 조회
+	@ApiOperation(value = "셀러| 특정 상품 정보 조회")
+	@ResponseBody
+	@GetMapping(value = "/seller/{prodNum}")
+	public ResponseEntity<?> prodDetailsBySeller(@PathVariable Long prodNum, Authentication seller) {
+		return new ResponseEntity<>(productService.getOneProdBySeller(prodNum, seller),HttpStatus.OK);
 	}
 }

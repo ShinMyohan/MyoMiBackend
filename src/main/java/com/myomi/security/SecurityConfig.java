@@ -41,7 +41,7 @@ public class SecurityConfig {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://192.168.0.18:5500");
+        configuration.addAllowedOrigin("http://172.30.1.1:5500");
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "PUT","DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
@@ -94,9 +94,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
-                .antMatchers(HttpMethod.GET, "/product/list","/product/list/*", "/product/{prodNum}").permitAll()
+                .antMatchers(HttpMethod.GET, "/product/list","/product/list/*", "/product/{prodNum}","list/seller/{seller}").permitAll()
                 .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
-                .antMatchers("/product/add").hasRole("SELLER")
+                .antMatchers("/product/add","/product/seller/{prodNum}").hasRole("SELLER")
 				.antMatchers("/order").hasRole("USER")
 				.antMatchers("/sellerpage").hasRole("SELLER")
                 .antMatchers("/notice","/notice/title/{keyword}").permitAll()

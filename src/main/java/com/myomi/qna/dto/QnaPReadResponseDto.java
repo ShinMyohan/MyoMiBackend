@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.myomi.product.entity.Product;
+import com.myomi.qna.entity.Qna;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +49,18 @@ public class QnaPReadResponseDto {
 		this.ansCreatedDate = ansCreatedDate;
 		this.pName = pName;
 	}
-
+	
+	//상품 리스트 조회시
+	public QnaPReadResponseDto toDto(Qna qna) {
+		return QnaPReadResponseDto.builder()
+				.qnaNum(qna.getQnaNum())
+				.userId(qna.getUserId().getName())
+				.queTitle(qna.getQueTitle())
+				.queContent(qna.getQueContent())
+				.queCreatedDate(qna.getQueCreatedDate())
+				.ansContent(qna.getAnsContent())
+				.ansCreatedDate(qna.getAnsCreatedDate())
+				.build();
+	}
 	
 }
