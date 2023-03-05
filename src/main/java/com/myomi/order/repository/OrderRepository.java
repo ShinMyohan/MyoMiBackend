@@ -1,20 +1,15 @@
 package com.myomi.order.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.myomi.order.entity.Order;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.myomi.order.dto.OrderResponseDto;
-import com.myomi.order.entity.Order;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long>, OrderCustomRepository {
-    public List<OrderResponseDto> findAllByUserId(String userId);
-
     public Optional<Order> findByUserIdAndOrderNum(String userId, Long num);
 
     //@Query("select o from Order o join o.orderDetail where o.orderDetail.product.prodNum=:prodNum and o.user.id=:userId")

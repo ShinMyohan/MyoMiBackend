@@ -4,12 +4,14 @@ import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.exception.FindException;
 import com.myomi.order.dto.OrderDetailRequestDto;
+import com.myomi.order.dto.OrderDetailResponseDto;
+import com.myomi.order.dto.OrderListResponseDto;
 import com.myomi.order.dto.OrderRequestDto;
-import com.myomi.order.dto.OrderResponseDto;
 import com.myomi.order.entity.Order;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.entity.Product;
 import com.myomi.product.repository.ProductRepository;
+import com.myomi.review.repository.ReviewRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,6 +33,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CouponRepository couponRepository;
+    private final ReviewRepository reviewRepository;
 
     /* TODO: 1. 주문서 작성 (배송, 상세) (OK)
              2. 배송정보 입력 (OK)
@@ -116,18 +121,31 @@ public class OrderService {
 //        }
     }
 
-    // 회원 정보로 주문 목록 확인
+    // 회원 정보로 주문 목록 확인 (마이페이지)
     @Transactional
-    public List<OrderResponseDto> getOrderListByUserId(Authentication user) {
+    public Map<Long, List<OrderListResponseDto>> getOrderListByUserId(Authentication user) {
         return orderRepository.findAllByUserId(user.getName());
     }
 
-    // 회원 정보로 주문 상세 조회
+    // 회원 정보로 주문 상세 조회 (마이페이지)
     @Transactional
-    public OrderResponseDto getOrderByUserId(Authentication user, Long num) throws FindException {
-        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num)
+    public OrderDetailResponseDto getOrderByUserId(Authentication user, Long orderNum) throws FindException {
+        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), orderNum)
                 .orElseThrow(() -> new FindException("해당 주문번호가 없습니다."));
-        OrderResponseDto orderResponseDto = new OrderResponseDto();
-        return orderResponseDto.toDto(order);
+//        List<ReviewCheckResponseDto> review = reviewRepository.findReviewNumByOrderNum(orderNum);
+
+        List<Object> orderProdList = new ArrayList<>();
+        for (int i = 0; i <= order.getOrderDetails().size() - 1; i++) {
+            Product product = order.getOrderDetails().get(i).getProduct();
+            // 주문한 상품 이름과 수량
+            orderProdList.add(product.getProdNum());
+            orderProdList.add(product.getName());
+            orderProdList.add(order.getOrderDetails().get(i).getProdCnt());
+            // 주문한 상품 한개 당 가격
+            orderProdList.add(product.getOriginPrice() * (1 - product.getPercentage() * 0.01));
+        }
+
+        OrderDetailResponseDto orderDetailResponseDto = new OrderDetailResponseDto();
+        return orderDetailResponseDto.toDto(order, orderProdList);
     }
 }

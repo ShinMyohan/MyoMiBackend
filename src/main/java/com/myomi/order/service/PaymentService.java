@@ -124,7 +124,7 @@ public class PaymentService {
                 .orElseThrow(() -> new FindException("해당하는 주문 번호가 없습니다."));
         String impUid = order.getImpUid();
         // 수령일 계산
-        String receiveDate = order.getDelivery().getReceiveDate();
+        String receiveDate = order.getDelivery().getReceiveDate().substring(0, 9); // yyyy-mm-dd만 뽑기
         LocalDateTime now = LocalDateTime.now();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
