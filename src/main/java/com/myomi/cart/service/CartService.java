@@ -36,8 +36,12 @@ public class CartService {
             log.info("장바구니가 비었습니다.");
         } else {
             for (Cart cart : carts) {
-                CartReadResponseDto dto = new CartReadResponseDto();
-                list.add(dto.toDto(cart));
+                if(cart.getProduct().getStatus() != 0) {
+                    log.info("품절된 상품입니다.");
+                } else {
+                    CartReadResponseDto dto = new CartReadResponseDto();
+                    list.add(dto.toDto(cart));
+                }
             }
         }
         return list;
@@ -46,6 +50,9 @@ public class CartService {
     // 장바구니 추가
     @Transactional
     public void addCart(Authentication user, CartSaveRequestDto requestDto) {
+        if(requestDto.getProduct().getStatus() != 0){
+            log.info("품절된 상품입니다.");
+        }
         Optional<Cart> cartOpt = cartRepository.findByUserIdAndProduct(user.getName(), requestDto.getProduct());
 
         if (cartOpt.isPresent()) {

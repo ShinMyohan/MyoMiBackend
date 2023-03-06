@@ -59,7 +59,7 @@ public class PaymentService {
 
     // 결제 완료
     @Transactional
-    public ResponseEntity<String> payment(PaymentRequestDto paymentRequestDto, Authentication user) throws IOException, FindException {
+    public ResponseEntity<Long> payment(PaymentRequestDto paymentRequestDto, Authentication user) throws IOException, FindException {
         String token = getToken();
         System.out.println("토큰 : " + token);
         String impUid = paymentRequestDto.getImpUid();
@@ -79,7 +79,7 @@ public class PaymentService {
                 log.info("결제 금액 오류, 결제 취소");
                 log.info("amount");
                 log.info("order.getTotalPrice()");
-                return new ResponseEntity<String>("결제 금액 오류, 결제 취소", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(orderNum, HttpStatus.BAD_REQUEST);
 
             }
             // 주문한 목록이 장바구니에 있다면 삭제
@@ -102,11 +102,11 @@ public class PaymentService {
             pointService.savePoint(-usedPoint, 2, user);
             pointService.savePoint(savePoint, 1, user);
 
-            return new ResponseEntity<>("결제가 완료되었습니다", HttpStatus.OK);
+            return new ResponseEntity<>(orderNum, HttpStatus.OK);
 
         } catch (Exception e) {
             paymentCancel(token, paymentRequestDto.getImpUid(), amount, "결제 에러");
-            return new ResponseEntity<String>("결제 에러", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(orderNum, HttpStatus.BAD_REQUEST);
         }
     }
 

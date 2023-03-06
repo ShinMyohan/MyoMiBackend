@@ -19,7 +19,7 @@ public class PaymentController {
 
     // 결제 완료 후 검증 & DB에 정보 저장
     @PutMapping("")
-    public ResponseEntity<String> paymentComplete(@RequestBody PaymentRequestDto requestDto, Authentication user) throws IOException, FindException {
+    public ResponseEntity<Long> paymentComplete(@RequestBody PaymentRequestDto requestDto, Authentication user) throws IOException, FindException {
         return paymentService.payment(requestDto, user);
     }
 

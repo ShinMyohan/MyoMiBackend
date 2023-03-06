@@ -7,13 +7,17 @@ import com.myomi.cart.entity.Cart;
 import com.myomi.comment.entity.Comment;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.follow.entity.Follow;
-import com.myomi.membership.entity.Membership;
+import com.myomi.membership.entity.MembershipLevel;
 import com.myomi.order.entity.Order;
 import com.myomi.point.entity.Point;
 import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,29 +31,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "users")
 //@DynamicInsert
-//@DynamicUpdate
+@DynamicUpdate
 public class User implements UserDetails
 //, Persistable<String> 
 {
@@ -132,11 +119,15 @@ public class User implements UserDetails
     @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
     private Date signoutDate;
 
-    @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    @JoinColumn(name = "membership_num")
-    private Membership membership;
+//    @ManyToOne(
+//            fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL)
+//    @JoinColumn(name = "membership_num")
+//    private Membership membership;
+
+    @Column(name = "membership_level") // , nullable = false
+    @Enumerated(EnumType.STRING) // 순서가 DB에 저장
+    private MembershipLevel membership;
 
     @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
@@ -177,7 +168,7 @@ public class User implements UserDetails
                 int role,
                 List<String> roles,
                 String name, String tel, String email,
-                String addr, LocalDateTime createdDate, Membership membership) {
+                String addr, LocalDateTime createdDate, MembershipLevel membership) {
         this.id = id;
         this.pwd = pwd;
         this.role = role;
