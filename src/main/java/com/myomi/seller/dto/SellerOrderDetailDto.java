@@ -20,7 +20,6 @@ public class SellerOrderDetailDto {
 	private Order order;
 	@JsonIgnore
 	private Product product;
-	
 	private int prodCnt;
 	private Long prodNum;
 	private String name;
@@ -33,6 +32,7 @@ public class SellerOrderDetailDto {
 	private String deliveryAddr;
 	private String deliveryMsg;
 	private String receiveDate;
+	private Long totalPrice;
 	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -42,7 +42,7 @@ public class SellerOrderDetailDto {
 	@Builder
 	public SellerOrderDetailDto(Order order, Product product, int prodCnt, Long prodNum, String name, Long orderNum,
 			String user, int week, String msg, String deliveryName, String deliveryTel, String deliveryAddr,
-			String deliveryMsg, String receiveDate, LocalDateTime createdDate) {
+			String deliveryMsg, String receiveDate, LocalDateTime createdDate, Long totalPrice) {
 		this.order = order;
 		this.product = product;
 		this.prodCnt = prodCnt;
@@ -58,15 +58,6 @@ public class SellerOrderDetailDto {
 		this.deliveryMsg = deliveryMsg;
 		this.receiveDate = receiveDate;
 		this.createdDate = createdDate;
+		this.totalPrice = totalPrice;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

@@ -12,8 +12,7 @@ public class SellerInfoResponseDto {
 	@JsonIgnore
 	private Product product;
 	@JsonIgnore
-	private Qna qna;
-	
+	private Qna qna;	
 	private String companyName;
 	private Long followCnt;
 	private int qnaCnt;
@@ -29,9 +28,4 @@ public class SellerInfoResponseDto {
 		this.qnaCnt = qnaCnt;
 		this.orderCnt = orderCnt;
 	}
-	
-	
-	
-	
-
 }

@@ -19,13 +19,10 @@ public class QnaAnsRequestDto {
 	private Product prodNum;
 	private String ansContent;
 
-	
 	@Builder
 	public QnaAnsRequestDto(User userId, Product prodNum, String ansContent) {
 		this.userId = userId;
 		this.prodNum = prodNum;
 		this.ansContent = ansContent;
 	}
-		
-
 }

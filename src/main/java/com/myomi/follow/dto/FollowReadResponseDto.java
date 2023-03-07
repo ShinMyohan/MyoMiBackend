@@ -19,8 +19,4 @@ public class FollowReadResponseDto {
 		this.followCnt = followCnt;
 
 	}
-	
-	
-	
-
 }
