@@ -1,5 +1,6 @@
 package com.myomi.product.control;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myomi.product.dto.ProductDto;
 import com.myomi.product.dto.ProductSaveDto;
@@ -38,22 +40,44 @@ public class ProductController {
 	
 	//셀러 - 상품 등록
 	@ApiOperation(value = "셀러| 상품등록")
-	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> productSave(@RequestBody ProductSaveDto productSaveDto, 
-//			@AuthenticationPrincipal User user
-			Authentication seller) {
-		if(productSaveDto.getName().length() > 30) {
+	@PostMapping(value = "add")
+	public ResponseEntity<?> productSave(String name, String category, int week, int percentage, Long originPrice,
+			String detail, Authentication seller, MultipartFile file) throws IOException {
+			//ProductSaveDto productSaveDto, 테스트 인자값 
+			//String productSaveDto,
+			
+		if(name.length() > 30) {
 			log.error("상품명 30자 초과");
-		} else if(productSaveDto.getDetail().length() > 150) {
+		} else if(detail.length() > 150) {
 			log.error("상품 특이사항 150자 초과");
 		} 
-		return new ResponseEntity<>(productService.addProduct(productSaveDto, seller),HttpStatus.OK);
+		
+		
+		//ObjectMapper mapper = new ObjectMapper();
+		//ProductSaveDto dto =  mapper.readValue(productSaveDto, ProductSaveDto.class);
+	//	dto.builder()
+	//	.file(file)
+	//	.build();
+		
+		//File file = new File(); //일반 파일로 바꾸는 작업을 여기서 하거나 
+		ProductSaveDto dto = ProductSaveDto.builder()
+			.name(name)
+			.category(category)
+			.detail(detail)
+			.originPrice(originPrice)
+			.percentage(percentage)
+			.week(week)
+			.file(file)
+			.build();
+		log.info("문자열 확인: " + file.getOriginalFilename());
+		log.info( ", dto.getFile=" +  dto.getFile().getOriginalFilename());
+		return new ResponseEntity<>(productService.addProduct(dto, seller),HttpStatus.OK);
 	}
 	
 	//셀러 - 특정 판매자 상품 리스트 조회
 	@ApiOperation(value = "사용자| 판매자 상품 리스트 조회")
 	@ResponseBody
-	@GetMapping(value = "list/{seller}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "list/seller/{seller}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ProductDto> productList(@PathVariable String seller){
 		return productService.getProductBySellerId(seller);
 	}
@@ -81,11 +105,17 @@ public class ProductController {
 	}
 	
 	//사용자 - 상품 리스트
+//	@ApiOperation(value = "메인| 모든 상품 리스트")
+//	@ResponseBody
+//	@GetMapping(value = "list")
+//	public ResponseEntity<?> productAllList(int status) {
+//		return new ResponseEntity<>(productService.getAllProduct(status), HttpStatus.OK);
+//	}
 	@ApiOperation(value = "메인| 모든 상품 리스트")
 	@ResponseBody
 	@GetMapping(value = "list")
-	public ResponseEntity<?> productAllList(int status) {
-		return new ResponseEntity<>(productService.getAllProduct(status), HttpStatus.OK);
+	public ResponseEntity<?> productAllList() {
+		return new ResponseEntity<>(productService.getAllProduct(), HttpStatus.OK);
 	}
 	
 	//사용자 - 키워드로 상품 검색
@@ -93,5 +123,14 @@ public class ProductController {
 	@GetMapping(value = "list/{keyword}")
 	public ResponseEntity<?> productAllByKeyword(String keyword) {
 		return new ResponseEntity<>(productService.getAllProduct(keyword),HttpStatus.OK);
+	}
+	
+	//------셀러 페이지
+	//셀러 - 본인 판매 상품 정보 조회
+	@ApiOperation(value = "셀러| 특정 상품 정보 조회")
+	@ResponseBody
+	@GetMapping(value = "/seller/{prodNum}")
+	public ResponseEntity<?> prodDetailsBySeller(@PathVariable Long prodNum, Authentication seller) {
+		return new ResponseEntity<>(productService.getOneProdBySeller(prodNum, seller),HttpStatus.OK);
 	}
 }

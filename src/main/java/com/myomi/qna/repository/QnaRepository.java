@@ -7,9 +7,6 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
-
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +39,5 @@ public interface QnaRepository extends CrudRepository<Qna, Long> {
 	@Query("SELECT q FROM Qna q join q.prodNum WHERE q.prodNum.seller.sellerId.id =:user AND q.qnaNum =:qnaNum")
 	public Optional<Qna> findBySellerId(@Param("user")String user,@Param("qnaNum")Long qnaNum);
 
-	public List<Qna> findByProdNum(Product prodNum);
+	public List<Qna> findByProdNumOrderByQnaNumDesc(Product prodNum);
 }

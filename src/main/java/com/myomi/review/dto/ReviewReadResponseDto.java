@@ -1,11 +1,13 @@
 package com.myomi.review.dto;
 
 import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.myomi.review.entity.Review;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 @Getter
 @NoArgsConstructor
 public class ReviewReadResponseDto {
@@ -30,5 +32,26 @@ public class ReviewReadResponseDto {
 		this.createdDate=createdDate;
 		this.stars=stars;
 	}
-
+	public ReviewReadResponseDto(Review entity) {
+		this.prodName = entity.getOrderDetail().getProduct().getName();
+		this.reviewNum = entity.getReviewNum();
+		this.userId = entity.getUser().getId();
+		this.sort = entity.getSort();
+		this.title = entity.getTitle();
+		this.content = entity.getContent();
+		this.createdDate = entity.getCreatedDate();
+		this.stars = entity.getStars();
 	}
+	
+	//상품 상세 조회시
+	public ReviewReadResponseDto toDto(Review review) {
+		return ReviewReadResponseDto.builder()
+				.reviewNum(review.getReviewNum())
+				.userId(review.getUser().getName())
+				.title(review.getTitle())
+				.content(review.getContent())
+				.createdDate(review.getCreatedDate())
+				.stars(review.getStars())
+				.build();
+	}
+}

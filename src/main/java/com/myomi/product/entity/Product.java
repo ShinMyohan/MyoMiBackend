@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.cart.entity.Cart;
@@ -26,14 +28,12 @@ import com.myomi.seller.entity.Seller;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter @Getter
-//@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 @Entity
-//@DynamicInsert
-//@DynamicUpdate
+@DynamicInsert
+@DynamicUpdate
 @SequenceGenerator(
 		 name = "PRODUCT_SEQ_GENERATOR",
 		 sequenceName = "PRODUCT_SEQ", //매핑할 데이터베이스 시퀀스 이름
@@ -99,12 +99,15 @@ public class Product {
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
 	
+	private String productImgUrl;
+	
 	@Builder
 	public Product(
 			Long prodNum,
 			Seller seller, String category, String name,
 			Long originPrice, int percentage, int week, int status,
-			String detail, int fee, List<OrderDetail> orderDetails) {
+			String detail, int fee,
+			Long reviewCnt, float stars, List<OrderDetail> orderDetails, String productImgUrl) {
 		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
@@ -115,9 +118,20 @@ public class Product {
 		this.status = status;
 		this.detail = detail;
 		this.fee = fee;
+		this.reviewCnt = reviewCnt;
+		this.stars = stars;
 		this.orderDetails = orderDetails;
+		this.productImgUrl = productImgUrl;
 	}
 	
 	//상품 등록한 셀러
 	public void registerSeller(Seller seller) {this.seller = seller;}
+	public void addProductImgUrl(String productImgUrl) {
+		this.productImgUrl = productImgUrl;
+	}
+	
+	public void update(String detail, int status) {
+		this.detail = detail;
+		this.status = status;
+	}
 }

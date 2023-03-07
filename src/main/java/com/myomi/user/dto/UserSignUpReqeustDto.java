@@ -1,7 +1,5 @@
 package com.myomi.user.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -15,9 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSignUpReqeustDto {
-	private LocalDateTime date = LocalDateTime.now(); 
-//	private Membership m = new Membership();
-	
 	@NotBlank(message = "사용자 아이디는 필수 입력 값입니다.")
 	@Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{5,30}$", message = "아이디는 특수문자를 제외한 5자이상이여야 합니다")
 	private String id;
@@ -42,18 +37,4 @@ public class UserSignUpReqeustDto {
 	
 	@Size(max = 60, message = "기본 배송지를 입력해주세요.")
 	private String addr;
-	
-//	@Builder
-//	public User toEntity(String encPwd) {
-//		return User.builder()
-//				.id(id)
-//				.pwd(encPwd)
-//				.role(UserRole.ROLE_USER)
-//				.name(name)
-//				.tel(tel)
-//				.email(email)
-//				.addr(addr)
-//				.createdDate(date)
-//				.build();
-//	}
 }

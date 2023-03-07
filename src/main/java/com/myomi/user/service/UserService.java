@@ -39,8 +39,6 @@ public class UserService {
     
     @Autowired
     private final PasswordEncoder passwordEncoder;
-
-//    private Logger logger = LoggerFactory.getLogger(getClass());
     
     /**
      * 1. 로그인 요청으로 들어온 ID, PWD 기반으로 Authentication 객체 생성
@@ -58,11 +56,10 @@ public class UserService {
     		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     	}
     	
-    	//-----되는 코드 
     	// 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, optU.get().getPwd()); //들어온 raw한 패스워드를 인코딩해서 디비에 있는 인코딩 된 패스워드랑 비교했어야했다!!!!!!
-//    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passwordEncoder.encode(password));
+//    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passwordEncoder.encode(password)); //위 코드가 안될시 시도할 코드
     	log.info("authenticationToken: "+authenticationToken.getName());
         
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
@@ -77,6 +74,7 @@ public class UserService {
         return tokenDto;
     }
     
+    //회원가입
     public String signup(UserSignUpReqeustDto userSignUpReqeustDto) {
     	
     	//휴대폰 번호가 이미 등록된 번호인지 확인 (이 메서드는 아래에 있습니다.)
@@ -94,11 +92,7 @@ public class UserService {
     	m.setMLevel("일반");
     	
     	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
-//    	String encPwd = new BCryptPasswordEncoder().encode(userSignUpReqeustDto.getPwd());
-//    	String encPwd = userSignUpReqeustDto.getPwd();
-//    	
-//    	//User 객체 만들어서 save()
-////    	User user = userRepository.save(userSignUpReqeustDto.toEntity(encPwd));
+
     	User user = User.builder()
     			.id(userSignUpReqeustDto.getId())
     			.pwd(encPwd)
@@ -111,9 +105,6 @@ public class UserService {
 				.membership(m)
     			.build();
 
-    	log.info("\n" + "아이디: "+user.getId() +" 패스워드: "+ user.getPwd() +" 유저 권한: "+ user.getRole() +" 유저이름: "+ user.getName() + "\n"
-    			+" 유저 휴대폰번호: "+ user.getTel() +" 유저 이메일 "+ user.getEmail() +" 유저 주소: "+ user.getAddr() +" 유저 가입날짜: "+ user.getCreatedDate());
-
     	userRepository.save(user);
     	if(user != null) { //유저가 Null이 아니면 유저 id 반환
     		return user.getId();
@@ -121,17 +112,13 @@ public class UserService {
     	throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     
-    
-    
     // 회원정보 검색
     public ResponseEntity<UserDto> getUserInfo(Authentication user) {
     	String username = user.getName();
     	Optional<User> u = userRepository.findById(username);
     	
     	Membership m = new Membership();
-    	m.setMNum(1);
-    	m.setMLevel("골드");
-    	
+
     	return new ResponseEntity<>(
     			UserDto.builder()
     				.id(username)
@@ -147,10 +134,8 @@ public class UserService {
 	    			.build(), HttpStatus.OK);
     };
     
+    //회원 정보 수정
     public ResponseEntity<UserDto> updateUserInfo(UserDto userDto, Authentication user) {
-//    	String username = user.getName();
-//    	Optional<User> u = userRepository.findById(username);
-    	
     	User u = User.builder()
 				.id(user.getName())
 				.pwd(userDto.getPwd())
@@ -158,7 +143,6 @@ public class UserService {
     			.tel(userDto.getTel())
     			.email(userDto.getEmail())
     			.addr(userDto.getAddr())
-//    			.createdDate(u.get().getCreatedDate())
     			.build();
     	
     	userRepository.save(u);

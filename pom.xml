@@ -168,6 +168,20 @@
             <version>5.3.4.RELEASE</version>
         </dependency> -->
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws -->
+		<dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-aws</artifactId>
+		    <version>2.2.1.RELEASE</version>
+		</dependency>
+
+		<!-- 아파치 티카 이미지 필터 -->
+		<!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+		<dependency>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
+		    <version>2.4.1</version>
+		</dependency>
     </dependencies>
     <build>
         <plugins>

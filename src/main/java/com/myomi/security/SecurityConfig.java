@@ -1,5 +1,7 @@
 package com.myomi.security;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,6 +12,9 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.myomi.jwt.filter.JwtAuthenticationFilter;
 import com.myomi.jwt.provider.JwtTokenProvider;
@@ -33,6 +38,17 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+	@Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://{본인IP}:5500");
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "PUT","DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 	/**
 	 * httpBasic().disable().csrf().disable(): rest api이므로 basic auth 및 csrf 보안을 사용하지 않는다는 설정
 	 *  sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS): JWT를 사용하기 때문에 세션을 사용하지 않는다는 설정
@@ -46,10 +62,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
-                .csrf().disable()     
-
-                .cors()
-                .and()
+                .csrf().disable()
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .cors().configurationSource(corsConfigurationSource()).and()
 //                .formLogin().disable()
 
                 // 시큐리티는 기본적으로 세션을 사용
@@ -76,24 +91,21 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
-                .antMatchers(HttpMethod.GET, "/product/list/*", "/product/{prodNum}").permitAll()
+                .antMatchers(HttpMethod.POST, "/signup/check/id").permitAll()
+                .antMatchers(HttpMethod.GET, "/product/list","/product/list/*", "/product/{prodNum}","list/seller/{seller}").permitAll()
                 .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
-                .antMatchers("/product/add").hasRole("SELLER")
+                .antMatchers("/product/add","/product/seller/{prodNum}").hasRole("SELLER")
 				.antMatchers("/order").hasRole("USER")
-				.antMatchers( "/sellerpage").hasRole("SELLER")
+				.antMatchers("/sellerpage").hasRole("SELLER")
                 .antMatchers("/notice","/notice/title/{keyword}").permitAll()
                 .antMatchers("/notice/add","/notice/{nNum}","/adminpage/*").hasRole("ADMIN")
-                .antMatchers("/review/add","/review/{reviewNum}").hasRole("USER")
+                .antMatchers("/review/add","/review/{reviewNum}","/user/modify").hasRole("USER")
                 .antMatchers("/user/info", "/user/modify").hasAnyRole("USER","SELLER")
                 .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll()
 				.antMatchers("/cart").hasRole("USER")
 				.antMatchers("/order/**").hasRole("USER")
-                .antMatchers("/user/test", "/user/modify").hasRole("USER")
-                .antMatchers("/user/info").hasAnyRole("USER","SELLER")
-                .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll ()
                 .anyRequest().authenticated()
                 .and()
-                //OAuth
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
