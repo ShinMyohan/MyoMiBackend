@@ -1,4 +1,8 @@
 package com.myomi.review.dto;
+import java.time.LocalDateTime;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.review.entity.Review;
 import com.myomi.user.entity.User;
@@ -17,51 +21,32 @@ public class ReviewSaveRequestDto {
 	
 	private Long orderNum;
 	private Long prodNum;
+	private LocalDateTime createdDate;
+	private MultipartFile file;
 	
 	@Builder
-	public ReviewSaveRequestDto(String title, String content, float stars, Long orderNum, Long prodNum) {
+	public ReviewSaveRequestDto(String title, String content, float stars, Long orderNum, Long prodNum,LocalDateTime createdDate,MultipartFile file) {
 		this.title=title;
 		this.content=content;
 		this.stars=stars;
 		this.orderNum = orderNum;
 		this.prodNum = prodNum;
+		this.createdDate=createdDate;
+		this.file=file;
 	}
 	
-//	public ProductDto toDto(Product product) {
-//		return ProductDto.builder()
-//				.seller(product.getSeller())
-//				.category(product.getCategory())
-//				.name(product.getName())
-//				.originPrice(product.getOriginPrice())
-//				.percentage(product.getPercentage())
-//				.week(product.getWeek())
-//				.detail(product.getDetail())
-////				.fee(9) //기본값 9로 넣어주려고 셋팅
-//				.build();
-//	}
-	
-//	public Product toEntity(ProductSaveDto productSaveDto
-//			, Seller seller
-//			) {
-//		return Product.builder()
-//				.seller(seller)
-//				.category(category)
-//				.name(name)
-//				.originPrice(originPrice)
-//				.percentage(percentage)
-//				.week(week)
-//				.detail(detail)
-//				.fee(9) //기본값 9로 넣어주려고 셋팅
-//				.build();
-//	}
-	public Review toEntity(ReviewSaveRequestDto reviewSaveRequestDto, User user, OrderDetail orderDetail) {
+	public Review toEntity(ReviewSaveRequestDto reviewSaveRequestDto, User user, OrderDetail orderDetail,String fileUrl) {
+		LocalDateTime date=LocalDateTime.now();
 		return Review.builder()
 				.user(user)
 				.title(reviewSaveRequestDto.getTitle())
 				.content(reviewSaveRequestDto.getContent())
-				.sort(3)
+				.sort(4)
 				.stars(reviewSaveRequestDto.getStars())
+				.createdDate(date)
 				.orderDetail(orderDetail)
+				.reviewImgurl(fileUrl)
 				.build();
-	}
-}
+				
+				}
+			}

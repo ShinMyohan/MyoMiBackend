@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.review.entity.Review;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -20,6 +21,17 @@ public class ReviewDetailResponseDto {
 	private LocalDateTime createdDate;
 	private float stars;
 	
+	@Builder
+	public ReviewDetailResponseDto(String userId,String prodName,Long reviewNum,String title, String content,int sort,LocalDateTime createdDate, float stars) {
+		this.userId=userId;
+		this.prodName=prodName;
+		this.reviewNum=reviewNum;
+		this.title=title;
+		this.content=content;
+		this.sort=sort;
+		this.createdDate=createdDate;
+		this.stars=stars;
+	}
 	public ReviewDetailResponseDto(Review entity) {
 		this.prodName = entity.getOrderDetail().getProduct().getName();
 		this.reviewNum = entity.getReviewNum();
