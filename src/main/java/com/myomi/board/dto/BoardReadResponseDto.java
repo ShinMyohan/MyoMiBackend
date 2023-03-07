@@ -3,6 +3,8 @@ package com.myomi.board.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
@@ -29,11 +31,15 @@ public class BoardReadResponseDto {
     private String userName;
     private List<CommentDto> comments;
     private List<Comment> reply;
-    
+    private MultipartFile file;
+    private String boardImgUrl;
+    private boolean enableUpdate;
+    private boolean enableDelete;
     
     @Builder  
     public BoardReadResponseDto(Long boardNum, User user, String category, String title, String content,
-    		LocalDateTime createdDate, Long hits, String userName, List<CommentDto> comments, List<Comment> reply) {
+    		LocalDateTime createdDate, Long hits, String userName, List<CommentDto> comments, List<Comment> reply,
+    		MultipartFile file, String boardImgUrl, boolean enableUpdate, boolean enableDelete) {
     	super();
     	this.boardNum = boardNum;
     	this.user = user;
@@ -45,11 +51,13 @@ public class BoardReadResponseDto {
     	this.userName = userName;
     	this.comments = comments;
     	this.reply = reply;
+    	this.file = file;
+    	this.boardImgUrl = boardImgUrl;
+    	this.enableUpdate = enableUpdate;
+    	this.enableDelete = enableDelete;
     }
-  
 
-    
-    public Board toEntity(User user) {
+    public Board toEntity(User user, String fileUrl) {
     	LocalDateTime date = LocalDateTime.now();
     	return Board.builder()
     			.user(user)
@@ -57,21 +65,7 @@ public class BoardReadResponseDto {
     			.title(title)
     			.content(content)
     			.createdDate(date)
+    			.boardImgUrl(fileUrl)
     			.build();
     }
-
-//    public Board toDto(User user){
-//    	LocalDateTime date = LocalDateTime.now();
-//    	return Board.builder()
-//    			.user(user)
-//    			.category(category)
-//    			.boardNum(boardNum)
-//    			.content(content)
-//    			.createdDate(date)
-//    			.hits(hits)
-//    			.title(title)
-//    			.build();
-//    }
-
-
 }

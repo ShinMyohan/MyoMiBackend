@@ -76,10 +76,13 @@ public class Board {
 		      mappedBy = "board")
    @OrderBy("createdDate desc")
    private List<Comment> comments;
+   
+   @Column(name = "board_img_url", nullable = false)
+   private String boardImgUrl;
 
     @Builder
     public Board(Long boardNum, User user, @NotNull String category, @NotNull String title, @NotNull String content,
-		LocalDateTime createdDate, Long hits) {
+		LocalDateTime createdDate, Long hits, String boardImgUrl) {
 	this.boardNum = boardNum;
 	this.user = user;
 	this.category = category;
@@ -87,13 +90,15 @@ public class Board {
 	this.content = content;
 	this.createdDate = createdDate;
 	this.hits = hits;
+	this.boardImgUrl = boardImgUrl;
 	//this.comments = comments;
 }
     //더티체킹 
-    public void update(String category, String title, String content) {
+    public void update(String category, String title, String content, String boardImgUrl) {
 		this.category = category;
 		this.title = title;
 		this.content = content;
+		this.boardImgUrl = boardImgUrl;
     }
     @PrePersist
     public void prePersist() {

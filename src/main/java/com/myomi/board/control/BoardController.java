@@ -1,5 +1,7 @@
 package com.myomi.board.control;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -17,13 +19,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myomi.board.dto.BoardReadResponseDto;
 import com.myomi.board.entity.Board;
 import com.myomi.board.service.BoardService;
+import com.myomi.comment.dto.CommentDto;
+import com.myomi.comment.entity.Comment;
 import com.myomi.exception.AddException;
 import com.myomi.exception.FindException;
 import com.myomi.exception.RemoveException;
+import com.myomi.user.entity.User;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,24 +73,39 @@ public class BoardController {
 
 	@ApiOperation(value = "게시판 | 글 작성 ")
 	@PostMapping("/board/add")  //로그인필요 
-	public ResponseEntity<?> boardAdd(@RequestBody BoardReadResponseDto addDto,
-			Authentication user) throws AddException{
-		service.addBoard(addDto, user);
+	public ResponseEntity<?> boardAdd(String category, String title, String content,
+    		 MultipartFile file,
+			Authentication user) throws AddException, IOException{
+		BoardReadResponseDto dto = BoardReadResponseDto.builder()
+				.content(content)
+				.title(title)
+				.category(category)
+				.file(file)
+				.build();
+		service.addBoard(dto, user);
+//		log.info("컨트롤러:" + file.getName() + "사이즈는: "+ file.getSize());
 		return new ResponseEntity<>( HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "게시판 | 글 상세 + 댓글 보기 ")
 	@GetMapping("/board/{boardNum}")
-	public ResponseEntity<?> boardDetail(@PathVariable Long boardNum){
-		BoardReadResponseDto dto = service.detailBoard(boardNum);
+	public ResponseEntity<?> boardDetail(@PathVariable Long boardNum,Authentication user){
+		BoardReadResponseDto dto = service.detailBoard(boardNum, user);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "게시판 | 글 수정 ")
 	@PutMapping("/board/{boardNum}") //로그인필요 
-	public ResponseEntity<?> boardModify(@RequestBody BoardReadResponseDto editDto, 
-			@PathVariable Long boardNum, Authentication user) throws AddException{
-		service.modifyBoard(editDto, boardNum, user);
+	public ResponseEntity<?> boardModify(String category, String title, String content,
+   		 MultipartFile file,
+			@PathVariable Long boardNum, Authentication user) throws AddException, IOException{
+		BoardReadResponseDto dto = BoardReadResponseDto.builder()
+				.content(content)
+				.title(title)
+				.category(category)
+				.file(file)
+				.build();
+		service.modifyBoard(dto, boardNum, user);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -99,7 +120,7 @@ public class BoardController {
 	@ApiOperation(value = "마이페이지 | 내가 작성한 글 보기 ")
 	@GetMapping("/mypage/boardList")
 	public ResponseEntity<?> myBoardList(Authentication user,
-			@PageableDefault(size=4) Pageable pageable) throws FindException{
+			Pageable pageable) throws FindException{
 		List<BoardReadResponseDto> list = service.findBoardListByUser(user,pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}

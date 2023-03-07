@@ -32,13 +32,17 @@ public class CommentDto {
 	private Long parent;
 	@JsonIgnore
 	private List<Comment> reply;
+	private boolean enableUpdate;
+    private boolean enableDelete;
 
 	@Builder
-	public CommentDto(Long commentNum, Board board, User user, String content, LocalDateTime createdDate,
-			String category, String title, String userId, Long parent, List<Comment> reply, String userName, Long boardNum) {
+	public CommentDto(Long commentNum, Board board, Long boardNum, User user, String content, LocalDateTime createdDate,
+			String category, String title, String userName, Long parent, List<Comment> reply, boolean enableUpdate,
+			boolean enableDelete) {
 		super();
 		this.commentNum = commentNum;
 		this.board = board;
+		this.boardNum = boardNum;
 		this.user = user;
 		this.content = content;
 		this.createdDate = createdDate;
@@ -47,8 +51,10 @@ public class CommentDto {
 		this.userName = userName;
 		this.parent = parent;
 		this.reply = reply;
-		this.boardNum = boardNum;
+		this.enableUpdate = enableUpdate;
+		this.enableDelete = enableDelete;
 	}
+
 
 	public Comment toEntity(User user, Board board) {
 		LocalDateTime date = LocalDateTime.now();
@@ -60,6 +66,7 @@ public class CommentDto {
 				.parent(parent)
 				.build();
 	}
+
 
 
 }

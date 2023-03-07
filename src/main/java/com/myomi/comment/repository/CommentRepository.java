@@ -21,6 +21,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
    public List<Comment> findAllByComments(@Param("username") String username,Pageable pageable);
    
    public List<Comment> findByParent(Long parent);
+   
+   public Optional<Comment> findById(Long CommentNum);
 
 
 }
