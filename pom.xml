@@ -168,6 +168,11 @@
             <version>5.3.4.RELEASE</version>
         </dependency> -->
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
+        <!-- WebSocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

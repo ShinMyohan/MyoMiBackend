@@ -120,7 +120,7 @@ public class PaymentService {
 
     // 주문 취소
     public ResponseEntity<String> orderCancel(Long num, Authentication user) throws FindException, IOException {
-        Order order = orderRepository.findByOrderNumAndUser(num, user.getName())
+        Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), num)
                 .orElseThrow(() -> new FindException("해당하는 주문 번호가 없습니다."));
         String impUid = order.getImpUid();
         // 수령일 계산
