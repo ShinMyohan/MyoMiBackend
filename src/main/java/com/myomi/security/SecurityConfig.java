@@ -41,7 +41,7 @@ public class SecurityConfig {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://172.30.1.1:5500");
+        configuration.addAllowedOrigin("http://{본인IP}:5500");
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "PUT","DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
@@ -64,9 +64,6 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .csrf().disable()
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-
-//                .cors()
-//                .and()
                 .cors().configurationSource(corsConfigurationSource()).and()
 //                .formLogin().disable()
 
@@ -94,6 +91,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
+                .antMatchers(HttpMethod.POST, "/signup/check/id").permitAll()
                 .antMatchers(HttpMethod.GET, "/product/list","/product/list/*", "/product/{prodNum}","list/seller/{seller}").permitAll()
                 .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
                 .antMatchers("/product/add","/product/seller/{prodNum}").hasRole("SELLER")
@@ -108,7 +106,6 @@ public class SecurityConfig {
 				.antMatchers("/order/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                //OAuth
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();

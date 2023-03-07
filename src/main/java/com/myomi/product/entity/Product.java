@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.cart.entity.Cart;
@@ -26,14 +28,12 @@ import com.myomi.seller.entity.Seller;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter @Getter
-//@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 @Entity
-//@DynamicInsert
-//@DynamicUpdate
+@DynamicInsert
+@DynamicUpdate
 @SequenceGenerator(
 		 name = "PRODUCT_SEQ_GENERATOR",
 		 sequenceName = "PRODUCT_SEQ", //매핑할 데이터베이스 시퀀스 이름

@@ -50,7 +50,7 @@ public class QnaPReadResponseDto {
 		this.pName = pName;
 	}
 	
-	//상품 리스트 조회시
+	//상품 상세 조회시
 	public QnaPReadResponseDto toDto(Qna qna) {
 		return QnaPReadResponseDto.builder()
 				.qnaNum(qna.getQnaNum())

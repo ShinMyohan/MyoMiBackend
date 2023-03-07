@@ -83,18 +83,9 @@ public class UserDto {
 	private List<Coupon> coupons;
 	
 	@Builder
-	public UserDto(String id, String pwd,
-			int role,
-			List<String> roles,
-			String name, String tel, String email, 
-			String addr, LocalDateTime createdDate,
-			Membership membership , 
-			Point point,
-			Seller seller,
-			List<Board> boards, List<Comment> comments, List<Review> reviews,
-			List<Order> orders, List<Qna> qnas, List<Follow> follows,
-			List<Cart> cart, List<Coupon> coupons
-			) {
+	public UserDto(String id, String pwd, int role, List<String> roles, String name, String tel, String email, String addr,
+			LocalDateTime createdDate, Membership membership , Point point, Seller seller, List<Board> boards, List<Comment> comments, List<Review> reviews,
+			List<Order> orders, List<Qna> qnas, List<Follow> follows, List<Cart> cart, List<Coupon> coupons) {
 		this.id = id;
 		this.pwd = pwd;
 		this.role = role;

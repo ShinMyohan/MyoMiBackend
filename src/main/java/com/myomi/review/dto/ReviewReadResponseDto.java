@@ -4,13 +4,12 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.review.entity.Review;
-import com.myomi.user.entity.User;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 @Getter
-@ToString
+@NoArgsConstructor
 public class ReviewReadResponseDto {
 	private String userId;
 	private String prodName;
@@ -42,4 +41,16 @@ public class ReviewReadResponseDto {
 		this.createdDate = entity.getCreatedDate();
 		this.stars = entity.getStars();
 	}
+	
+	//상품 상세 조회시
+	public ReviewReadResponseDto toDto(Review review) {
+		return ReviewReadResponseDto.builder()
+				.reviewNum(review.getReviewNum())
+				.userId(review.getUser().getName())
+				.title(review.getTitle())
+				.content(review.getContent())
+				.createdDate(review.getCreatedDate())
+				.stars(review.getStars())
+				.build();
 	}
+}

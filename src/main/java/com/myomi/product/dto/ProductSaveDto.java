@@ -16,24 +16,6 @@ import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor @JsonAutoDetect
 public class ProductSaveDto {
-	
-	@Builder
-	public ProductSaveDto(String category,
-			 String name,
-			 Long originPrice,  int percentage,
-			 int week,
-			 String detail, MultipartFile file) {
-//		super();
-		this.category = category;
-		this.name = name;
-		this.originPrice = originPrice;
-		this.percentage = percentage;
-		this.week = week;
-		this.detail = detail;
-		this.file = file;
-	}
-
-
 	@NotBlank
 	private String category;
 	
@@ -58,13 +40,16 @@ public class ProductSaveDto {
 	private MultipartFile file;
 	
 	
-//	@Builder
-//	public ProductSaveDto(
-//			MultipartFile file) {
-//		this.name = name;
-//		this.category = cate
-//		this.file = file;
-//	}
+	@Builder
+	public ProductSaveDto(String category, String name, Long originPrice,  int percentage, int week, String detail, MultipartFile file) {
+		this.category = category;
+		this.name = name;
+		this.originPrice = originPrice;
+		this.percentage = percentage;
+		this.week = week;
+		this.detail = detail;
+		this.file = file;
+	}
 	
 	//상품 등록시 사용
 	public Product toEntity(ProductSaveDto productSaveDto
@@ -84,8 +69,4 @@ public class ProductSaveDto {
 				.productImgUrl(fileUrl)
 				.build();
 	}
-	
-//	public void addProductImgUrl(MultipartFile file) {
-//		this.file = file;
-//	}
 }

@@ -50,8 +50,15 @@ public class UserController {
     public String signup(@RequestBody UserSignUpReqeustDto userSignUpReqeustDto) {
     	return userService.signup(userSignUpReqeustDto);
     }
+//    checkIdExists
     
-    @ApiOperation(value = "사용자| 등록된 휴대폰번호 체크")
+    @ApiOperation(value = "사용자| 등록된 아이디 중복 체크")
+    @PostMapping("/signup/check/id")
+    public ResponseEntity<Boolean> checkIdDuplicate(String id) {
+    	return ResponseEntity.ok(userService.checkIdExists(id));
+    }
+    
+    @ApiOperation(value = "사용자| 등록된 휴대폰번호 중복 체크")
     @GetMapping("/signup/check/{tel}/exists")
     public ResponseEntity<Boolean> checkTelDuplicate(@PathVariable String tel) {
     	return ResponseEntity.ok(userService.checkTelExists(tel));

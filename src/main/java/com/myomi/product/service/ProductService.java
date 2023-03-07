@@ -25,6 +25,7 @@ import com.myomi.product.repository.ProductRepository;
 import com.myomi.qna.dto.QnaPReadResponseDto;
 import com.myomi.qna.entity.Qna;
 import com.myomi.qna.repository.QnaRepository;
+import com.myomi.review.dto.ReviewReadResponseDto;
 import com.myomi.review.entity.Review;
 import com.myomi.review.repository.ReviewRepository;
 import com.myomi.s3.FileUtils;
@@ -78,14 +79,13 @@ public class ProductService {
 			}
 		}
 //		else {
-			String fileUrl = s3Uploader.upload(file, "상품이미지", seller
-					, productSaveDto
-					);
+		String fileUrl = s3Uploader.upload(file, "상품이미지", seller, productSaveDto);
 			
 //			product.addProductImgUrl(fileUrl); //이거 안됨
 			
 //		}
 		Product product = productSaveDto.toEntity(productSaveDto, s, fileUrl);
+		
 		//상품등록
 		productRepository.save(product);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -129,8 +129,13 @@ public class ProductService {
 			qDto.add(qnaDto.toDto(q));
 		}
 		
+		List<ReviewReadResponseDto> rDto = new ArrayList<>();
+		for(Review r : reviews) {
+			ReviewReadResponseDto reviewDto = new ReviewReadResponseDto();
+			rDto.add(reviewDto.toDto(r));
+		}
 		ProductReadOneDto dto = new ProductReadOneDto();
-		return new ResponseEntity<>(dto.toDto(product.get(), reviews, qDto) , HttpStatus.OK);
+		return new ResponseEntity<>(dto.toDto(product.get(), rDto, qDto) , HttpStatus.OK);
 	}
 	
 	@Transactional //성공

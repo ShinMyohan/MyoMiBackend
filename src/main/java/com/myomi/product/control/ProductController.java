@@ -41,24 +41,16 @@ public class ProductController {
 	//셀러 - 상품 등록
 	@ApiOperation(value = "셀러| 상품등록")
 	@PostMapping(value = "add")
-	public ResponseEntity<?> productSave(
-			String name,
-			String category,
-			int week,
-			int percentage,
-			Long originPrice,
-			String detail,
-			//ProductSaveDto productSaveDto, 
-//			String productSaveDto,
-//			@AuthenticationPrincipal User user
-			Authentication seller, 
-			MultipartFile file
-			) throws IOException {
-//		if(productSaveDto.getName().length() > 30) {
-//			log.error("상품명 30자 초과");
-//		} else if(productSaveDto.getDetail().length() > 150) {
-//			log.error("상품 특이사항 150자 초과");
-//		} 
+	public ResponseEntity<?> productSave(String name, String category, int week, int percentage, Long originPrice,
+			String detail, Authentication seller, MultipartFile file) throws IOException {
+			//ProductSaveDto productSaveDto, 테스트 인자값 
+			//String productSaveDto,
+			
+		if(name.length() > 30) {
+			log.error("상품명 30자 초과");
+		} else if(detail.length() > 150) {
+			log.error("상품 특이사항 150자 초과");
+		} 
 		
 		
 		//ObjectMapper mapper = new ObjectMapper();
@@ -66,7 +58,7 @@ public class ProductController {
 	//	dto.builder()
 	//	.file(file)
 	//	.build();
-	//	
+		
 		//File file = new File(); //일반 파일로 바꾸는 작업을 여기서 하거나 
 		ProductSaveDto dto = ProductSaveDto.builder()
 			.name(name)

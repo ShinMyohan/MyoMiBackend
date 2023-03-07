@@ -15,15 +15,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDto {
 	private Long prodNum;
-	
 	@JsonIgnore
+	@NotBlank
 	private Seller seller;
 //	private SellerDto sellerDto;
 	@NotBlank
 	private String category;
+	@NotBlank
 	private String name;
 	@NotBlank
 	private Long originPrice;
+	@NotBlank
 	private int percentage;
 	@NotBlank
 	private int week;
@@ -35,15 +37,8 @@ public class ProductDto {
 	private float stars;
 	
 	@Builder
-	public ProductDto(
-			Long prodNum, 
-			Seller seller, 
-			String category,
-			String name, Long originPrice, int percentage, 
-			int week,
-			int status,
-			String detail,
-			String productImgUrl, Long reviewCnt, float stars) {
+	public ProductDto(Long prodNum, Seller seller, String category, String name, Long originPrice, int percentage, 
+			int week, int status, String detail, String productImgUrl, Long reviewCnt, float stars) {
 		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
@@ -70,7 +65,6 @@ public class ProductDto {
 				.week(product.getWeek())
 				.detail(product.getDetail())
 				.productImgUrl(product.getProductImgUrl())
-//				.fee(9) //기본값 9로 넣어주려고 셋팅
 				.reviewCnt(product.getReviewCnt())
 				.stars(product.getStars())
 				.build();
