@@ -88,11 +88,11 @@ public class Coupon {
 
     @Column(name = "status")
     @ColumnDefault("'0'")
-    private int status;
+    private Integer status;
     //status:0 -> 사용 전
 
     @Builder
-    public Coupon(User user, int sort, int percentage, LocalDateTime createdDate, LocalDateTime usedDate, int status,
+    public Coupon(User user, int sort, int percentage, LocalDateTime createdDate, LocalDateTime usedDate, Integer status,
                   Long couponNum) {
         this.user = user;
         this.sort = sort;
@@ -103,10 +103,11 @@ public class Coupon {
         this.couponNum = couponNum;
     }
 
-    //더티체킹
-    public void update(LocalDateTime usedDate, int status) {
-        this.usedDate = usedDate;
+  //더티체킹
+    public void update(Long couponNum, int status) {
+        this.couponNum = couponNum;
         this.status = status;
+        this.usedDate = LocalDateTime.now();
     }
 
     @PrePersist

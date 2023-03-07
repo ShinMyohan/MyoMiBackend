@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.myomi.coupon.repository.CouponRepository;
+import com.myomi.follow.repository.FollowRepository;
+import com.myomi.point.dto.MyPageDto;
 import com.myomi.point.dto.PointDetailDto;
 import com.myomi.point.dto.PointDto;
 import com.myomi.point.entity.Point;
@@ -35,6 +38,8 @@ public class PointDetailService {
 	private final PointDetailRepository pdr;
 	private final PointRepository pr;
 	private final UserRepository ur;
+	private final CouponRepository cr;
+	private final FollowRepository fr;
 
 
 	//마이페이지에서 나의 포인트 리스트 조회 
@@ -84,7 +89,6 @@ public class PointDetailService {
 	public PointDto findTotalPoint (Authentication user) {
 		String username = user.getName();
 		Point point = pr.findAllById(username);
-	  
 		PointDto dto = PointDto.builder()
 				.id(username)
 				.totalPoint(point.getTotalPoint())
@@ -93,4 +97,43 @@ public class PointDetailService {
 		
 	}
 	
+	@Transactional
+	public void savePoint (int amount, int sort, Authentication user){
+		LocalDateTime date = LocalDateTime.now();
+		String username = user.getName();
+		Optional<User> optU = ur.findById(username);
+		PointDetail pd = new PointDetail();
+		PointDetailEmbedded pde = new PointDetailEmbedded();
+		pde = PointDetailEmbedded.builder()
+				.createdDate(date)
+				.uId(username)
+				.build();
+		pd = PointDetail.builder()
+				.amount(amount)
+				.sort(sort)
+				.pointEmbedded(pde)
+				.build();
+
+		pdr.save(pd);
+//		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+
+    public MyPageDto getMyPageInfo (Authentication user) {
+    	String username = user.getName();
+    	Optional<User> optU = ur.findById(username);
+		Point point = pr.findAllById(username);
+		Long coupon = cr.findByUser(username);
+		Long follow = fr.findAllFollowByUserId(username);
+		int membership = optU.get().getMembership().getMNum();
+	     MyPageDto dto = MyPageDto.builder()
+	    		 .totalPoint(point.getTotalPoint())
+	    		 .couponCount(coupon)
+	    		 .followCount(follow)
+	    		 .userName(optU.get().getName())
+	    		 .membership(membership)
+	    		 .build();
+	     
+	     return dto;
+    }
 }
