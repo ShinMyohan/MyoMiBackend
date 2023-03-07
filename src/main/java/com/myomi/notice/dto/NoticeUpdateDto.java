@@ -1,10 +1,8 @@
 package com.myomi.notice.dto;
 
 import java.time.LocalDateTime;
-
 import com.myomi.admin.entity.Admin;
 import com.myomi.notice.entity.Notice;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +10,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class NoticeUpdateDto {
 	
-
 	private String title;
 	private String content;
 
-	
 	@Builder
 	public NoticeUpdateDto(String title, String content) {
 		this.title = title;
@@ -34,7 +30,6 @@ public class NoticeUpdateDto {
 					.title(title)
 					.content(content)
 					.createdDate(date)
-					.build();
-				
+					.build();			
 	}
 }

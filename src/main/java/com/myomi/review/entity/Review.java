@@ -70,9 +70,12 @@ public class Review {
 
     @OneToOne(mappedBy = "review")
     private BestReview bestReview;
-
+    
+    private String reviewImgUrl;
+    
     @Builder
-    public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars, OrderDetail orderDetail) {
+    public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars, OrderDetail orderDetail
+    		,String reviewImgurl) {
         this.reviewNum = reviewNum;
         this.user = user;
         this.sort = sort;
@@ -81,6 +84,7 @@ public class Review {
         this.createdDate = createdDate;
         this.stars = stars;
         this.orderDetail = orderDetail;
+        this.reviewImgUrl=reviewImgurl;
     }
 
     public void update(String title, String content) {

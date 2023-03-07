@@ -2,9 +2,10 @@ package com.myomi.admin.control;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,32 +21,34 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/admin/*")
 public class AdminController {
-	@Autowired
 	private final AdminService service;
 	
 	//판매자 신청명단 목록 조회
-	@GetMapping("seller/list")
-	public List<SellerResponseDto> sellerAllList(
+	@GetMapping("seller")
+	public List<SellerResponseDto> sellerList(
 			){
 		return service.getAllSeller();
 		
 	}
 	
 	//판매자 신청상태 status로 조회
-	@GetMapping("seller/list/{status}")
-	public List<SellerResponseDto> sellerAllByStatus(@PathVariable int status){
-		return service.getAllSellerStatus(status);
+	@GetMapping("seller/{status}")
+	public List<SellerResponseDto> sellerListByStatus(@PathVariable int status){
+		return service.getAllSellerByStatus(status);
+	}
+	
+	//판매자 승인
+	@PutMapping("seller/{sellerId}/{status}")
+	public void sellerStatusModify(@PathVariable String sellerId,@PathVariable int status) {
+		service.modifySellerStatus(status,sellerId);
 	}
 	
 	//판매자 강제탈퇴
-	
-	//판매자 승인,승인 반려 혹은 거절
-//	public void sellerModify()
-//	
 	//판매자 상세보기
-	@GetMapping("detail/{sellerId}")
-	public SellerDetailDto sellerDetails(@PathVariable String sellerId){
-		return service.detailSellerInfo(sellerId);
+	@GetMapping("seller/detail/{sellerId}")
+	public SellerDetailDto sellerDetail(@PathVariable String sellerId)
+	{
+		return service.getOneSellerInfo(sellerId);
 	}
 	
 }

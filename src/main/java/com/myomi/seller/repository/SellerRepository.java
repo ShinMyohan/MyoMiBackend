@@ -1,19 +1,13 @@
 package com.myomi.seller.repository;
 
 import java.util.List;
-
-import org.springframework.data.jpa.repository.Query;
-import java.util.Optional;
-
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myomi.product.entity.Product;
 import com.myomi.seller.entity.Seller;
@@ -33,9 +27,11 @@ public interface SellerRepository extends CrudRepository<Seller, String>{
 	List<Product> findAllBySellerId(@Param("userId")String userId);
 
 	//판매자 탈퇴신청(status 변경)
+	//판매자 승인 혹은 반려(status 변경)
 	@Modifying
-	@Query("UPDATE Seller s SET s.status =3 WHERE s.sellerId.id =:userId")
-	public void updateSellerId(@Param("userId")String userId);
+	@Transactional
+	@Query("UPDATE Seller s SET s.status=:status WHERE s.sellerId.id=:userId")
+	public void updateSellerId(@Param("status") int status, @Param("userId") String userId);
 
 	//특정 셀러 찾기
 	Optional<Seller> findById(String sellerId);
