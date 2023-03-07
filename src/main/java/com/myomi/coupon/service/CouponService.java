@@ -4,6 +4,8 @@ import com.myomi.coupon.dto.CouponDto;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.exception.AddException;
+
+import com.myomi.user.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Getter
 public class CouponService {
     private final CouponRepository cr;
+    private final UserRepository ur;
 
     //마이페이지에서 쿠폰 조회
     @Transactional
@@ -49,13 +52,13 @@ public class CouponService {
     //쿠폰 사용시 status update
     @Transactional
     public void modifyCoupon(Long couponNum, int status) throws AddException {
-//        LocalDateTime date = LocalDateTime.now();
+        //        LocalDateTime date = LocalDateTime.now();
         Optional<Coupon> cp = cr.findById(couponNum);
         Coupon coupon = cp.get();
-        if(status == 1 && coupon.getStatus() == 0) {  // 결제할 때
+        if (status == 1 && coupon.getStatus() == 0) {  // 결제할 때
             coupon.update(couponNum, status);
         } else if (status == 0 && coupon.getStatus() == 1) { // 결제 취소할 때
-            if(LocalDateTime.now().isBefore(coupon.getCreatedDate().plusDays(30))) {
+            if (LocalDateTime.now().isBefore(coupon.getCreatedDate().plusDays(30))) {
                 coupon.update(couponNum, status);
             } else {
                 status = 2;
@@ -63,11 +66,12 @@ public class CouponService {
                 log.info("결제 취소했으나, 쿠폰 만료기간이 지나서 사용할 수 없음");
             }
         }
-//		if (coupon.getUsedDate()==null && status == 1) {
-//				//쿠폰은 status 1(사용됨) 으로만 변경가능, 2(만료)는 프로시저
-//				coupon.update(date, status);
-//			}else {
-//				throw new AddException("권한이 없습니다");
-//			}
+    }
+
+    @Transactional
+    public Long getTotalCoupon(Authentication user) {
+        String username = user.getName();
+        Long count = cr.findByUser(username);
+        return count;
     }
 }

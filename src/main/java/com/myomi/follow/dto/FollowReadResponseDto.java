@@ -1,8 +1,5 @@
 package com.myomi.follow.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.myomi.seller.entity.Seller;
-
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,8 +16,4 @@ public class FollowReadResponseDto {
 		this.followCnt = followCnt;
 
 	}
-	
-	
-	
-
 }

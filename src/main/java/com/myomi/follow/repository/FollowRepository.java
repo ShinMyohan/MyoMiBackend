@@ -27,5 +27,8 @@ public interface FollowRepository extends CrudRepository<Follow, FollowEmbedded>
 	@Query("SELECT f FROM Follow f join f.sellerId WHERE f.id.uId =:userId")
 	public List<Follow> findAllByUserId(@Param("userId")String user,Pageable pageable);
 	
-
+	//내 팔로우 수 조회
+	@Query(value = "SELECT count(*) FROM follow WHERE user_id=:userId",nativeQuery=true)
+	public Long findAllFollowByUserId(@Param("userId")String user);
+	
 }

@@ -1,27 +1,15 @@
 package com.myomi.review.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.user.entity.User;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -70,9 +58,12 @@ public class Review {
 
     @OneToOne(mappedBy = "review")
     private BestReview bestReview;
-
+    
+    private String reviewImgUrl;
+    
     @Builder
-    public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars, OrderDetail orderDetail) {
+    public Review(Long reviewNum, User user, int sort, @NotNull String title, @NotNull String content, LocalDateTime createdDate, float stars, OrderDetail orderDetail
+    		,String reviewImgurl) {
         this.reviewNum = reviewNum;
         this.user = user;
         this.sort = sort;
@@ -81,6 +72,7 @@ public class Review {
         this.createdDate = createdDate;
         this.stars = stars;
         this.orderDetail = orderDetail;
+        this.reviewImgUrl=reviewImgurl;
     }
 
     public void update(String title, String content) {

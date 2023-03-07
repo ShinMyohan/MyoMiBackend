@@ -1,14 +1,15 @@
 package com.myomi.point.control;
 
+import com.myomi.point.dto.MyPageDto;
 import com.myomi.point.dto.PointDetailDto;
 import com.myomi.point.dto.PointDto;
 import com.myomi.point.service.PointDetailService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class PointDetailController {
 	@ApiOperation(value = "마이페이지 | 포인트 목록 보기 ")
 	@GetMapping("mypage/pointDetail")
 	public ResponseEntity<?> myPointList(Authentication user,
-			@PageableDefault(size=4) Pageable pageable) {
+			@PageableDefault(sort = "pointEmbedded.createdDate", size=10, direction = Direction.DESC)Pageable pageable) {
 		List<PointDetailDto> list = service.findMyPointList(user, pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
@@ -45,9 +46,15 @@ public class PointDetailController {
 
 	@GetMapping("point")
 	@ApiOperation(value = "포인트 | 총 포인트 보기 ")
-	public ResponseEntity<?> findTotalpoint (Authentication user) {
+	public ResponseEntity<?> getTotalpoint (Authentication user) {
 		PointDto dto = service.findTotalPoint(user);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "마이페이지| 상단메뉴 정보")
+	@GetMapping("/headerinfo")
+	public MyPageDto mypageInfo (Authentication user) {
+		return service.getMyPageInfo(user);
 	}
 
 }

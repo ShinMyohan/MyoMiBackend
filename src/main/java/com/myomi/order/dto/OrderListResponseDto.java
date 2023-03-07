@@ -19,26 +19,4 @@ public class OrderListResponseDto { // 주문 기본, 상세, 배송정보 한�
     private LocalDateTime payCreatedDate;
     private LocalDateTime canceledDate;
     private Long reviewNum; // 리뷰 번호
-
-//    @Builder
-//    public OrderListResponseDto(Long orderNum, String pName, Long totalPrice, LocalDateTime payCreatedDate,
-//                                LocalDateTime canceledDate, Long reviewNum) {
-//        this.orderNum = orderNum;
-//        this.pName = pName;
-//        this.totalPrice = totalPrice;
-//        this.payCreatedDate = payCreatedDate;
-//        this.canceledDate = canceledDate;
-//        this.reviewNum = reviewNum;
-//    }
-//
-//    public OrderListResponseDto toDto(Order order) {
-//        return OrderListResponseDto.builder()
-//                .orderNum(order.getOrderNum())
-//                .pName(order.get)
-//                .totalPrice(order.getCouponNum())
-//                .payCreatedDate(order.getUsedPoint())
-//                .canceledDate(order.getSavePoint())
-//                .reviewNum(order.getTotalPrice())
-//                .build();
-//    }
 }

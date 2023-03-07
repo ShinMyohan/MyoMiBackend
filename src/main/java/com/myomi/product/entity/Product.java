@@ -1,39 +1,26 @@
 package com.myomi.product.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-
-import org.hibernate.annotations.ColumnDefault;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.cart.entity.Cart;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.qna.entity.Qna;
 import com.myomi.seller.entity.Seller;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
-@Setter @Getter
-//@AllArgsConstructor
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Getter
 @NoArgsConstructor
 @Entity
-//@DynamicInsert
-//@DynamicUpdate
+@DynamicInsert
+@DynamicUpdate
 @SequenceGenerator(
 		 name = "PRODUCT_SEQ_GENERATOR",
 		 sequenceName = "PRODUCT_SEQ", //매핑할 데이터베이스 시퀀스 이름
@@ -99,12 +86,15 @@ public class Product {
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Cart> cart;
 	
+	private String productImgUrl;
+	
 	@Builder
 	public Product(
 			Long prodNum,
 			Seller seller, String category, String name,
 			Long originPrice, int percentage, int week, int status,
-			String detail, int fee, List<OrderDetail> orderDetails) {
+			String detail, int fee,
+			Long reviewCnt, float stars, List<OrderDetail> orderDetails, String productImgUrl) {
 		this.prodNum = prodNum;
 		this.seller = seller;
 		this.category = category;
@@ -115,9 +105,20 @@ public class Product {
 		this.status = status;
 		this.detail = detail;
 		this.fee = fee;
+		this.reviewCnt = reviewCnt;
+		this.stars = stars;
 		this.orderDetails = orderDetails;
+		this.productImgUrl = productImgUrl;
 	}
 	
 	//상품 등록한 셀러
 	public void registerSeller(Seller seller) {this.seller = seller;}
+	public void addProductImgUrl(String productImgUrl) {
+		this.productImgUrl = productImgUrl;
+	}
+	
+	public void update(String detail, int status) {
+		this.detail = detail;
+		this.status = status;
+	}
 }

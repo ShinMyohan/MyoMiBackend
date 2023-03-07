@@ -1,39 +1,26 @@
 package com.myomi.qna.entity;
 
-import com.myomi.product.entity.Product;
-import com.myomi.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.myomi.product.entity.Product;
+import com.myomi.user.entity.User;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
 @SequenceGenerator(
         name =
                 "QNA_SEQ_GENERATOR", // 사용할 sequence 이름
@@ -82,7 +69,6 @@ public class Qna implements Serializable {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime queCreatedDate;
 
-
     @Column(name = "ans_content")
     private String ansContent;
 
@@ -91,12 +77,13 @@ public class Qna implements Serializable {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime ansCreatedDate;
-
-
+    
+    private String qnaImgUrl;
+    
     @Builder
-    public Qna(Long qnaNum, @NotNull User userId, @NotNull Product prodNum, @NotNull String queTitle,
-               @NotNull String queContent, @NotNull LocalDateTime queCreatedDate, String ansContent,
-               LocalDateTime ansCreatedDate) {
+    public Qna(Long qnaNum, User userId, Product prodNum, String queTitle,
+               String queContent, LocalDateTime queCreatedDate, String ansContent,
+               LocalDateTime ansCreatedDate, String qnaImgUrl) {
         this.qnaNum = qnaNum;
         this.userId = userId;
         this.prodNum = prodNum;
@@ -105,6 +92,7 @@ public class Qna implements Serializable {
         this.queCreatedDate = queCreatedDate;
         this.ansContent = ansContent;
         this.ansCreatedDate = ansCreatedDate;
+        this.qnaImgUrl = qnaImgUrl;
     }
 
     public void update(String queTitle, String queContent) {

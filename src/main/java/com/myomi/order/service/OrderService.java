@@ -11,7 +11,6 @@ import com.myomi.order.entity.Order;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.entity.Product;
 import com.myomi.product.repository.ProductRepository;
-import com.myomi.review.repository.ReviewRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,22 +32,10 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CouponRepository couponRepository;
-    private final ReviewRepository reviewRepository;
-
-    /* TODO: 1. 주문서 작성 (배송, 상세) (OK)
-             2. 배송정보 입력 (OK)
-             3. 상세정보 입력 (OK)
-             4. 내 주문 목록 조회 (OK)
-             5. 주문 상세 조회 (OK)
-             6. 결제 API
-             7. 결제시 포인트 차감/적립/쿠폰적용
-             8. 결제 시, 장바구니에서 주문한 상품 삭제 -> cart에서 메서드 가져오기
-             9. 배송 3일 전에 주문 취소 (OK)
-    */
 
     // 주문서 작성
     @Transactional
-    public Long addOrder(Authentication user, OrderRequestDto requestDto) { // TODO: 수령일 4일전에부터 신청가능
+    public Long addOrder(Authentication user, OrderRequestDto requestDto) {
         User u = userRepository.findById(user.getName())
                 .orElseThrow(() -> new IllegalArgumentException("로그인한 사용자만 이용 가능합니다."));
 

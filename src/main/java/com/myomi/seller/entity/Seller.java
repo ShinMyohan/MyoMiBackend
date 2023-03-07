@@ -1,34 +1,25 @@
 package com.myomi.seller.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.ColumnDefault;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.follow.entity.Follow;
 import com.myomi.product.entity.Product;
 import com.myomi.user.entity.User;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter @NoArgsConstructor
 @Entity(name = "Seller")
 @Table(name = "seller_info")
+@DynamicInsert
+@DynamicUpdate
 public class Seller {
 	@Id
 	@Column(name = "seller_id")
@@ -57,7 +48,7 @@ public class Seller {
 
 	@Column(name = "bank_account")
 	@NotNull
-	private String bank_account;
+	private String bankAccount;
 
 	@ColumnDefault("'0'")
 	@Column(name = "status")
@@ -72,8 +63,8 @@ public class Seller {
 	private List<Product> products;
 	
 	@Builder
-	public Seller(String id, User sellerId, @NotNull String companyName, @NotNull String companyNum,
-				  @NotNull String internetNum, @NotNull String addr, @NotNull String manager, @NotNull String bank_account,
+	public Seller(String id, User sellerId, String companyName, String companyNum,
+				  String internetNum, String addr, String manager, String bankAccount,
 				  int status, Long followCnt, List<Follow> follows, List<Product> products) {
 		this.id = id;
 		this.sellerId = sellerId;
@@ -82,7 +73,7 @@ public class Seller {
 		this.internetNum = internetNum;
 		this.addr = addr;
 		this.manager = manager;
-		this.bank_account = bank_account;
+		this.bankAccount = bankAccount;
 		this.status = status;
 		this.followCnt = followCnt;
 		this.follows = follows;

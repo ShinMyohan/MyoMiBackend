@@ -31,15 +31,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "users")
-//@DynamicInsert
+@DynamicInsert
 @DynamicUpdate
-public class User implements UserDetails
-//, Persistable<String> 
-{
+public class User implements UserDetails {
     @Id
     @NotNull
     @Column(name = "id", updatable = false, unique = true, nullable = false)
@@ -49,54 +59,10 @@ public class User implements UserDetails
     @Column(name = "pwd", nullable = false)
     private String pwd;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
-//    @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-
-    //	@OneToOne(mappedBy = "roles")
-//	private UserRole role;
-//	@Enumerated(EnumType.STRING)
     private int role;
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getUsername() {
-        return id;
-    }
-
-    @Override
-    public String getPassword() {
-        return pwd;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -119,14 +85,8 @@ public class User implements UserDetails
     @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
     private Date signoutDate;
 
-//    @ManyToOne(
-//            fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL)
-//    @JoinColumn(name = "membership_num")
-//    private Membership membership;
-
     @Column(name = "membership_level") // , nullable = false
-    @Enumerated(EnumType.STRING) // 순서가 DB에 저장
+    @Enumerated(EnumType.STRING)
     private MembershipLevel membership;
 
     @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -181,15 +141,40 @@ public class User implements UserDetails
         this.membership = membership;
     }
 
-    //for OAuth!
-//	public User update(String name, String provider) {
-//        this.name = name;
-//        this.provider = provider;
-//        return this;
-//    }
-//
-//    public String getRoleKey() {
-////        return this.roles.getKey();
-//    	return this.getRoleKey();
-//    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return id;
+    }
+
+    @Override
+    public String getPassword() {
+        return pwd;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -22,8 +22,6 @@ public class OrderDetailRequestDto {
 
     public OrderDetail toEntity(OrderDetailRequestDto orderDetailRequestDto) {
             return OrderDetail.builder()
-//                    .product(orderDetailRequestDto.getProduct())
-//                    .product(orderDetailRequestDto.getProduct())
                     .prodCnt(orderDetailRequestDto.getProdCnt())
                     .build();
     }

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,7 +25,6 @@ import com.myomi.comment.entity.Comment;
 import com.myomi.user.entity.User;
 
 import lombok.Builder;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -70,15 +70,19 @@ public class Board {
    @Column(name = "hits", updatable =  false)
  //  @ColumnDefault("'0'")
    private Long hits;
-   
+ 
    @JsonIgnore
    @OneToMany(cascade = CascadeType.REMOVE, 
 		      mappedBy = "board")
+   @OrderBy("createdDate desc")
    private List<Comment> comments;
+   
+   @Column(name = "board_img_url", nullable = false)
+   private String boardImgUrl;
 
     @Builder
     public Board(Long boardNum, User user, @NotNull String category, @NotNull String title, @NotNull String content,
-		LocalDateTime createdDate, Long hits) {
+		LocalDateTime createdDate, Long hits, String boardImgUrl) {
 	this.boardNum = boardNum;
 	this.user = user;
 	this.category = category;
@@ -86,13 +90,15 @@ public class Board {
 	this.content = content;
 	this.createdDate = createdDate;
 	this.hits = hits;
+	this.boardImgUrl = boardImgUrl;
 	//this.comments = comments;
 }
     //더티체킹 
-    public void update(String category, String title, String content) {
+    public void update(String category, String title, String content, String boardImgUrl) {
 		this.category = category;
 		this.title = title;
 		this.content = content;
+		this.boardImgUrl = boardImgUrl;
     }
     @PrePersist
     public void prePersist() {

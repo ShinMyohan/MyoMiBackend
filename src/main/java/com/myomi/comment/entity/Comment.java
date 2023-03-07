@@ -6,13 +6,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -34,8 +35,6 @@ import lombok.NoArgsConstructor;
         name = "COMMENTS_SEQ_GENERATOR",
         sequenceName = "COMMENTS_SEQ",
         initialValue = 1, allocationSize = 1)
-//@DynamicInsert
-//@DynamicUpdate
 public class Comment {
     @Id
     @Column(name = "comment_num", updatable = false)
@@ -50,11 +49,10 @@ public class Comment {
     @JsonIgnore
     private Board board;
     //게시판 글 번호 -> 마이페이지에서 글 정보 필요함
-
+    
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false,
             updatable = false)
-    @JsonIgnore
     private User user;
 
     @Column(name = "content")
@@ -68,14 +66,16 @@ public class Comment {
     
     @Column(name = "parent", updatable = false)
    // @ManyToOne(fetch = FetchType.LAZY)
-    private int parent;
+    private Long parent;
     //부모 댓글 번호
     
+    @JsonIgnore
     @OneToMany(mappedBy="parent",cascade = CascadeType.REMOVE)
     private List<Comment> reply;
+  
 
     @Builder
-    public Comment(Long commentNum, Board board, User user, @NotNull String content, int parent, LocalDateTime createdDate,
+    public Comment(Long commentNum, Board board, User user, String content, Long parent, LocalDateTime createdDate,
     		List<Comment> reply) {
         this.commentNum = commentNum;
         this.board = board;
@@ -84,10 +84,15 @@ public class Comment {
         this.parent = parent;
         this.createdDate = createdDate;
         this.reply =  reply;
-        
+    
     }
 
     public void update(String content) {
         this.content = content;
+    }
+    
+    @PrePersist
+    public void prePersist() {
+    	 this.parent = this.parent == null ? 0 : this.parent;
     }
 }
