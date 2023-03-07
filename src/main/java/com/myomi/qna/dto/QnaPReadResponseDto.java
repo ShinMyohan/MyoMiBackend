@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.myomi.product.entity.Product;
 import com.myomi.qna.entity.Qna;
+import com.myomi.user.entity.User;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,13 +19,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QnaPReadResponseDto {
 	private Long qnaNum;
+	private User sellerId;
 	private String userId;
 	private Product product;
 	private String queTitle;
 	private String queContent;
 	private String pName;
+	private String companyName;
 
-	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -37,8 +39,9 @@ public class QnaPReadResponseDto {
 	private LocalDateTime ansCreatedDate;
 	
 	@Builder
-	public QnaPReadResponseDto(Long qnaNum, String userId, Product product,String queTitle, String queContent, LocalDateTime queCreatedDate,
-			String ansContent, LocalDateTime ansCreatedDate, String pName) {
+	public QnaPReadResponseDto(Long qnaNum, User sellerId,String userId, Product product,String queTitle, String queContent, LocalDateTime queCreatedDate,
+			String ansContent, LocalDateTime ansCreatedDate, String pName, String companyName) {
+		this.sellerId = sellerId;
 		this.qnaNum = qnaNum;
 		this.userId = userId;
 		this.product = product;
@@ -48,6 +51,7 @@ public class QnaPReadResponseDto {
 		this.ansContent = ansContent;
 		this.ansCreatedDate = ansCreatedDate;
 		this.pName = pName;
+		this.companyName = companyName;
 	}
 	
 	//상품 상세 조회시

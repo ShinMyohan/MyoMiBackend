@@ -1,9 +1,5 @@
 package com.myomi.admin.dto;
 
-import java.util.List;
-
-import com.myomi.notice.entity.Notice;
-
 import lombok.Builder;
 
 public class AdminDto {
@@ -16,6 +12,5 @@ public class AdminDto {
 		this.adminId = adminId;
 		this.pwd = pwd;
 	}
-	
-	
+
 }

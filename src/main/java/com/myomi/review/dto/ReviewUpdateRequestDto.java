@@ -1,11 +1,11 @@
 package com.myomi.review.dto;
 
-
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Getter@NoArgsConstructor
 public class ReviewUpdateRequestDto {
 	
-private String title;
-private String content;
+	private String title;
+	private String content;
 }

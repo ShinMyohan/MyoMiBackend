@@ -32,7 +32,7 @@ public class NoticeService {
 	
 	
 	@Transactional
-	public List<NoticeDto> getAllNotice(Pageable pageable){
+	public List<NoticeDto> getAllList(Pageable pageable){
 		List<Notice>notices = noticeRepository.findAll(pageable);
 		List<NoticeDto>list = new ArrayList<>();
 		if(notices.size()==0) {
@@ -55,9 +55,13 @@ public class NoticeService {
 	@Transactional
 	public void addNotice(NoticeRequestDto noticeDto,Authentication admin) {
 		String username=admin.getName();
-		Optional<Admin> a=adminRepository.findById(username);
-		Notice n = noticeDto.toEntity(noticeDto,a.get());
-		noticeRepository.save(n);
+		Optional<Admin>optA=adminRepository.findById(username);
+		Notice n = noticeDto.toEntity(noticeDto,optA.get());
+		if(optA.isPresent()){
+			noticeRepository.save(n);
+		}else {
+			log.error("관리자만 작성가능합니다.");
+		}
 	}
 	
 	@Transactional
@@ -70,19 +74,27 @@ public class NoticeService {
 	public void modifyNotice(NoticeUpdateDto noticeDto, Long noticeNum,Authentication admin) {
 		Notice notice = noticeRepository.findById(noticeNum).get();
 		String username=admin.getName();
-		Optional<Admin> a=adminRepository.findById(username);
+		Optional<Admin> optA=adminRepository.findById(username);
 		if(notice.getNoticeNum() != noticeNum) {
 			log.error("해당 공지사항이 없습니다.");
-		} else {
-			Notice n = noticeDto.toEntity(noticeDto,a.get(),noticeNum);
+		} else if(optA.isPresent()){
+			Notice n = noticeDto.toEntity(noticeDto,optA.get(),noticeNum);
 			noticeRepository.save(n);
+		}else {
+			log.error("관리자만 수정가능합니다.");
 		}
 	}
 	
 	@Transactional
-	public void RemoveNotice(Long nNum) {
+	public void removeNotice(Long nNum,Authentication admin) {
 		Notice notice = noticeRepository.findById(nNum).get();
-		noticeRepository.delete(notice);
+		String username=admin.getName();
+		Optional<Admin> optA=adminRepository.findById(username);
+		if(optA.isPresent()) {
+			noticeRepository.delete(notice);
+		}else {
+			log.error("관리자만 삭제가능합니다.");
+		}
 	}
 	
 	//제목으로 검색

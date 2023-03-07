@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 
+import com.myomi.comment.dto.CommentDto;
 import com.myomi.comment.entity.Comment;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
@@ -18,4 +19,10 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
    @EntityGraph(attributePaths = {"user","board"})
    @Query("select c from Comment c join c.board where c.user.id=:username")
    public List<Comment> findAllByComments(@Param("username") String username,Pageable pageable);
+   
+   public List<Comment> findByParent(Long parent);
+   
+   public Optional<Comment> findById(Long CommentNum);
+
+
 }

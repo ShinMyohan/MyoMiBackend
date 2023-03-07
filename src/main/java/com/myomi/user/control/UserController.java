@@ -50,7 +50,6 @@ public class UserController {
     public String signup(@RequestBody UserSignUpReqeustDto userSignUpReqeustDto) {
     	return userService.signup(userSignUpReqeustDto);
     }
-//    checkIdExists
     
     @ApiOperation(value = "사용자| 등록된 아이디 중복 체크")
     @PostMapping("/signup/check/id")

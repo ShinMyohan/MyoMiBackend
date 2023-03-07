@@ -2,19 +2,23 @@ package com.myomi.notice.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.admin.dto.AdminDto;
 import com.myomi.admin.entity.Admin;
 import com.myomi.notice.entity.Notice;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 @Getter
+@NoArgsConstructor
 public class NoticeDto {
 	
 	private Long noticeNum;
 	private String adminId;
 	private String title;
 	private String content;
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private LocalDateTime createdDate;
 	
 	@Builder

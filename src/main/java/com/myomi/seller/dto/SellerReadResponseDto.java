@@ -28,7 +28,4 @@ public class SellerReadResponseDto {
 		this.bankAccount = bankAccount;
 		this.status = status;
 	}
-	
-	
-
 }
