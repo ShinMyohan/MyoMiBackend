@@ -28,7 +28,7 @@ public class CartService {
                5. 장바구니 수량 변경
     */
 
-    @Transactional //TODO: 화면에 보여줄 정보 추리기, 주문 화면에 보여줄 정보 / 상품에서 바로구매시 가져올 정보
+    @Transactional
     public List<CartReadResponseDto> getCartList(Authentication user) {
         List<Cart> carts = cartRepository.findByUserId(user.getName());
         List<CartReadResponseDto> list = new ArrayList<>();
@@ -36,8 +36,12 @@ public class CartService {
             log.info("장바구니가 비었습니다.");
         } else {
             for (Cart cart : carts) {
-                CartReadResponseDto dto = new CartReadResponseDto();
-                list.add(dto.toDto(cart));
+                if(cart.getProduct().getStatus() != 0) {
+                    log.info("품절된 상품입니다.");
+                } else {
+                    CartReadResponseDto dto = new CartReadResponseDto();
+                    list.add(dto.toDto(cart));
+                }
             }
         }
         return list;
@@ -46,6 +50,9 @@ public class CartService {
     // 장바구니 추가
     @Transactional
     public void addCart(Authentication user, CartSaveRequestDto requestDto) {
+        if(requestDto.getProduct().getStatus() != 0){
+            log.info("품절된 상품입니다.");
+        }
         Optional<Cart> cartOpt = cartRepository.findByUserIdAndProduct(user.getName(), requestDto.getProduct());
 
         if (cartOpt.isPresent()) {
@@ -67,8 +74,8 @@ public class CartService {
 
     @Transactional
     public void removeCart(Authentication user, List<CartDeleteRequestDto> requestDto) {
-        for (CartDeleteRequestDto cart : requestDto) {
-            cartRepository.deleteCartByUserIdAndProduct(user.getName(), cart.getProduct().getProdNum());
+        for (CartDeleteRequestDto dto : requestDto) {
+            cartRepository.deleteCartByUserIdAndProduct(user.getName(), dto.getProdNum());
         }
     }
 }

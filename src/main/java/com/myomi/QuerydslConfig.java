@@ -14,7 +14,7 @@ public class QuerydslConfig {
     private EntityManager entityManager; // querydsl이 query 생성할 수 있도록 em 주입
 
     @Bean
-    public JPAQueryFactory jpaQueryFactory(){
+    public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(entityManager);
     }
 }

@@ -1,11 +1,14 @@
 package com.myomi.user.repository;
 
-import java.util.Optional;
-
+import com.myomi.membership.entity.MembershipLevel;
+import com.myomi.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.myomi.user.entity.User;
+import java.util.Optional;
 
 
 @Repository
@@ -25,4 +28,13 @@ public interface UserRepository extends JpaRepository<User, String> {
 	//OAuth 시 필요
 	User findByIdAndPwd(String email, String password);
 
+    // 전체 멤버십 초기화
+    @Modifying
+    @Query("Update User u set u.membership = :membership")
+    public void updateAllMembership(@Param("membership") MembershipLevel membershipLevel);
+
+    // 멤버십 등급 update
+    @Modifying
+    @Query("UPDATE User u SET u.membership = :membership WHERE u.id = :userId")
+    public void updateMembershipByUserId(@Param("userId") String UserId, @Param("membership") MembershipLevel membershipLevel);
 }

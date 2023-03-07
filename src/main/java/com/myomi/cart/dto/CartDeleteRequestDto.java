@@ -1,14 +1,14 @@
 package com.myomi.cart.dto;
 
-import com.myomi.product.entity.Product;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter @Setter @NoArgsConstructor // setter 임시 사용
+@Getter @NoArgsConstructor
 public class CartDeleteRequestDto {
-    private Product product;
+    private Long prodNum;
 
-    @Builder
-    public CartDeleteRequestDto(Product product) {
-        this.product = product;
-    }
+//    @Builder
+//    public CartDeleteRequestDto(Long prodNum) {
+//        this.prodNum = prodNum;
+//    }
 }

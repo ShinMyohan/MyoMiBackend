@@ -43,7 +43,7 @@ public class Order {
 
     @Column(name = "used_point")
     @ColumnDefault("'0'")
-    private Long usedPoint;
+    private int usedPoint;
 
     @Column(name = "pay_created_date")
     private LocalDateTime payCreatedDate;
@@ -55,7 +55,7 @@ public class Order {
     private Long totalPrice;
 
     @Column(name = "save_point")
-    private Long savePoint;
+    private int savePoint;
 
     @Column(name = "imp_uid")
     private String impUid; // 아임포트 결제 번호
@@ -67,8 +67,8 @@ public class Order {
     private Delivery delivery = new Delivery();
 
     @Builder
-    public Order(Long orderNum, User user, LocalDateTime createdDate, String msg, Long couponNum, Long usedPoint, LocalDateTime payCreatedDate,
-                 LocalDateTime canceledDate, Long totalPrice, Long savePoint, List<OrderDetail> orderDetails,
+    public Order(Long orderNum, User user, LocalDateTime createdDate, String msg, Long couponNum, int usedPoint, LocalDateTime payCreatedDate,
+                 LocalDateTime canceledDate, Long totalPrice, int savePoint, List<OrderDetail> orderDetails,
                  Delivery delivery) {
         this.orderNum = orderNum;
         this.user = user;
@@ -95,13 +95,16 @@ public class Order {
         this.delivery = delivery;
     }
 
-    public void updateCanceledDate(Long orderNum) {
+    // 결제일 업데이트
+    public void updatePayCreatedDate(Long orderNum, String impUid, LocalDateTime payCreatedDate) {
         this.orderNum = orderNum;
-        this.canceledDate = LocalDateTime.now();
+        this.impUid = impUid;
+        this.payCreatedDate = payCreatedDate;
     }
 
-    public void updatePayCreatedDate(Long orderNum) {
-        this.orderNum = orderNum;
-        this.payCreatedDate = LocalDateTime.now();
+    // 취소일 업데이트
+    public void updateCanceledDate(String impUid) {
+        this.impUid = impUid;
+        this.canceledDate = LocalDateTime.now();
     }
 }

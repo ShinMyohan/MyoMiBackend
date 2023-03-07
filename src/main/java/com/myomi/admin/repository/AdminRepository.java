@@ -1,14 +1,12 @@
 package com.myomi.admin.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.myomi.admin.entity.Admin;
+import com.myomi.seller.entity.Seller;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.myomi.admin.entity.Admin;
-import com.myomi.seller.entity.Seller;
+import java.util.List;
 
 public interface AdminRepository extends CrudRepository<Admin, String> {
 	

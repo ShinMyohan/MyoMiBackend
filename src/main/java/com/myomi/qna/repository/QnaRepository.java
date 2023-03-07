@@ -1,19 +1,16 @@
 package com.myomi.qna.repository;
 
 
-import java.util.List;
-import java.util.Optional;
-
+import com.myomi.product.entity.Product;
+import com.myomi.qna.entity.Qna;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 
-import com.myomi.product.entity.Product;
-import com.myomi.qna.dto.QnaUReadResponseDto;
-import com.myomi.qna.entity.Qna;
+import java.util.List;
+import java.util.Optional;
 
 
 public interface QnaRepository extends CrudRepository<Qna, Long> {

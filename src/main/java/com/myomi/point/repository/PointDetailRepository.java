@@ -2,17 +2,15 @@
 
 package com.myomi.point.repository;
 
-import java.util.List;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-
 import com.myomi.point.dto.PointDetailDto;
 import com.myomi.point.entity.PointDetail;
 import com.myomi.point.entity.PointDetailEmbedded;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface PointDetailRepository extends JpaRepository<PointDetail, PointDetailEmbedded> {
  

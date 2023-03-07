@@ -1,12 +1,17 @@
 package com.myomi.seller.service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
+import com.myomi.order.entity.OrderDetail;
+import com.myomi.order.repository.OrderRepository;
+import com.myomi.product.entity.Product;
+import com.myomi.product.repository.ProductRepository;
+import com.myomi.qna.entity.Qna;
+import com.myomi.seller.dto.*;
+import com.myomi.seller.entity.Seller;
+import com.myomi.seller.repository.SellerRepository;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +19,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.myomi.order.entity.OrderDetail;
-import com.myomi.order.repository.OrderRepository;
-import com.myomi.product.entity.Product;
-import com.myomi.product.repository.ProductRepository;
-import com.myomi.qna.entity.Qna;
-import com.myomi.seller.dto.SellerAddRequestDto;
-import com.myomi.seller.dto.SellerCheckRequestDto;
-import com.myomi.seller.dto.SellerInfoResponseDto;
-import com.myomi.seller.dto.SellerOrderDetailDto;
-import com.myomi.seller.dto.SellerProductResponseDto;
-import com.myomi.seller.dto.SellerReadResponseDto;
-import com.myomi.seller.entity.Seller;
-import com.myomi.seller.repository.SellerRepository;
-import com.myomi.user.entity.User;
-import com.myomi.user.repository.UserRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -211,7 +203,7 @@ public class SellerService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 			} 	
 		}
-		sr.updateSellerId(userId);
+		sr.updateSellerId(3, userId);
 	}
 	
 	//판매자 상품목록 조회

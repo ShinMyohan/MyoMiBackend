@@ -1,8 +1,15 @@
 package com.myomi.user.service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.myomi.jwt.dto.TokenDto;
+import com.myomi.jwt.provider.JwtTokenProvider;
+//import com.myomi.membership.entity.Membership;
+import com.myomi.membership.entity.MembershipLevel;
+import com.myomi.user.dto.UserDto;
+import com.myomi.user.dto.UserSignUpReqeustDto;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.myomi.jwt.dto.TokenDto;
-import com.myomi.jwt.provider.JwtTokenProvider;
-import com.myomi.membership.entity.Membership;
-import com.myomi.user.dto.UserDto;
-import com.myomi.user.dto.UserSignUpReqeustDto;
-import com.myomi.user.entity.User;
-import com.myomi.user.repository.UserRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -87,9 +86,9 @@ public class UserService {
     	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
     		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
     	}
-    	Membership m = new Membership();
-    	m.setMNum(0);
-    	m.setMLevel("일반");
+//    	Membership m = new Membership();
+//    	m.setMembershipNum(0);
+//    	m.setMembershipLevel("일반");
     	
     	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
 
@@ -102,7 +101,7 @@ public class UserService {
 				.email(userSignUpReqeustDto.getEmail())
 				.addr(userSignUpReqeustDto.getAddr())
 				.createdDate(date)
-				.membership(m)
+				.membership(MembershipLevel.NEW)
     			.build();
 
     	userRepository.save(user);
@@ -116,8 +115,6 @@ public class UserService {
     public ResponseEntity<UserDto> getUserInfo(Authentication user) {
     	String username = user.getName();
     	Optional<User> u = userRepository.findById(username);
-    	
-    	Membership m = new Membership();
 
     	return new ResponseEntity<>(
     			UserDto.builder()
@@ -128,7 +125,7 @@ public class UserService {
 	    			.email(u.get().getEmail())
 	    			.addr(u.get().getAddr())
 	    			.createdDate(u.get().getCreatedDate())
-	    			.membership(m)
+	    			.membership(u.get().getMembership())
 	    			.point(u.get().getPoint())
 	    			.seller(u.get().getSeller())
 	    			.build(), HttpStatus.OK);

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.myomi.membership.entity.MembershipLevel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,6 @@ import com.myomi.point.repository.PointDetailRepository;
 import com.myomi.point.repository.PointRepository;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,20 +83,7 @@ public class PointDetailService {
 	    pdr.save(pd);
 	    return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	//총 보유 포인트
-	@Transactional
-	public PointDto findTotalPoint (Authentication user) {
-		String username = user.getName();
-		Point point = pr.findAllById(username);
-		PointDto dto = PointDto.builder()
-				.id(username)
-				.totalPoint(point.getTotalPoint())
-				.build();
-		return dto;
-		
-	}
-	
+
 	@Transactional
 	public void savePoint (int amount, int sort, Authentication user){
 		LocalDateTime date = LocalDateTime.now();
@@ -117,7 +104,20 @@ public class PointDetailService {
 		pdr.save(pd);
 //		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
 	
+	//총 보유 포인트
+	@Transactional
+	public PointDto findTotalPoint (Authentication user) {
+		String username = user.getName();
+		Point point = pr.findAllById(username);
+		PointDto dto = PointDto.builder()
+				.id(username)
+				.totalPoint(point.getTotalPoint())
+				.build();
+		return dto;
+		
+	}
 
     public MyPageDto getMyPageInfo (Authentication user) {
     	String username = user.getName();
@@ -125,7 +125,7 @@ public class PointDetailService {
 		Point point = pr.findAllById(username);
 		Long coupon = cr.findByUser(username);
 		Long follow = fr.findAllFollowByUserId(username);
-		int membership = optU.get().getMembership().getMNum();
+		MembershipLevel membership = optU.get().getMembership();
 	     MyPageDto dto = MyPageDto.builder()
 	    		 .totalPoint(point.getTotalPoint())
 	    		 .couponCount(coupon)
