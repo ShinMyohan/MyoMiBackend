@@ -25,8 +25,7 @@ public class QnaUReadResponseDto {
 	private User userId;
 	
 	@JsonIgnore
-	private Product product;
-	
+	private Product product;	
 	private String id;
 	private String pName;
 	private String category;
@@ -34,6 +33,10 @@ public class QnaUReadResponseDto {
 	private String detail;
 	private String queTitle;
 	private String queContent;
+	private Long originPrice;
+	private String companyName;
+	private String userName;
+	private String file;
 	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -52,7 +55,7 @@ public class QnaUReadResponseDto {
 	@Builder
 	public QnaUReadResponseDto(Long qnaNum, User userId, Product product, String id, String pName, String category, int week,
 			String detail, String queTitle, String queContent, LocalDateTime queCreatedDate, String ansContent,
-			LocalDateTime ansCreatedDate, Authentication user) {
+			LocalDateTime ansCreatedDate, Authentication user, Long originPrice, String companyName,String file, String userName) {
 		this.qnaNum = qnaNum;
 		this.userId = userId;
 		this.product = product;
@@ -67,9 +70,11 @@ public class QnaUReadResponseDto {
 		this.ansContent = ansContent;
 		this.ansCreatedDate = ansCreatedDate;
 		this.user = user;
+		this.originPrice = originPrice;
+		this.companyName = companyName;
+		this.file = file;
+		this.userName = userName;
 	}
-	
-	
 	public QnaUReadResponseDto(Qna qna) {
 		this.qnaNum = qna.getQnaNum();
 		this.userId = qna.getUserId();
@@ -80,9 +85,4 @@ public class QnaUReadResponseDto {
 		this.ansContent = qna.getAnsContent();
 		this.ansCreatedDate = qna.getAnsCreatedDate();
 	}
-
-
-	
-	
-
 }

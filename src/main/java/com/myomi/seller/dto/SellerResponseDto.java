@@ -4,7 +4,8 @@ import java.util.Date;
 
 import lombok.Builder;
 import lombok.Getter;
-@Getter
+import lombok.NoArgsConstructor;
+@Getter@NoArgsConstructor
 public class SellerResponseDto {
 	private String sellerId;
 	private String companyName;

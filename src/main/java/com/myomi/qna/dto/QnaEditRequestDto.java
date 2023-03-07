@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class QnaEditRequestDto {
-//	private Long qnaNum;
 	@JsonIgnore
 	private User userId;
 	@JsonIgnore
@@ -24,8 +23,4 @@ public class QnaEditRequestDto {
 		this.queTitle = queTitle;
 		this.queContent = queContent;
 	}
-	
-	
-
-
 }

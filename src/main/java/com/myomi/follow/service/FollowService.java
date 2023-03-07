@@ -7,8 +7,10 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.myomi.follow.dto.FollowDeleteRequestDto;
 import com.myomi.follow.dto.FollowReadResponseDto;
@@ -42,7 +44,8 @@ public class FollowService {
 		String userId = user.getName();
 		Optional<Follow> optF = fr.findByUserIdAndSellerId(userId, sellerId);
 		if(optF.isPresent()) {
-			log.info("이미 팔로우한 셀러입니다.");
+			log.info("이미 팔로우 된 셀러입니다.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		} else {
 			Optional<User> optU = ur.findById(userId);
 			Optional<Seller> optS = sr.findById(sellerId);
@@ -91,6 +94,19 @@ public class FollowService {
 			log.info("팔로우 하지 않은 셀러입니다.");
 		} else {
 			fr.deleteFollowByUserIdAndSellerId(userId, sId);			
+		}
+	}
+	
+	//팔로우 여부 확인
+	@Transactional
+	public int getFollowCheck(String sId,Authentication user) {
+		String userId = user.getName();
+		Optional<Follow> follow = fr.findByUserIdAndSellerId(userId,sId);
+		if(follow.isEmpty()) {
+			return 0;  //팔로우 X
+		}
+		else {
+			return 1;  //이미 팔로우 함
 		}
 	}
 }

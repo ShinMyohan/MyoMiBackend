@@ -31,6 +31,4 @@ public class QnaSReadResponseDto {
 		this.ansContent = ansContent;
 		this.ansCreatedDate = ansCreatedDate;
 	}
-	
-	
 }

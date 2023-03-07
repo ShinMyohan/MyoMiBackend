@@ -30,8 +30,4 @@ public class SellerAddRequestDto {
 		this.manager = manager;
 		this.bankAccount = bankAccount;
 	}
-	
-	
-	
-
 }

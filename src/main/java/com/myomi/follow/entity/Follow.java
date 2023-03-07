@@ -24,8 +24,6 @@ import lombok.Setter;
 @DynamicInsert
 @DynamicUpdate
 public class Follow {
-
-
 	@EmbeddedId
 	private FollowEmbedded id = new FollowEmbedded();
 	
@@ -39,13 +37,11 @@ public class Follow {
 	@JoinColumn(name = "seller_id")
 	private Seller sellerId;
 	
-
 	public Follow(User user, Seller seller) {
 		this.userId = user;
 		this.sellerId = seller;
 		
-	}
-	
+	}	
 }
 
 

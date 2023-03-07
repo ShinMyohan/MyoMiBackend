@@ -25,10 +25,16 @@ import lombok.RequiredArgsConstructor;
 public class FollowController {
 	private final FollowService followService;
 	
-	//팔로우 하기
+	//팔로우 하기(스토어)
 	@PostMapping("store/follow/{sId}")
 	public void followSave(@PathVariable String sId, Authentication user){
 		followService.addFollow(sId,user);
+	}
+	
+	//언팔로우 하기(스토어)
+	@DeleteMapping("store/follow/{sId}")
+	public void followStoreDelete(@PathVariable String sId, Authentication user) {
+		followService.removeStoreFollow(sId,user);
 	}
 	
 	//언팔로우 하기(마이페이지,다중삭제 가능)
@@ -43,10 +49,10 @@ public class FollowController {
 		return followService.getAllUserFollowList(user,pageable);
 	}
 	
-	//언팔로우 하기(스토어)
-	@DeleteMapping("store/{sId}")
-	public void followStoreDelete(@PathVariable String sId, Authentication user) {
-		followService.removeStoreFollow(sId,user);
+	//팔로우 여부 확인
+	@GetMapping("store/follow/{sId}")
+	public int followCheck(@PathVariable String sId, Authentication user) {
+		return followService.getFollowCheck(sId,user);
 	}
-
+	
 }
