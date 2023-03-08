@@ -66,7 +66,19 @@ public class CommentDto {
 				.parent(parent)
 				.build();
 	}
-
+	public CommentDto toDto(Comment comment, boolean enableUpdate, boolean enableDelete) {
+		LocalDateTime date = LocalDateTime.now();
+		return CommentDto.builder()
+				.board(comment.getBoard())
+				.userName(comment.getUser().getName())
+				.commentNum(comment.getCommentNum())
+				.content(comment.getContent())
+				.createdDate(comment.getCreatedDate())
+				.parent(comment.getParent())
+				.enableDelete(enableDelete)
+				.enableUpdate(enableUpdate)
+				.build();
+	}
 
 
 }

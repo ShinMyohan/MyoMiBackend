@@ -36,7 +36,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "*")
 @RestController
 //@RequestMapping("/board")
 @RequiredArgsConstructor
@@ -88,7 +87,7 @@ public class BoardController {
     }
 
     @ApiOperation(value = "게시판 | 글 상세 + 댓글 보기 ")
-    @GetMapping("/board/{boardNum}")
+    @GetMapping("/board/detail/{boardNum}")
     public ResponseEntity<?> boardDetail(@PathVariable Long boardNum, Authentication user) {
         BoardReadResponseDto dto = service.detailBoard(boardNum, user);
         return new ResponseEntity<>(dto, HttpStatus.OK);
