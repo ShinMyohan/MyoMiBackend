@@ -99,7 +99,9 @@ public class PaymentService {
             // 포인트 insert, update
             int usedPoint = order.getUsedPoint();
             int savePoint = order.getSavePoint();
-            pointService.savePoint(-usedPoint, 2, user);
+            if(usedPoint != 0) {
+                pointService.savePoint(-usedPoint, 2, user);
+            }
             pointService.savePoint(savePoint, 1, user);
 
             return new ResponseEntity<>(orderNum, HttpStatus.OK);
@@ -124,7 +126,7 @@ public class PaymentService {
                 .orElseThrow(() -> new FindException("해당하는 주문 번호가 없습니다."));
         String impUid = order.getImpUid();
         // 수령일 계산
-        String receiveDate = order.getDelivery().getReceiveDate().substring(0, 9); // yyyy-mm-dd만 뽑기
+        String receiveDate = order.getDelivery().getReceiveDate().substring(0, 10); // yyyy-mm-dd만 뽑기
         LocalDateTime now = LocalDateTime.now();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -151,7 +153,9 @@ public class PaymentService {
                     int usedPoint = order.getUsedPoint();
                     int savePoint = order.getSavePoint();
                     pointService.savePoint(usedPoint, 2, user);
-                    pointService.savePoint(-savePoint, 1, user);
+                    if(savePoint != 0) {
+                        pointService.savePoint(-savePoint, 1, user);
+                    }
                 }
             } else {
                 log.info("배송일 3일전 까지만 취소 가능합니다");
