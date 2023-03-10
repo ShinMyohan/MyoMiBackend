@@ -1,5 +1,7 @@
 package com.myomi.product.dto;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -19,12 +21,13 @@ public class ProductUpdateDto {
 	//상품 업데이트시 사용
 	public Product toEntity(Long prodNum, 
 			ProductUpdateDto productUpdateDto
-			, Seller seller) {
+			, Seller seller, LocalDateTime date) {
 		return Product.builder()
 				.prodNum(prodNum)
 				.seller(seller)
 				.detail(productUpdateDto.getDetail())
 				.status(productUpdateDto.getStatus())
+				.modifiedDate(date)
 				.build();
 	}
 }

@@ -1,23 +1,36 @@
 package com.myomi.product.control;
 
-import com.myomi.product.dto.ProductDto;
-import com.myomi.product.dto.ProductSaveDto;
-import com.myomi.product.dto.ProductUpdateDto;
-import com.myomi.product.service.ProductService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import com.myomi.common.status.ExceedMaxUploadSizeException;
+import com.myomi.common.status.NoResourceException;
+import com.myomi.common.status.UnqualifiedException;
+import com.myomi.product.dto.ProductDto;
+import com.myomi.product.dto.ProductSaveDto;
+import com.myomi.product.dto.ProductUpdateDto;
+import com.myomi.product.service.ProductService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Api(tags = "상품")
 @Slf4j
@@ -32,22 +45,15 @@ public class ProductController {
 	@ApiOperation(value = "셀러| 상품등록")
 	@PostMapping(value = "add")
 	public ResponseEntity<?> productSave(String name, String category, int week, int percentage, Long originPrice,
-			String detail, Authentication seller, MultipartFile file) throws IOException {
+			String detail, Authentication seller, MultipartFile file) throws NoResourceException,IOException,UnqualifiedException,ExceedMaxUploadSizeException {
 			//ProductSaveDto productSaveDto, 테스트 인자값 
 			//String productSaveDto,
 			
-		if(name.length() > 30) {
-			log.error("상품명 30자 초과");
-		} else if(detail.length() > 150) {
-			log.error("상품 특이사항 150자 초과");
-		} 
-		
-		
-		//ObjectMapper mapper = new ObjectMapper();
-		//ProductSaveDto dto =  mapper.readValue(productSaveDto, ProductSaveDto.class);
-	//	dto.builder()
-	//	.file(file)
-	//	.build();
+//		if(name.length() > 30) {
+//			log.error("상품명 30자 초과");
+//		} else if(detail.length() > 150) {
+//			log.error("상품 특이사항 150자 초과");
+//		} 
 		
 		//File file = new File(); //일반 파일로 바꾸는 작업을 여기서 하거나 
 		ProductSaveDto dto = ProductSaveDto.builder()
@@ -59,9 +65,10 @@ public class ProductController {
 			.week(week)
 			.file(file)
 			.build();
-		log.info("문자열 확인: " + file.getOriginalFilename());
-		log.info( ", dto.getFile=" +  dto.getFile().getOriginalFilename());
-		return new ResponseEntity<>(productService.addProduct(dto, seller),HttpStatus.OK);
+//		log.info("문자열 확인: " + file.getOriginalFilename());
+//		log.info( ", dto.getFile=" +  dto.getFile().getOriginalFilename());
+		productService.addProduct(dto, seller); 
+		return new ResponseEntity<>("상품등록완료",HttpStatus.OK);
 	}
 	
 	//셀러 - 특정 판매자 상품 리스트 조회

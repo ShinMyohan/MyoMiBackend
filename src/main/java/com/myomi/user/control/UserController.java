@@ -1,5 +1,7 @@
 package com.myomi.user.control;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myomi.jwt.dto.TokenDto;
 import com.myomi.user.dto.UserDto;
 import com.myomi.user.dto.UserLoginRequestDto;
 import com.myomi.user.dto.UserSignUpReqeustDto;
@@ -33,11 +34,11 @@ public class UserController {
 	
 	@ApiOperation(value = "회원| 일반 로그인")
     @PostMapping("/login")
-    public TokenDto login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
+    public Map<String, Object> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
         String userId = userLoginRequestDto.getUserId();
         String password = userLoginRequestDto.getPassword();
-        TokenDto tokenDto = userService.login(userId, password);
-        return tokenDto;
+        Map<String, Object> map = userService.login(userId, password);
+        return map;
     }
     
     @PostMapping("/test")
@@ -52,8 +53,8 @@ public class UserController {
     }
     
     @ApiOperation(value = "사용자| 등록된 아이디 중복 체크")
-    @PostMapping("/signup/check/id")
-    public ResponseEntity<Boolean> checkIdDuplicate(String id) {
+    @PostMapping("/signup/check/{id}")
+    public ResponseEntity<Boolean> checkIdDuplicate(@PathVariable String id) {
     	return ResponseEntity.ok(userService.checkIdExists(id));
     }
     

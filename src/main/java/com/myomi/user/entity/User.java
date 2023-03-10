@@ -1,5 +1,31 @@
 package com.myomi.user.entity;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
@@ -13,35 +39,11 @@ import com.myomi.point.entity.Point;
 import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -78,7 +80,6 @@ public class User implements UserDetails {
 
     @Column(name = "created_date")
     @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
-
     private LocalDateTime createdDate;
 
     @Column(name = "signout_date")
@@ -120,8 +121,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Coupon> coupons;
-
-    private String provider;
 
     @Builder
     public User(String id, String pwd,
