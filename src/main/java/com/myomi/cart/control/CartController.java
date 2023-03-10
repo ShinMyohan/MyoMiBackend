@@ -4,8 +4,12 @@ import com.myomi.cart.dto.CartDeleteRequestDto;
 import com.myomi.cart.dto.CartReadResponseDto;
 import com.myomi.cart.dto.CartSaveRequestDto;
 import com.myomi.cart.service.CartService;
+import com.myomi.common.status.ProductSoldOutException;
+import com.myomi.common.status.ResponseDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +24,27 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/cart/list")
-    public List<CartReadResponseDto> cartList(Authentication user) {
-        return cartService.getCartList(user);
+    public ResponseEntity<?> cartList(Authentication user){
+        List<CartReadResponseDto> result = cartService.getCartList(user);
+        ResponseDetails responseDetails = ResponseDetails.success(result, "/api/cart/list");
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
     @PostMapping("/cart")
-    public void cartSave(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
-        cartService.addCart(user, requestDto);
+    public ResponseEntity<?> cartSave(Authentication user, @RequestBody CartSaveRequestDto requestDto) throws ProductSoldOutException {
+        ResponseDetails responseDetails = cartService.addCart(user, requestDto);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
     @PutMapping("/cart")
-    public void cartModify(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
-        cartService.saveCart(user, requestDto);
+    public ResponseEntity<?> cartModify(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
+        ResponseDetails responseDetails = cartService.saveCart(user, requestDto);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
     @DeleteMapping("/cart")
-    public void cartRemove(Authentication user, @RequestBody List<CartDeleteRequestDto> requestDto) {
-        cartService.removeCart(user, requestDto);
+    public ResponseEntity<?> cartRemove(Authentication user, @RequestBody List<CartDeleteRequestDto> requestDto) {
+        ResponseDetails responseDetails = cartService.removeCart(user, requestDto);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 }

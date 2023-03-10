@@ -3,7 +3,6 @@ package com.myomi.chat.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -30,7 +29,6 @@ public class ChatRoom {
     private String userId;
 
     @Column(name = "admin_id")
-    @ColumnDefault("'admin'")
     private String adminId;
 
     @Column(name = "created_date", nullable = false)

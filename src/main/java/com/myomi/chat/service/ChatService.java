@@ -52,6 +52,7 @@ public class ChatService {
         } else {
             ChatRoom chatRoom = ChatRoom.builder()
                     .userId(user.getName())
+                    .adminId("admin")
                     .build();
             chatRepository.save(chatRoom);
         }

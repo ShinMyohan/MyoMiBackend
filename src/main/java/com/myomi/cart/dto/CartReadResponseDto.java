@@ -13,14 +13,18 @@ public class CartReadResponseDto {
     private String name;
     private Long originPrice;
     private int percentage;
+    private int status;
+    private String productImgUrl;
     private int prodCnt;
 
     @Builder
-    public CartReadResponseDto(Long prodNum, String name, Long originPrice, int percentage, int prodCnt) {
+    public CartReadResponseDto(Long prodNum, String name, Long originPrice, int percentage, int status, String productImgUrl, int prodCnt) {
         this.prodNum = prodNum;
         this.name = name;
         this.originPrice = originPrice;
         this.percentage = percentage;
+        this.status = status;
+        this.productImgUrl = productImgUrl;
         this.prodCnt = prodCnt;
     }
 
@@ -30,6 +34,8 @@ public class CartReadResponseDto {
                 .name(cart.getProduct().getName())
                 .originPrice(cart.getProduct().getOriginPrice())
                 .percentage(cart.getProduct().getPercentage())
+                .status(cart.getProduct().getStatus())
+                .productImgUrl(cart.getProduct().getProductImgUrl())
                 .prodCnt(cart.getProdCnt())
                 .build();
     }

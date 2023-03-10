@@ -20,7 +20,7 @@ public class ChatMsg {
 
     @MapsId("roomNum")
     @ManyToOne
-    @JoinColumn(name = "num")  // chatRoom의 PK
+    @JoinColumn(name = "room_num")  // chatRoom의 PK
     private ChatRoom chatRoom;
 
     @Column(name = "sender_id", nullable = false)

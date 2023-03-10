@@ -11,6 +11,9 @@ public interface OrderCustomRepository {
     // 마이페이지 주문 목록
     Map<Long, List<OrderListResponseDto>> findAllByUserId(String userId);
 
+    // 페이지네이션
+//    Page<OrderListResponseDto> searchPageComplex(String userId, Pageable pageable);
+
     // 3개월간 주문 금액 계산
     List<OrderSumResponseDto> findOrderTotalPrice();
 }

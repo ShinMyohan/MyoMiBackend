@@ -1,17 +1,15 @@
 package com.myomi.order.control;
 
+import com.myomi.common.status.ResponseDetails;
 import com.myomi.exception.FindException;
-import com.myomi.order.dto.OrderDetailResponseDto;
-import com.myomi.order.dto.OrderListResponseDto;
 import com.myomi.order.dto.OrderRequestDto;
 import com.myomi.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -23,18 +21,21 @@ public class OrderController {
 
     // 마이페이지에서 주문 목록 받기
     @GetMapping("/list")
-    public Map<Long, List<OrderListResponseDto>> orderMyList(Authentication user) {
-        return orderService.getOrderListByUserId(user);
+    public ResponseEntity<?> orderMyList(Authentication user) {
+        ResponseDetails responseDetails = orderService.getOrderListByUserId(user);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
     @PostMapping("")
-    public Long orderAdd(Authentication user, @RequestBody OrderRequestDto requestDto) {
-        return orderService.addOrder(user, requestDto);
+    public ResponseEntity<?> orderAdd(Authentication user, @RequestBody OrderRequestDto requestDto) {
+        ResponseDetails responseDetails = orderService.addOrder(user, requestDto);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
     // 마이페이지에서 주문 상세 확인
     @GetMapping("/{num}")
-    public OrderDetailResponseDto orderDetails(Authentication user, @PathVariable Long num) throws FindException {
-        return orderService.getOrderByUserId(user, num);
+    public ResponseEntity<?> orderDetails(Authentication user, @PathVariable Long num) throws FindException {
+        ResponseDetails responseDetails = orderService.getOrderByUserId(user, num);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 }
