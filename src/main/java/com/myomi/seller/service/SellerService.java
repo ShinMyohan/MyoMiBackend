@@ -1,62 +1,88 @@
 package com.myomi.seller.service;
 
-import com.myomi.order.entity.OrderDetail;
-import com.myomi.order.repository.OrderRepository;
-import com.myomi.product.entity.Product;
-import com.myomi.product.repository.ProductRepository;
-import com.myomi.qna.entity.Qna;
-import com.myomi.seller.dto.*;
-import com.myomi.seller.entity.Seller;
-import com.myomi.seller.repository.SellerRepository;
-import com.myomi.user.entity.User;
-import com.myomi.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.myomi.order.entity.OrderDetail;
+import com.myomi.order.repository.OrderRepository;
+import com.myomi.product.entity.Product;
+import com.myomi.product.repository.ProductRepository;
+import com.myomi.qna.entity.Qna;
+import com.myomi.s3.FileUtils;
+import com.myomi.s3.S3UploaderSellerIntNum;
+import com.myomi.s3.S3UploaderSellerNum;
+import com.myomi.seller.dto.SellerAddRequestDto;
+import com.myomi.seller.dto.SellerCheckRequestDto;
+import com.myomi.seller.dto.SellerInfoResponseDto;
+import com.myomi.seller.dto.SellerOrderDetailDto;
+import com.myomi.seller.dto.SellerProductResponseDto;
+import com.myomi.seller.dto.SellerReadResponseDto;
+import com.myomi.seller.entity.Seller;
+import com.myomi.seller.repository.SellerRepository;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SellerService {
+    @Autowired
+    private S3UploaderSellerNum s3UploaderSellerNum;
+    @Autowired
+    private S3UploaderSellerIntNum s3UploaderSellerIntNum;
 	private final SellerRepository sr;
 	private final UserRepository ur;
 	private final OrderRepository or;
 	private final ProductRepository pr;
-	/* TODO : 1.판매자로 신청하기@
-	 *        2.판매자 신청현황 조회하기(승인대기,승인완료,승인불가,신청상세) @
-	 *        3.판매자 주문현황 조회 @
-	 *        4.판매자 info(팔로우 수, 미답변 문의 건 수, 주문 건 수 조회)@
-	 *        5.판매자 탈퇴(조건만족시)
-	 */
+
 
 	//판매자로 신청
 	@Transactional
-	public ResponseEntity<SellerAddRequestDto> addSeller(SellerAddRequestDto addDto, Authentication user){
+	public void addSeller(SellerAddRequestDto addDto, Authentication user) throws IOException{
 		String userId = user.getName();
 		Optional<User> optU = ur.findById(userId);
-		Seller seller = Seller.builder()
-				.sellerId(optU.get())
-				.companyName(addDto.getCompanyName())
-				.companyNum(addDto.getCompanyNum())
-				.internetNum(addDto.getInternetNum())
-				.addr(addDto.getAddr())
-				.manager(addDto.getManager())
-		        .bankAccount(addDto.getBankAccount())
-				.build();
-		sr.save(seller);
-
-		return new ResponseEntity<>(HttpStatus.OK);
+		MultipartFile file1 = addDto.getFile1();
+		MultipartFile file2 = addDto.getFile2();
+		
+		if(file1 != null) {
+			InputStream inputStream1 = file1.getInputStream();
+			boolean isValid = FileUtils.validImgFile(inputStream1);
+			if(!isValid) {
+				throw new IOException("파일 형식 오류");
+			}
+			String fileUrl1 = s3UploaderSellerNum.upload(file1, "사업자등록증사본", user, addDto);
+			String fileUrl2 = s3UploaderSellerIntNum.upload(file2, "통신판매업신고증사본", user, addDto);
+			Seller seller = Seller.builder()
+    				.sellerId(optU.get())
+    				.companyName(addDto.getCompanyName())
+    				.companyNum(addDto.getCompanyNum())
+    				.internetNum(addDto.getInternetNum())
+    				.addr(addDto.getAddr())
+    				.manager(addDto.getManager())
+    		        .bankAccount(addDto.getBankAccount())
+    		        .companyImgUrl(fileUrl1)
+    		        .internetImgUrl(fileUrl2)
+    				.build();
+    		sr.save(seller);
+		}
+		
 	}
 	
 	//판매자 사업자등록번호 검증
@@ -208,12 +234,13 @@ public class SellerService {
 	
 	//판매자 상품목록 조회
 	@Transactional
-	public List<SellerProductResponseDto> getAllSellerProductList(Authentication user,Pageable pageable){
+	public List<SellerProductResponseDto> getAllSellerProductList(Authentication user){
 		String userId = user.getName();
-		List<Product> list = sr.findProductBySellerId(userId, pageable);
+		List<Product> list = sr.findProductBySellerId(userId);
 		List<SellerProductResponseDto> prodlist = new ArrayList<>();
 		if(list.size() == 0) {
 			log.info("등록된 상품이 없습니다.");
+			throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_FOUND_PRODUCT");
 		}else {
 			for(Product prod : list) {
 				SellerProductResponseDto dto = SellerProductResponseDto.builder()
@@ -221,7 +248,10 @@ public class SellerService {
 						.prodName(prod.getName())
 				        .prodPrice(prod.getOriginPrice())
 				        .prodPercentage(prod.getPercentage())
-				        .reviewCnt(prod.getReviewCnt())						
+				        .reviewCnt(prod.getReviewCnt())	
+				        .prodImgUrl(prod.getProductImgUrl())
+				        .status(prod.getStatus())
+				        .modifiedDate(prod.getModifiedDate())
 						.build();
 				prodlist.add(dto);
 			}
