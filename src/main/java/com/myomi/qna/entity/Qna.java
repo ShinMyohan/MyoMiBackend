@@ -44,7 +44,7 @@ public class Qna implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name = "qna_user", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private User userId;
 

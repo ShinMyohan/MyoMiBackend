@@ -40,6 +40,6 @@ public interface SellerRepository extends CrudRepository<Seller, String>{
 	
 	//판매자 상품조회
 	@Query("SELECT p FROM Product p WHERE p.seller.sellerId.id =:userId")
-	List<Product> findProductBySellerId(@Param("userId")String userId,Pageable pageable);	
+	List<Product> findProductBySellerId(@Param("userId")String userId);	
 }
 

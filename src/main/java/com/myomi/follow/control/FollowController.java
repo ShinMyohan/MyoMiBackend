@@ -30,12 +30,6 @@ public class FollowController {
 		followService.removeStoreFollow(sId,user);
 	}
 	
-	//언팔로우 하기(마이페이지,다중삭제 가능)
-	@DeleteMapping("mypage/follow")
-	public void followMypageDelete(@RequestBody List<FollowDeleteRequestDto> requestDto, Authentication user ) {
-		followService.removeMypageFollow(requestDto,user);
-	}
-	
 	//팔로우 목록 조회(마이페이지,페이징)
 	@GetMapping("mypage/follow")
 	public List<FollowReadResponseDto> followAllByUserList(Authentication user,@PageableDefault(size=5) Pageable pageable) {

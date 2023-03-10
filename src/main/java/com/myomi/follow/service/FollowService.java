@@ -32,12 +32,6 @@ public class FollowService {
 	private final UserRepository ur;
 	private final SellerRepository sr;
 	
-	/* TODO : 1.팔로우 하기@
-	 *        2.언팔로우 하기(마이페이지, 다중삭제)@
-	 *        3.팔로우 목록 조회(페이징)@
-	 *        4.언팔로우 하기(스토어)@
-	 */
-	
 	//팔로우 하기
 	@Transactional
 	public void addFollow(String sellerId, Authentication user) {
@@ -52,15 +46,6 @@ public class FollowService {
 			Follow follow = new Follow(optU.get(),optS.get());
 			fr.save(follow);
 		}
-	}
-	
-	//언팔로우 하기 (마이페이지, 다중삭제)
-	@Transactional
-	public void removeMypageFollow(List<FollowDeleteRequestDto> requestDto ,Authentication user) {
-		String userId = user.getName();
-		for (FollowDeleteRequestDto follow : requestDto) {
-			fr.deleteFollowByUserIdAndSellerId(userId, follow.getSellerId());
-		}	
 	}
 	
 	//3.팔로우 목록 조회(페이징)
