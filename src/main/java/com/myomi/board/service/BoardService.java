@@ -2,14 +2,19 @@ package com.myomi.board.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
+import com.myomi.board.dto.PageBean;
 import com.myomi.board.entity.Board;
 import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.dto.CommentDto;
@@ -46,25 +52,30 @@ public class BoardService {
 	private final UserRepository ur;
 	private final CommentRepository cr;
 
+
 	//글 리스트 출력
-	public List<BoardReadResponseDto> getBoard(Pageable pageable) {
-		//  Sort sort = sort.by(Direction.DESC,"createdDate");
-		Page<Board> list = br.findAll(pageable);
+	public PageBean<BoardReadResponseDto> getBoard(int currentPage) {
+		int startRow = (currentPage-1)*PageBean.CNT_PER_PAGE +1;
+		int endRow =  currentPage*PageBean.CNT_PER_PAGE;
+		List<Object[]> list = br.findAll(startRow, endRow);
 		List<BoardReadResponseDto> boardList = new ArrayList<>();
-		for (Board board : list) {
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //HH:mm:ss.SSSSSS");
+		for (Object[] arr : list) {
+			String timeStr= arr[4].toString().split(" ")[0] + " 00:00:00";
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
-					.boardNum(board.getBoardNum())
-					.userName(board.getUser().getName())
-					.category(board.getCategory())
-					.title(board.getTitle())
-					.content(board.getContent())
-					.createdDate(board.getCreatedDate())
-					.hits(board.getHits())
+					.boardNum(((BigDecimal)arr[1]).longValue())
+					.category((String)arr[2])
+					.title((String)arr[3])
+					.createdDate(LocalDateTime.parse(timeStr,format))
+					.userName((String)arr[5])
+					.hits(((BigDecimal)arr[6]).longValue())
 					.build();
 			boardList.add(dto);
 		}
-		return boardList;
-	}
+		int totalCnt = (int) br.count();
+		PageBean<BoardReadResponseDto> pb = new PageBean(currentPage, boardList, totalCnt);
+		return pb;
+	}	
 
 	//제목으로 검색
 	public List<BoardReadResponseDto> getByTitle(String keyword, Pageable pageable) {
@@ -86,24 +97,28 @@ public class BoardService {
 	}
 
 	//제목, 카테고리로 검색
-	public List<BoardReadResponseDto> getByCategoryAndTitle(String category, String title, Pageable pageable) {
-		List<Board> list = br.findByCategoryContainingAndTitleContaining(category, title, pageable);
+	public PageBean<BoardReadResponseDto> getByCategoryAndTitle(int currentPage, String category, String title) {
+		int startRow = (currentPage-1)*PageBean.CNT_PER_PAGE +1;
+		int endRow =  currentPage*PageBean.CNT_PER_PAGE;
+		List<Object[]> list = br.findByCategoryAndTitle(startRow, endRow, category, title);
 		List<BoardReadResponseDto> boardList = new ArrayList<>();
-		for (Board board : list) {
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //HH:mm:ss.SSSSSS");
+		for (Object[] arr : list) {
+			String timeStr= arr[4].toString().split(" ")[0] + " 00:00:00";
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()
-					.boardNum(board.getBoardNum())
-					.userName(board.getUser().getName())
-					.category(board.getCategory())
-					.title(board.getTitle())
-					.content(board.getContent())
-					.createdDate(board.getCreatedDate())
-					.hits(board.getHits())
+					.boardNum(((BigDecimal)arr[1]).longValue())
+					.category((String)arr[2])
+					.title((String)arr[3])
+					.createdDate(LocalDateTime.parse(timeStr,format))
+					.userName((String)arr[5])
+					.hits(((BigDecimal)arr[6]).longValue())
 					.build();
 			boardList.add(dto);
-
 		}
-		return boardList;
-	}
+		int totalCnt = (int) br.count();
+		PageBean<BoardReadResponseDto> pb = new PageBean(currentPage, boardList, totalCnt);
+		return pb;
+	}	
 
 	//글 상세보기
 	@Transactional
@@ -121,7 +136,7 @@ public class BoardService {
 			}
 			BoardReadResponseDto dto = new BoardReadResponseDto();
 			return dto.toDto(board.get(), listCommentDTO, enableUpdate, enableDelete);
-			
+
 		}else {
 			String username = user.getName();
 			Optional<User> optU = ur.findById(username);
@@ -174,31 +189,26 @@ public class BoardService {
 	@Transactional
 	public ResponseEntity<BoardDetailResponseDto> modifyBoard(BoardReadResponseDto editDto, Long boardNum, Authentication user)
 			throws AddException, IOException {
+
 		String username = user.getName();
 		Board board = br.findById(boardNum).get();
 		MultipartFile file = editDto.getFile();
-		if (file != null) {
-			InputStream inputStream = file.getInputStream();
-			boolean isValid = FileUtils.validImgFile(inputStream);
-			if (!isValid) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+		if (!board.getUser().getId().equals(username)) {
+			throw new AddException("작성자만 수정 가능합니다.");
+		} else {
+			board.update(editDto.getCategory(), editDto.getTitle(), editDto.getContent());
+
+			if (file!= null) {
+				String fileUrl = s3Uploader.upload(file, "게시판이미지", user, editDto);
+				board.update(fileUrl);
 			}
 
-			if (!board.getUser().getId().equals(username)) {
-				throw new AddException("작성자만 수정 가능합니다.");
-			}
-			String fileUrl = s3Uploader.upload(file, "게시판이미지", user, editDto);
-			board.update(editDto.getCategory(), editDto.getTitle(), editDto.getContent(), fileUrl);
-
-		} else if (file == null) {
-			if (!board.getUser().getId().equals(username)) {
-				throw new AddException("작성자만 수정 가능합니다.");
-			} else {
-				board.update(editDto.getCategory(), editDto.getTitle(), editDto.getContent(), null);
-			}
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+
 
 	//글 삭제
 	@Transactional

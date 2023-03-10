@@ -19,6 +19,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.comment.entity.Comment;
@@ -32,12 +34,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name="board")
+@DynamicUpdate
 @SequenceGenerator(
 name = "BOARD_SEQ_GENERATOR",
 sequenceName = "BOARD_SEQ", 
 initialValue = 1, allocationSize = 1 )
-//@DynamicInsert
-//@DynamicUpdate
 public class Board {
    @Id
    @Column(name="num", updatable =  false)
@@ -94,12 +95,16 @@ public class Board {
 	//this.comments = comments;
 }
     //더티체킹 
-    public void update(String category, String title, String content, String boardImgUrl) {
+    public void update(String category, String title, String content) {
 		this.category = category;
 		this.title = title;
 		this.content = content;
-		this.boardImgUrl = boardImgUrl;
     }
+    
+    public void update(String boardImgUrl) {
+    	this.boardImgUrl = boardImgUrl;
+    }
+    
     @PrePersist
     public void prePersist() {
         this.hits = this.hits == null ? 0 : this.hits;

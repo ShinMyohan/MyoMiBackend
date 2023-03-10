@@ -3,6 +3,7 @@ package com.myomi.board.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,11 +36,13 @@ public class BoardReadResponseDto {
 	private String boardImgUrl;
 	private boolean enableUpdate;
 	private boolean enableDelete;
+	private Pageable pageable;
+	
 
 	@Builder  
 	public BoardReadResponseDto(Long boardNum, User user, String category, String title, String content,
 			LocalDateTime createdDate, Long hits, String userName, List<CommentDto> comments, List<Comment> reply,
-			MultipartFile file, String boardImgUrl, boolean enableUpdate, boolean enableDelete) {
+			MultipartFile file, String boardImgUrl, boolean enableUpdate, boolean enableDelete,  Pageable pageable) {
 		this.boardNum = boardNum;
 		this.user = user;
 		this.category = category;
@@ -54,6 +57,7 @@ public class BoardReadResponseDto {
 		this.boardImgUrl = boardImgUrl;
 		this.enableUpdate = enableUpdate;
 		this.enableDelete = enableDelete;
+		this.pageable = pageable;
 	}
 
 	public Board toEntity(User user, String fileUrl) {
@@ -82,8 +86,17 @@ public class BoardReadResponseDto {
 				.enableDelete(enableDelete)
 				.enableUpdate(enableUpdate)
 				.build();
-
+	}
 	
-
+	public BoardReadResponseDto toDto (Board board) {
+		return BoardReadResponseDto.builder()
+				.boardNum(board.getBoardNum())
+				.userName(board.getUser().getName())
+				.category(board.getCategory())
+				.title(board.getTitle())
+				.content(board.getContent())
+				.createdDate(board.getCreatedDate())
+				.hits(board.getHits())
+				.build();
 	}
 }
