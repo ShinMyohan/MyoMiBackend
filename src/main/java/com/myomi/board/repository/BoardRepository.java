@@ -17,9 +17,6 @@ import com.myomi.board.entity.Board;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @EntityGraph(attributePaths = "user")
-    public Page<Board> findAll(Pageable pageable);
-
-    @EntityGraph(attributePaths = "user")
     public Optional<Board> findById(Long boardNum);
 
     @EntityGraph(attributePaths = "user")
@@ -35,6 +32,27 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("UPDATE Board b set b.hits = b.hits+1 where b.boardNum=:boardNum")
     public void updateHits(Long boardNum);
 
+    
+    @Query(value="SELECT * FROM (SELECT rownum rn, a. *\n"
+    		+ "	FROM(select b.num, b.category, b.title, b.created_date, u.name, b.hits \n"
+    		+ "	FROM board b, users u\n"
+    		+ "	WHERE b.user_id = u.id\n"
+    		+ "	ORDER BY created_date desc) a)\n"
+    		+ "	WHERE rn BETWEEN :startRow AND :endRow", nativeQuery = true)
+    public List<Object[]> findAll(@Param("startRow") int startRow, @Param("endRow") int endRow);
+    
+    
+    @Query(value=" \n"
+    		+ " SELECT * FROM (SELECT rownum rn,a.*\n"
+    		+ "	FROM(select b.num, b.category, b.title, b.created_date,u.name, b.hits \n"
+    		+ "	FROM board b, users u\n"
+    		+ "	WHERE b.user_id = u.id\n"
+    		+ "	ORDER BY created_date desc) a)\n"
+    		+ "	WHERE rn BETWEEN :startRow AND :endRow\n"
+    		+ " AND category LIKE %:category% AND title LIKE %:title%", nativeQuery=true)
+    public List<Object[]> findByCategoryAndTitle(@Param("startRow") int startRow, @Param("endRow") int endRow,
+    		                                     @Param("category")String category,@Param("title") String title);
+    		
 
 }
  
