@@ -48,7 +48,7 @@ public class ReviewController {
     public ResponseEntity<?> reviewsave(ReviewSaveRequestDto reviewSaveDto,
                                         Authentication user
             , MultipartFile file, Long orderNum, Long prodNum,
-                                        String title, String content, float stars
+                                        String title, String content, float stars,int sort
 
     ) throws AddException, IOException {
         ReviewSaveRequestDto dto = ReviewSaveRequestDto.builder()
@@ -58,6 +58,7 @@ public class ReviewController {
                 .content(content)
                 .stars(stars)
                 .file(file)
+                .sort(sort)
                 .build();
         return new ResponseEntity<>(service.addReview(dto, user), HttpStatus.OK);
     }

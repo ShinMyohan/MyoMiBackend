@@ -51,12 +51,10 @@ public class ReviewService {
         List<ReviewDetailResponseDto> list = new ArrayList<>();
         if (reviews.size() == 0) {
             log.info("리뷰가 없습니다.");
-        } else if (!(reviews.get(0).getOrderDetail().getProduct().getSeller().getId().equals(seller.getName()))) {
-            throw new FindException("다른 판매자의 리뷰에 접근할 수 없습니다.");
         } else {
             for (Review review : reviews) {
                 ReviewDetailResponseDto dto = ReviewDetailResponseDto.builder()
-                        .userId(review.getUser().getId())
+                        .userName(review.getUser().getName())
                         .prodName(review.getOrderDetail().getProduct().getName())
                         .reviewNum(review.getReviewNum())
                         .title(review.getTitle())
@@ -64,7 +62,7 @@ public class ReviewService {
                         .sort(review.getSort())
                         .createdDate(review.getCreatedDate())
                         .stars(review.getStars())
-
+                        .file(review.getReviewImgUrl())
                         .build();
                 list.add(dto);
             }
@@ -83,13 +81,14 @@ public class ReviewService {
         } else {
             for (Review review : reviews) {
                 ReviewDetailResponseDto dto = ReviewDetailResponseDto.builder()
-                        .userId(review.getUser().getId())
+                        .userName(review.getUser().getName())
                         .prodName(review.getOrderDetail().getProduct().getName())
                         .reviewNum(review.getReviewNum())
                         .title(review.getTitle())
                         .content(review.getContent())
                         .createdDate(review.getCreatedDate())
                         .stars(review.getStars())
+                        .file(review.getReviewImgUrl())
                         .build();
                 list.add(dto);
             }
@@ -107,6 +106,11 @@ public class ReviewService {
         Optional<User> optU = userRepository.findById(username);
         OrderDetailEmbedded ode = OrderDetailEmbedded.builder().orderNum(reviewSaveDto.getOrderNum())
                 .prodNum(reviewSaveDto.getProdNum()).build();
+        Optional<OrderDetail> od = orderdetailRepository.findById(ode);
+        Optional<Review> Optr = reviewRepository.findByOrderDetail_order_orderNum(ode.getOrderNum());
+        if (Optr.isPresent()) {
+        	throw new AddException("해당 주문상세로 작성한 리뷰가 존재합니다.");
+        }else {
         MultipartFile file = reviewSaveDto.getFile();
         if (file != null) {
             InputStream inputStream = file.getInputStream();
@@ -114,17 +118,16 @@ public class ReviewService {
             if (!isValid) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
+            String fileUrl = s3Uploader.upload(file, "리뷰이미지", user, reviewSaveDto);
+           
+            Review review = reviewSaveDto.toEntity(reviewSaveDto, optU.get(), od.get(), fileUrl);
+            	reviewRepository.save(review);
+        }else{
+        	Review review = reviewSaveDto.toEntity(reviewSaveDto, optU.get(), od.get(), null);
+        	reviewRepository.save(review);
         }
-        String fileUrl = s3Uploader.upload(file, "리뷰이미지", user, reviewSaveDto);
-        Optional<OrderDetail> od = orderdetailRepository.findById(ode);
-        Review review = reviewSaveDto.toEntity(reviewSaveDto, optU.get(), od.get(), fileUrl);
+        return new ResponseEntity<>(HttpStatus.OK);
 
-        Optional<Review> Optr = reviewRepository.findByOrderDetail_order_orderNum(ode.getOrderNum());
-        if (Optr.isPresent()) {
-            throw new AddException("해당 주문상세로 작성한 리뷰가 존재합니다.");
-        } else {
-            reviewRepository.save(review);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 

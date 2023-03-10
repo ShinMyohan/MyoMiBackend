@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
 @Entity
 @Table(name = "notice")
 @SequenceGenerator(name = "NOTICE_SEQ_GENERATOR", sequenceName = "NOTICE_SEQ", // 매핑할 데이터베이스 시퀀스 이름
