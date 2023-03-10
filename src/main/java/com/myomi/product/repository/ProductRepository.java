@@ -1,17 +1,18 @@
 package com.myomi.product.repository;
 
-import com.myomi.product.entity.Product;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.myomi.product.entity.Product;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long>{
 	//셀러가 등록한 모든 상품 찾기
-	List<Product> findAllBySellerId(String sellerId);
+	List<Product> findAllBySellerIdOrderByReviewCntDesc(String sellerId);
 	//셀러가 등록한 특정 상품 찾기
 	Optional<Product> findBySellerIdAndProdNum(String sellerId, Long prodNum);
 	//특정 상품 조회하기

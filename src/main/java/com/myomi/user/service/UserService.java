@@ -1,15 +1,10 @@
 package com.myomi.user.service;
 
-import com.myomi.jwt.dto.TokenDto;
-import com.myomi.jwt.provider.JwtTokenProvider;
-//import com.myomi.membership.entity.Membership;
-import com.myomi.membership.entity.MembershipLevel;
-import com.myomi.user.dto.UserDto;
-import com.myomi.user.dto.UserSignUpReqeustDto;
-import com.myomi.user.entity.User;
-import com.myomi.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +16,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import com.myomi.common.status.ErrorCode;
+import com.myomi.common.status.NoResourceException;
+import com.myomi.jwt.dto.TokenDto;
+import com.myomi.jwt.provider.JwtTokenProvider;
+import com.myomi.membership.entity.MembershipLevel;
+import com.myomi.user.dto.UserDto;
+import com.myomi.user.dto.UserSignUpReqeustDto;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 //@Transactional(readOnly = true) //true로 되어있다는건 commit을 안하겠다는거
-//레이지된 애
 @RequiredArgsConstructor
 public class UserService {
 	@Autowired
@@ -45,19 +49,20 @@ public class UserService {
      * 3. 검증이 정상적으로 통과되었다면 인증된 Authentication객체를 기반으로 JWT 토큰을 생성
      */
     @Transactional
-    public TokenDto login(String userId, String password) {
-    	Optional<User> optU = userRepository.findById(userId);
-    	log.info("입력한 id:" + userId + " 디비아이디: " + optU.get().getId());
-    	log.info("입력한 비번:" + password + " 디비비번: " + optU.get().getPwd());
+    public Map<String, Object> login(String userId, String password) {
+    	User optU = userRepository.findById(userId)
+    			.orElseThrow(()-> new NoResourceException(ErrorCode.BAD_REQUEST, "NOT_FOUND_USER"));
+//    	log.info("입력한 id:" + userId + " 디비아이디: " + optU.getId());
+//    	log.info("입력한 비번:" + password + " 디비비번: " + optU.getPwd());
     	
-    	if(!passwordEncoder.matches(password, optU.get().getPwd())) {
+    	if(!passwordEncoder.matches(password, optU.getPwd())) {
     		log.error("비밀번호 오류");
-    		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    		throw new NoResourceException(ErrorCode.BAD_REQUEST, "DISCORD_PASSWORD");
     	}
     	
     	// 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, optU.get().getPwd()); //들어온 raw한 패스워드를 인코딩해서 디비에 있는 인코딩 된 패스워드랑 비교했어야했다!!!!!!
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, optU.getPwd()); //들어온 raw한 패스워드를 인코딩해서 디비에 있는 인코딩 된 패스워드랑 비교했어야했다!!!!!!
 //    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passwordEncoder.encode(password)); //위 코드가 안될시 시도할 코드
     	log.info("authenticationToken: "+authenticationToken.getName());
         
@@ -68,9 +73,12 @@ public class UserService {
         
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
- 
+        Map map = new HashMap<>();
+        map.put("token", tokenDto);
+        map.put("userName", optU.getName());
+        map.put("userRole", optU.getRole());
         log.info(tokenDto.getAccessToken());
-        return tokenDto;
+        return map;
     }
     
     //회원가입
@@ -86,9 +94,6 @@ public class UserService {
     	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
     		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
     	}
-//    	Membership m = new Membership();
-//    	m.setMembershipNum(0);
-//    	m.setMembershipLevel("일반");
     	
     	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
 
@@ -109,6 +114,14 @@ public class UserService {
     		return user.getId();
     	}
     	throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    
+    public ResponseEntity<?> checkIdDup(String id) {
+    	boolean checkId = checkIdExists(id);
+    	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
+    		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+    	}
+    	return new ResponseEntity<>(HttpStatus.OK);
     }
     
     // 회원정보 검색

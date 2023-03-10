@@ -1,5 +1,25 @@
 package com.myomi.product.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.myomi.common.status.AddException;
+import com.myomi.common.status.ErrorCode;
+import com.myomi.common.status.ExceedMaxUploadSizeException;
+import com.myomi.common.status.NoResourceException;
+import com.myomi.common.status.UnqualifiedException;
 import com.myomi.product.dto.ProductDto;
 import com.myomi.product.dto.ProductReadOneDto;
 import com.myomi.product.dto.ProductSaveDto;
@@ -16,22 +36,9 @@ import com.myomi.s3.FileUtils;
 import com.myomi.s3.S3Uploader;
 import com.myomi.seller.entity.Seller;
 import com.myomi.seller.repository.SellerRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +50,7 @@ public class ProductService {
 	private final SellerRepository sellerRepository;
 	private final ReviewRepository reviewRepository;
 	private final QnaRepository qnaRepository;
+	private LocalDateTime date = LocalDateTime.now();
 	/**
 	 * TODO:
 	 * 1. 셀러 등록 후 상품 등록하기
@@ -55,15 +63,18 @@ public class ProductService {
 	 */
 	
 	@Transactional
-	public ResponseEntity<ProductSaveDto> addProduct(ProductSaveDto productSaveDto, Authentication seller) throws IOException {
+	public ResponseEntity<?> addProduct(ProductSaveDto productSaveDto, Authentication seller) throws NoResourceException,IOException,UnqualifiedException,ExceedMaxUploadSizeException,AddException {
 		Seller s = sellerRepository.findById(seller.getName())
-				.orElseThrow(() -> new IllegalArgumentException("판매자만 상품 등록이 가능합니다"));
+				.orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_FOUND_SELLER"));
 		
 		if(s.getStatus() == 3) {
 			log.error("탈퇴를 신청한 판매자입니다.");
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST); 
+			throw new UnqualifiedException(ErrorCode.BAD_REQUEST, "UNQUALIFIED_SELLER");
 		}
 		
+		if(productSaveDto.getName().length() > 30) {
+			throw new AddException(ErrorCode.BAD_REQUEST, "EXCEED_MAX_CHAR");
+		}
 		MultipartFile file = productSaveDto.getFile();
 		
 		
@@ -72,15 +83,15 @@ public class ProductService {
 			
 			boolean isValid = FileUtils.validImgFile(inputStream);
 			if(!isValid) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				throw new ExceedMaxUploadSizeException(ErrorCode.BAD_REQUEST,"EXCEED_FILE_SIZE");
 			}
+		} else {
+			log.info("첨부된 이미지 파일이 없습니다.");
+			throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_FOUND_FILE");
 		}
-//		else {
+
 		String fileUrl = s3Uploader.upload(file, "상품이미지", seller, productSaveDto);
-			
-//			product.addProductImgUrl(fileUrl); //이거 안됨
-			
-//		}
+		
 		Product product = productSaveDto.toEntity(productSaveDto, s, fileUrl);
 		
 		//상품등록
@@ -89,11 +100,12 @@ public class ProductService {
 	}
 	
 	@Transactional
-	public List<ProductDto> getProductBySellerId(String sellerId) {
-		List<Product> prods = productRepository.findAllBySellerId(sellerId);
+	public List<ProductDto> getProductBySellerId(String sellerId) throws NoResourceException{
+		List<Product> prods = productRepository.findAllBySellerIdOrderByReviewCntDesc(sellerId);
 		List<ProductDto> list = new ArrayList<>();
 		if (prods.size() == 0) {
 		        log.info("등록된 상품이 없습니다.");
+		        throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "PRODUCT_NOT_FOUND");
 		} else {
 		    for (Product p : prods) {
 		    	ProductDto dto = new ProductDto();
@@ -106,13 +118,15 @@ public class ProductService {
 	
 	@Transactional
 	public ResponseEntity<?> getOneProd(Long prodNum) {
-		Optional<Product> product = productRepository.findProdInfo(prodNum);
+		Product product = productRepository.findProdInfo(prodNum)
+				.orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "PRODUCT_NOT_FOUND"));
+		
 //		List<Qna> qnas = product.get().getQnas(); //이방법이 훨씬 좋아
-		List<Qna> qnas = qnaRepository.findByProdNumOrderByQnaNumDesc(product.get());
+		List<Qna> qnas = qnaRepository.findByProdNumOrderByQnaNumDesc(product);
 		//리뷰 DTO 받으면 태리님 방식처럼 해보기 
 		List<Review> reviews = reviewRepository.findAllReviewByProd(prodNum);
 		
-		if(product.get().getQnas().size() == 0) {	
+		if(product.getQnas().size() == 0) {	
 			log.info("상품관련 문의가 없습니다.");
 		}
 		
@@ -132,29 +146,30 @@ public class ProductService {
 			rDto.add(reviewDto.toDto(r));
 		}
 		ProductReadOneDto dto = new ProductReadOneDto();
-		return new ResponseEntity<>(dto.toDto(product.get(), rDto, qDto) , HttpStatus.OK);
+		return new ResponseEntity<>(dto.toDto(product, rDto, qDto) , HttpStatus.OK);
 	}
 	
 	@Transactional //성공
 	public ResponseEntity<ProductUpdateDto> modifyProduct(Long prodNum, ProductUpdateDto productUpdateDto, Authentication seller) {
-		Optional<Product> p = productRepository.findBySellerIdAndProdNum(seller.getName(), prodNum);
-//				.orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
-		
-//		Product prod = productUpdateDto.toEntity(prodNum, productUpdateDto, p.get().getSeller());
+		Product p = productRepository.findBySellerIdAndProdNum(seller.getName(), prodNum)
+				.orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "PRODUCT_NOT_FOUND"));
 		
 		if(p != null) {
-			p.get().update(productUpdateDto.getDetail(), productUpdateDto.getStatus());
+			p.update(productUpdateDto.getDetail(), productUpdateDto.getStatus(), date);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@Transactional //성공
 	public ResponseEntity<?> removeProduct(Long prodNum, Authentication seller) {
-		Optional<Product> p = productRepository.findById(prodNum);
-		Optional<Seller> s = sellerRepository.findById(seller.getName());
-		if(p.get().getSeller().getId() == s.get().getId()) {
-			productRepository.deleteById(prodNum);
+		Product p = productRepository.findById(prodNum)
+				.orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "PRODUCT_NOT_FOUND"));
+		Seller s = sellerRepository.findById(seller.getName())
+				.orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_FOUND_SELLER"));
+		if(p.getSeller().getId() != s.getId()) {
+			throw new UnqualifiedException(ErrorCode.BAD_REQUEST, "DISCORD_SELLER");
 		}
+		productRepository.deleteById(prodNum);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -172,6 +187,9 @@ public class ProductService {
 	@Transactional
 	public ResponseEntity<?> getAllProduct() { 
 		List<Product> pList = productRepository.findAll();
+		if(pList.size() == 0) {
+			
+		}
 		List<ProductDto> list = new ArrayList<>();
 		for(Product p : pList) {
 			ProductDto dto = new ProductDto();
@@ -196,11 +214,13 @@ public class ProductService {
 	
 	// 셀러페이지
 	@Transactional
-	public ResponseEntity<?> getOneProdBySeller(Long prodNum, Authentication seller) {
-		Optional<Product> product = productRepository.findBySellerIdAndProdNum(seller.getName(),prodNum);
+	public ResponseEntity<?> getOneProdBySeller(Long prodNum, Authentication seller) throws NoResourceException {
+//		Optional<Product> product = productRepository.findBySellerIdAndProdNum(seller.getName(),prodNum);
+		Product product = productRepository.findBySellerIdAndProdNum(seller.getName(),prodNum)
+				.orElseThrow(()-> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND,"PRODUCT_NOT_FOUND"));
 
 		ProductDto dto = new ProductDto();
 		
-		return new ResponseEntity<>(dto.toDto(product.get()) , HttpStatus.OK);
+		return new ResponseEntity<>(dto.toDto(product) , HttpStatus.OK);
 	}
 }

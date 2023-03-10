@@ -1,5 +1,10 @@
 package com.myomi.user.dto;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myomi.board.entity.Board;
 import com.myomi.cart.entity.Cart;
@@ -12,15 +17,11 @@ import com.myomi.point.entity.Point;
 import com.myomi.qna.entity.Qna;
 import com.myomi.review.entity.Review;
 import com.myomi.seller.entity.Seller;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -43,10 +44,11 @@ public class UserDto {
 	private String email;
 	
 	private String addr;
-	
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private LocalDateTime createdDate;
 	
-	private Date signoutDate;
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+	private LocalDateTime signoutDate;
 	
 	@JsonIgnore
 	private MembershipLevel membership;
