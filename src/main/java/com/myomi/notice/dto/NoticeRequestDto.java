@@ -22,7 +22,7 @@ public class NoticeRequestDto {
 	public NoticeRequestDto(String title, String content) {
 		this.title = title;
 		this.content = content;
-	
+		
 	}
 
 	public Notice toEntity( 

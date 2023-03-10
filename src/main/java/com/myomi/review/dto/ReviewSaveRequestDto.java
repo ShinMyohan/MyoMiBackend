@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,14 +16,14 @@ public class ReviewSaveRequestDto {
     private String title;
     private String content;
     private float stars;
-
     private Long orderNum;
     private Long prodNum;
+    private int sort;
     private LocalDateTime createdDate;
     private MultipartFile file;
 
     @Builder
-    public ReviewSaveRequestDto(String title, String content, float stars, Long orderNum, Long prodNum, LocalDateTime createdDate, MultipartFile file) {
+    public ReviewSaveRequestDto(String title, String content, float stars, Long orderNum, Long prodNum, LocalDateTime createdDate, MultipartFile file,int sort) {
         this.title = title;
         this.content = content;
         this.stars = stars;
@@ -32,6 +31,7 @@ public class ReviewSaveRequestDto {
         this.prodNum = prodNum;
         this.createdDate = createdDate;
         this.file = file;
+        this.sort=sort;
     }
 
     public Review toEntity(ReviewSaveRequestDto reviewSaveRequestDto, User user, OrderDetail orderDetail, String fileUrl) {
@@ -40,7 +40,7 @@ public class ReviewSaveRequestDto {
                 .user(user)
                 .title(reviewSaveRequestDto.getTitle())
                 .content(reviewSaveRequestDto.getContent())
-                .sort(4)
+                .sort(reviewSaveRequestDto.getSort())
                 .stars(reviewSaveRequestDto.getStars())
                 .createdDate(date)
                 .orderDetail(orderDetail)

@@ -1,18 +1,25 @@
 package com.myomi.admin.service;
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.myomi.admin.dto.AdminDto;
+import com.myomi.admin.entity.Admin;
 import com.myomi.admin.repository.AdminRepository;
 import com.myomi.seller.dto.SellerDetailDto;
 import com.myomi.seller.dto.SellerResponseDto;
 import com.myomi.seller.entity.Seller;
 import com.myomi.seller.repository.SellerRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +28,7 @@ public class AdminService {
 
     private final SellerRepository sellerRepository;
     private final AdminRepository adminRepository;
-
+    
     //판매자 리스트
     public List<SellerResponseDto> getAllSeller() {
 

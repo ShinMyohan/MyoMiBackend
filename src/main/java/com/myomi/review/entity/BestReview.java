@@ -19,8 +19,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-//fk를 갖는 클래스
 @Getter
 @NoArgsConstructor
 @Entity

@@ -15,11 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "review")
-/*
- * @DynamicInsert
- *
- * @DynamicUpdate
- */
+
 @SequenceGenerator(name = "REVIEW_SEQ_GENERATOR", sequenceName = "REVIEW_SEQ", // 매핑할 데이터베이스 시퀀스 이름
         initialValue = 1, allocationSize = 1)
 public class Review {
