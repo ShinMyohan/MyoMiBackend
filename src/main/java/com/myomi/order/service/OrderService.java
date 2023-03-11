@@ -15,14 +15,14 @@ import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -154,5 +154,24 @@ public class OrderService {
         OrderDetailResponseDto dto = new OrderDetailResponseDto();
         dto = dto.toDto(order, orderProdList);
         return new ResponseDetails(dto, 200, path);
+    }
+
+    // 결제하지 않은 주문들 삭제
+    @Scheduled(cron = "0 0 1 * * *") // 매일 새벽 1시
+    @Transactional
+    public ResponseDetails deleteOrder() {
+        String path = "/api/order";
+        log.info("결제하지 않은 주문들의 삭제를 시작합니다.");
+        LocalDateTime today = LocalDateTime.now();
+        List<Order> orders = orderRepository.findAllByPayCreatedDateIsNullAndCreatedDateBefore(today); // 전날 주문저장을 했으나 결제하지 않은 주문들
+        for (Order order : orders) {
+            log.info("결제되지 않은 주문을 찾았습니다. 삭제합니다. [userId : {}, orderNum : {}]", order.getUser().getId(), order.getOrderNum());
+            orderRepository.deleteById(order.getOrderNum());
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date now = new Date();
+        String strDate = sdf.format(now);
+        log.info("주문 삭제를 완료했습니다. [finishDate : {}]", strDate);
+        return new ResponseDetails("주문 삭제를 완료했습니다.", 200, path);
     }
 }
