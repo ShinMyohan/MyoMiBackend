@@ -14,7 +14,7 @@ public class ChatMsgDTO {
     private String content;
 
     @Builder
-    public ChatMsgDTO (Long num, String senderId, String content) {
+    public ChatMsgDTO(Long num, String senderId, String content) {
         this.num = num;
         this.senderId = senderId;
         this.content = content;

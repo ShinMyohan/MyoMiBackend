@@ -20,7 +20,7 @@ public class ChatMsg {
 
     @MapsId("roomNum")
     @ManyToOne
-    @JoinColumn(name = "room_num")  // chatRoom의 PK
+    @JoinColumn(name = "room_num")
     private ChatRoom chatRoom;
 
     @Column(name = "sender_id", nullable = false)
@@ -37,16 +37,11 @@ public class ChatMsg {
 
     public void registerChatRoomAndMsg(ChatRoom chatRoom) {
         chatRoom.registerChatMsg(this);
-
-//        if(!order.getOrderDetails().contains(this)) {
-//            order.getOrderDetails().add(this);
-//        }
     }
 
     @Builder
     public ChatMsg(ChatMsgEmbedded id, ChatRoom chatRoom, String senderId, String content) {
-        this.id = id;// service단에서 현재시간으로 id를 보내줌
-//        this.chatRoom = chatRoom;
+        this.id = id;
         this.senderId = senderId;
         this.content = content;
     }

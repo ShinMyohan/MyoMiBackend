@@ -14,14 +14,14 @@ public class ChatRoomDTO {
     private String userId;
 
     @Builder
-    public ChatRoomDTO (Long num, String adminId, String userId) {
+    public ChatRoomDTO(Long num, String adminId, String userId) {
         this.num = num;
         this.adminId = adminId;
         this.userId = userId;
     }
 
-    public ChatRoomDTO toDto (ChatRoom chatRoom) {
-         return ChatRoomDTO.builder()
+    public ChatRoomDTO toDto(ChatRoom chatRoom) {
+        return ChatRoomDTO.builder()
                 .num(chatRoom.getNum())
                 .userId(chatRoom.getUserId())
                 .adminId(chatRoom.getAdminId())
