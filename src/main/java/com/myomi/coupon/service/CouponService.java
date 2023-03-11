@@ -3,8 +3,6 @@ package com.myomi.coupon.service;
 import com.myomi.coupon.dto.CouponDto;
 import com.myomi.coupon.entity.Coupon;
 import com.myomi.coupon.repository.CouponRepository;
-import com.myomi.exception.AddException;
-
 import com.myomi.user.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +49,7 @@ public class CouponService {
 
     //쿠폰 사용시 status update
     @Transactional
-    public void modifyCoupon(Long couponNum, int status) throws AddException {
+    public void modifyCoupon(Long couponNum, int status) {
         //        LocalDateTime date = LocalDateTime.now();
         Optional<Coupon> cp = cr.findById(couponNum);
         Coupon coupon = cp.get();

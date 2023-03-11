@@ -37,13 +37,14 @@ public class CartService {
             log.info("회원의 장바구니에 담겨있는 상품이 없음");
         } else {
             for (Cart cart : carts) {
-                if(cart.getProduct().getStatus() != 0) {
+                if (cart.getProduct().getStatus() != 0) {
                     log.info("장바구니에 넣은 상품이 품절됨 [상품번호 prodNum : {}]", cart.getProduct().getProdNum());
-                }
+                } else {
                     CartReadResponseDto dto = new CartReadResponseDto();
                     list.add(dto.toDto(cart));
                 }
             }
+        }
         return list;
     }
 
@@ -54,13 +55,13 @@ public class CartService {
         // 회원이거나 판매자는 상품을 장바구니에 담을 수 없음
         User u = userRepository.findById(user.getName())
                 .orElseThrow(() -> new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "회원만 이용 가능합니다."));
-        if(u.getRole() != 0) {
+        if (u.getRole() != 0) {
             log.info("판매자가 장바구니에 상품을 담으려고 시도함 [userId : {}, prodNum : {}]", u.getId(), requestDto.getProduct().getProdNum());
             throw new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "판매자는 상품을 장바구니에 담을 수 없습니다.");
 
         }
 
-        if(requestDto.getProduct().getStatus() != 0){
+        if (requestDto.getProduct().getStatus() != 0) {
             log.info("품절된 상품은 장바구니에 담을 수 없습니다. [상품번호 prodNum : {}]", requestDto.getProduct());
             throw new ProductSoldOutException(ErrorCode.BAD_REQUEST, "PRODUCT_STATUS_ERROR");
         }
@@ -70,7 +71,7 @@ public class CartService {
             // 장바구니에 이미 상품이 있다면 수량만 추가
             saveCart(user, requestDto);
             log.info("장바구니에 존재하는 상품입니다. 수량을 추가합니다. [회원 userId : {}, 상품 번호 prodNum : {}]",
-                                                                 user.getName(), requestDto.getProduct().getProdNum());
+                    user.getName(), requestDto.getProduct().getProdNum());
             return new ResponseDetails(requestDto, 200, path); // TODO: requestDto 반환이 맞을까
         } else {
             Cart cart = requestDto.toEntity(user.getName(), requestDto);
@@ -85,8 +86,8 @@ public class CartService {
     public ResponseDetails saveCart(Authentication user, CartSaveRequestDto requestDto) {
         String path = "/api/cart";
         Product product = productRepository.findById(requestDto.getProduct().getProdNum())
-                        .orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "해당 상품번호에 해당하는 상품이 없습니다."));
-        if(product.getStatus() != 0) {
+                .orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "해당 상품번호에 해당하는 상품이 없습니다."));
+        if (product.getStatus() != 0) {
             log.info("품절된 상품은 장바구니에 담을 수 없습니다. [상품번호 prodNum : {}]", requestDto.getProduct());
             throw new ProductSoldOutException(ErrorCode.BAD_REQUEST, "PRODUCT_STATUS_ERROR");
         }
@@ -100,7 +101,7 @@ public class CartService {
         String path = "/api/cart";
         for (CartDeleteRequestDto dto : requestDto) {
             cartRepository.deleteCartByUserIdAndProduct(user.getName(), dto.getProdNum());
-            log.info(user.getName() + "님의 장바구니에서 " + dto.getProdNum() +"번째 상품을 성공적으로 삭제했습니다.");
+            log.info(user.getName() + "님의 장바구니에서 " + dto.getProdNum() + "번째 상품을 성공적으로 삭제했습니다.");
         }
         return new ResponseDetails(requestDto, 200, path);
     }

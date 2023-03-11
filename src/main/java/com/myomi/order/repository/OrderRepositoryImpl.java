@@ -35,7 +35,7 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
                 .join(product).on(orderDetail.product.eq(product))
                 .leftJoin(review).on(orderDetail.eq(review.orderDetail))
                 .where(order.user.id.eq(userId))
-                .orderBy(order.orderNum.desc())
+                .orderBy(orderDetail.order.orderNum.desc())
                 .transform(groupBy(orderDetail.order.orderNum).as(list(Projections.fields(OrderListResponseDto.class,
                         orderDetail.order.orderNum, product.prodNum, product.name.as("pName"), order.totalPrice, order.createdDate, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum")))));
         return result;
