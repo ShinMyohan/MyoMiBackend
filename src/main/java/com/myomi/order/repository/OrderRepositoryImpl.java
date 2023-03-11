@@ -69,11 +69,6 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 //    }
 
 
-
-
-
-
-
     // 멤버십, 회원 별 3개월간 결제 총합 조회
     @Override
     public List<OrderSumResponseDto> findOrderTotalPrice() {

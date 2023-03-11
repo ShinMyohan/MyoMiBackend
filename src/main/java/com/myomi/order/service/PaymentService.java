@@ -199,7 +199,7 @@ public class PaymentService {
         bw.flush();
         bw.close();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
         Gson gson = new Gson();
         String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
         System.out.println(response);
@@ -222,7 +222,7 @@ public class PaymentService {
         conn.setRequestProperty("Authorization", access_token);
         conn.setDoOutput(true);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
         Gson gson = new Gson();
         Response response = gson.fromJson(br.readLine(), Response.class);
 
@@ -266,7 +266,7 @@ public class PaymentService {
         bw.flush();
         bw.close();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
         br.close();
         conn.disconnect();

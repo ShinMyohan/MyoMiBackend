@@ -36,12 +36,4 @@ public class Cart {
         this.product = product;
         this.prodCnt = prodCnt;
     }
-
-//    public void updateProdCnt(Cart cart) { // 더티체킹
-//        this.user = cart.getUser();
-//        this.product = cart.getProduct();
-//        this.prodCnt = cart.getProdCnt();
-//    }
-
-    // 연관관계 편의 메서드
 }

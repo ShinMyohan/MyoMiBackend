@@ -29,24 +29,14 @@ public class OrderDetail {
     private int prodCnt;
 
     @Builder
-    private OrderDetail(Order order, Product product, int prodCnt) {
-//        this.order = order;
-//        this.id = id;
-//        registerOrder(order, product);
+    private OrderDetail(int prodCnt) {
         this.prodCnt = prodCnt;
     }
 
     // 연관관계 편의 메소드
     public void registerOrderAndProduct(Order order, Product product) {
-//        if(this.order != null) {
-//            this.order.getOrderDetails().remove(this);
-//        }
         this.order = order;
         this.product = product;
         order.addOrderDetail(this);
-
-//        if(!order.getOrderDetails().contains(this)) {
-//            order.getOrderDetails().add(this);
-//        }
     }
 }

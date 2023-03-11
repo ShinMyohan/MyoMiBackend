@@ -3,8 +3,8 @@ package com.myomi.order.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class DeliveryRequestDto {
     private String name;
     private String tel;

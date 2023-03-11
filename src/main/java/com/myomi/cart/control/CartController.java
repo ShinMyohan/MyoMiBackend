@@ -24,7 +24,7 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/cart/list")
-    public ResponseEntity<?> cartList(Authentication user){
+    public ResponseEntity<?> cartList(Authentication user) {
         List<CartReadResponseDto> result = cartService.getCartList(user);
         ResponseDetails responseDetails = ResponseDetails.success(result, "/api/cart/list");
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
