@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface ReviewRepository extends CrudRepository<Review, Long> {
 
-    public Optional<Review> findByOrderDetail_order_orderNum(Long OrderNum);
-
     @Query(value = "select r.* from review r join orders_detail o on r.prod_num=o.prod_num\r\n"
             + "and r.order_num = o.order_num\r\n"
             + "join users u on r.user_id=u.id where r.prod_num=? and r.created_date between (select to_char(sysdate,'yyyy-mm') || '-01' as 이번달시작일 from dual)\r\n"

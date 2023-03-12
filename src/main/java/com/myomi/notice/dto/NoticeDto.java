@@ -20,14 +20,16 @@ public class NoticeDto {
 	private String content;
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	private LocalDateTime createdDate;
+	private boolean enableAdd;
 	
 	@Builder
-	public NoticeDto(Long noticeNum, String adminId, String title, String content, LocalDateTime createdDate) {
+	public NoticeDto(Long noticeNum, String adminId, String title, String content, LocalDateTime createdDate,boolean enableAdd) {
 		this.noticeNum = noticeNum;
 		this.adminId = adminId;
 		this.title = title;
 		this.content = content;
 		this.createdDate = createdDate;
+		this.enableAdd=enableAdd;
 	}
 	public NoticeDto(Notice entity) {
 		this.noticeNum=entity.getNoticeNum();
