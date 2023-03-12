@@ -37,6 +37,7 @@ public class QnaUReadResponseDto {
 	private String companyName;
 	private String userName;
 	private String file;
+	private String prodImg;
 	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -55,7 +56,7 @@ public class QnaUReadResponseDto {
 	@Builder
 	public QnaUReadResponseDto(Long qnaNum, User userId, Product product, String id, String pName, String category, int week,
 			String detail, String queTitle, String queContent, LocalDateTime queCreatedDate, String ansContent,
-			LocalDateTime ansCreatedDate, Authentication user, Long originPrice, String companyName,String file, String userName) {
+			LocalDateTime ansCreatedDate, Authentication user, Long originPrice, String companyName,String file, String userName, String prodImg) {
 		this.qnaNum = qnaNum;
 		this.userId = userId;
 		this.product = product;
@@ -74,6 +75,7 @@ public class QnaUReadResponseDto {
 		this.companyName = companyName;
 		this.file = file;
 		this.userName = userName;
+		this.prodImg = prodImg;
 	}
 	public QnaUReadResponseDto(Qna qna) {
 		this.qnaNum = qna.getQnaNum();
