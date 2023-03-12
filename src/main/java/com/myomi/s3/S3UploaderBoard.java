@@ -50,7 +50,7 @@ public class S3UploaderBoard {
 			, BoardReadResponseDto boardDto
 			) {
 //		Optional<Board> optB = boardRepository.findById(boardDto.getBoardNum());
-		String fileName = dirName + "/" + user.getName();
+		String fileName = dirName + "/" + user.getName() + "/" + uploadFile.getPath();
 		String uploadImageUrl = putS3(uploadFile, fileName);
 
 		removeNewFile(uploadFile);  // 로컬에 생성된 File 삭제 (MultipartFile -> File 전환 하며 로컬에 파일 생성됨)

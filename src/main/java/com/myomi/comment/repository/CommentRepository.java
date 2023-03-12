@@ -18,7 +18,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
 
    @EntityGraph(attributePaths = {"user","board"})
    @Query("select c from Comment c join c.board where c.user.id=:username")
-   public List<Comment> findAllByComments(@Param("username") String username,Pageable pageable);
+   public List<Comment> findAllByComments(@Param("username") String username);
    
    public List<Comment> findByParent(Long parent);
    
