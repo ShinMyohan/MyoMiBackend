@@ -23,7 +23,7 @@ public interface FollowRepository extends CrudRepository<Follow, FollowEmbedded>
 	@Query(value = "DELETE FROM follow WHERE seller_id = :sellerId AND user_id = :userId" , nativeQuery = true)
 	public void deleteFollowByUserIdAndSellerId(@Param(value = "userId")String userId, @Param(value = "sellerId") String sellerId);
 
-	//팔로우 목록 조회(페이징)
+	//팔로우 목록 조회
 	@Query("SELECT f FROM Follow f join f.sellerId WHERE f.id.uId =:userId")
 	public List<Follow> findAllByUserId(@Param("userId")String user,Pageable pageable);
 	

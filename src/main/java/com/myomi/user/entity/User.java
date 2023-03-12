@@ -86,7 +86,7 @@ public class User implements UserDetails {
     @JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
     private Date signoutDate;
 
-    @Column(name = "membership_level") // , nullable = false
+    @Column(name = "membership_level")
     @Enumerated(EnumType.STRING)
     private MembershipLevel membership;
 
@@ -123,10 +123,7 @@ public class User implements UserDetails {
     private List<Coupon> coupons;
 
     @Builder
-    public User(String id, String pwd,
-                int role,
-                List<String> roles,
-                String name, String tel, String email,
+    public User(String id, String pwd, int role, List<String> roles, String name, String tel, String email,
                 String addr, LocalDateTime createdDate, MembershipLevel membership) {
         this.id = id;
         this.pwd = pwd;

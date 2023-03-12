@@ -3,7 +3,6 @@ package com.myomi.user.service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-//@Transactional(readOnly = true) //true로 되어있다는건 commit을 안하겠다는거
 @RequiredArgsConstructor
 public class UserService {
 	@Autowired
@@ -62,8 +60,7 @@ public class UserService {
     	
     	// 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, optU.getPwd()); //들어온 raw한 패스워드를 인코딩해서 디비에 있는 인코딩 된 패스워드랑 비교했어야했다!!!!!!
-//    	UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, passwordEncoder.encode(password)); //위 코드가 안될시 시도할 코드
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, optU.getPwd());
     	log.info("authenticationToken: "+authenticationToken.getName());
         
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
@@ -83,7 +80,6 @@ public class UserService {
     
     //회원가입
     public String signup(UserSignUpReqeustDto userSignUpReqeustDto) {
-    	
     	//휴대폰 번호가 이미 등록된 번호인지 확인 (이 메서드는 아래에 있습니다.)
     	boolean checkTel = checkTelExists(userSignUpReqeustDto.getTel());
     	if(checkTel) { //번호가 이미 등록된 번호면 예외발생
@@ -127,20 +123,21 @@ public class UserService {
     // 회원정보 검색
     public ResponseEntity<UserDto> getUserInfo(Authentication user) {
     	String username = user.getName();
-    	Optional<User> u = userRepository.findById(username);
+    	User u = userRepository.findById(username)
+    			.orElseThrow(()->new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_FOUND_USER"));
 
     	return new ResponseEntity<>(
     			UserDto.builder()
     				.id(username)
-	    			.role(u.get().getRole())
-	    			.name(u.get().getName())
-	    			.tel(u.get().getTel())
-	    			.email(u.get().getEmail())
-	    			.addr(u.get().getAddr())
-	    			.createdDate(u.get().getCreatedDate())
-	    			.membership(u.get().getMembership())
-	    			.point(u.get().getPoint())
-	    			.seller(u.get().getSeller())
+	    			.role(u.getRole())
+	    			.name(u.getName())
+	    			.tel(u.getTel())
+	    			.email(u.getEmail())
+	    			.addr(u.getAddr())
+	    			.createdDate(u.getCreatedDate())
+	    			.membership(u.getMembership())
+	    			.point(u.getPoint())
+	    			.seller(u.getSeller())
 	    			.build(), HttpStatus.OK);
     };
     

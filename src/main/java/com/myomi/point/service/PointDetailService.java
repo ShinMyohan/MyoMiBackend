@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.myomi.common.status.ErrorCode;
+import com.myomi.common.status.TokenValidFailedException;
 import com.myomi.coupon.repository.CouponRepository;
 import com.myomi.follow.repository.FollowRepository;
 import com.myomi.point.dto.MyPageDto;
@@ -46,6 +48,9 @@ public class PointDetailService {
 	@Transactional
 	public List<PointDetailDto> findMyPointList(Authentication user,
 			Pageable pageable) {
+		String path = "/api/mypointlist";
+		User u = ur.findById(user.getName())
+				.orElseThrow(() -> new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "로그인한 회원만 이용가능한 서비스입니다."));
 		String username = user.getName();
 		List<PointDetail> list = pdr.findAllByUser(username, pageable);
 		List<PointDetailDto> pointList = new ArrayList<>();

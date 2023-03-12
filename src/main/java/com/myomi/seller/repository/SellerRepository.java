@@ -2,6 +2,7 @@ package com.myomi.seller.repository;
 
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.product.entity.Product;
+import com.myomi.seller.dto.SellerOrderDetailDto;
 import com.myomi.seller.entity.Seller;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,7 +24,7 @@ public interface SellerRepository extends CrudRepository<Seller, String>{
 	//주문별 조회
 	@Query("SELECT p FROM Product p WHERE p.seller.sellerId.id =:userId")
 	List<Product> findAllBySellerId(@Param("userId")String userId);
-	
+		
 	///주문별 상세조회
 	@Query("SELECT od FROM OrderDetail od WHERE od.order.orderNum = :orderNum AND od.product.prodNum =:prodNum")
 	Optional<OrderDetail> findByOrder(@Param("orderNum")Long orderNum, @Param("prodNum")Long prodNum);

@@ -18,7 +18,6 @@ public class PageBean<T> {
 	private int endPage;
 	private int currentPage;
 
-
 	public PageBean(int CurrentPage, List<T>list, int totalCnt) {
 		this.currentPage = currentPage;
 		this.list =list;

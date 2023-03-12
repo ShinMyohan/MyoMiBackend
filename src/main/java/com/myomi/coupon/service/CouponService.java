@@ -50,7 +50,6 @@ public class CouponService {
     //쿠폰 사용시 status update
     @Transactional
     public void modifyCoupon(Long couponNum, int status) {
-        //        LocalDateTime date = LocalDateTime.now();
         Optional<Coupon> cp = cr.findById(couponNum);
         Coupon coupon = cp.get();
         if (status == 1 && coupon.getStatus() == 0) {  // 결제할 때

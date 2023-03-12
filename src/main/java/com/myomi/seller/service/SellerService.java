@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.myomi.common.status.ErrorCode;
+import com.myomi.common.status.NoResourceException;
 import com.myomi.order.entity.OrderDetail;
 import com.myomi.order.repository.OrderRepository;
 import com.myomi.product.entity.Product;
@@ -130,10 +132,9 @@ public class SellerService {
 
 	//판매자 주문현황 조회
 	@Transactional
-	public List<SellerOrderDetailDto> getAllSellerOrderList(Authentication user,Pageable pageable){
+	public List<SellerOrderDetailDto> getAllSellerOrderList(Authentication user){
 		String userId = user.getName();
 		List<Product> list = sr.findAllBySellerId(userId);
-
 		List<SellerOrderDetailDto> odList = new ArrayList<>();
 		for(Product p : list) {
 			p.getOrderDetails();
@@ -160,6 +161,7 @@ public class SellerService {
 		SellerOrderDetailDto dto = SellerOrderDetailDto.builder()
 				.prodNum(optO.get().getProduct().getProdNum())
 				.prodCnt(optO.get().getProdCnt())
+				.prodImg(optO.get().getProduct().getProductImgUrl())
 		        .user(optO.get().getOrder().getUser().getName())
 		        .name(optO.get().getProduct().getName())
 		        .orderNum(optO.get().getOrder().getOrderNum())

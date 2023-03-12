@@ -36,7 +36,7 @@ public class Notice {
 
 	@Column(name = "created_date",updatable = false)
 	private LocalDateTime createdDate;
-
+	
 	@Builder
 	public Notice(Long noticeNum, Admin admin, String title, String content, LocalDateTime createdDate) {
 		this.noticeNum = noticeNum;

@@ -104,4 +104,8 @@ public class Qna implements Serializable {
         this.ansContent = ansContent;
         this.ansCreatedDate = ansCreatedDate;
     }
+    
+    public void update(String qnaImgUrl) {
+    	this.qnaImgUrl = qnaImgUrl;
+    }
 }

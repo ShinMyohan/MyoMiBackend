@@ -27,9 +27,8 @@ public class ProductReadOneDto {
 	private String productImgUrl;
 	
 	@Builder
-	public ProductReadOneDto(Long prodNum, String sellerName, String sellerId,String category,
-			String name, Long originPrice, int percentage, int week, 
-			String detail, List<ReviewReadResponseDto> reviews,  List<QnaPReadResponseDto> qnas, String productImgUrl) {
+	public ProductReadOneDto(Long prodNum, String sellerName, String sellerId,String category, String name, Long originPrice, 
+			int percentage, int week, String detail, List<ReviewReadResponseDto> reviews,  List<QnaPReadResponseDto> qnas, String productImgUrl) {
 		this.prodNum = prodNum;
 		this.sellerName = sellerName;
 		this.sellerId = sellerId;
