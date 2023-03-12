@@ -18,7 +18,6 @@ public class ProductDto {
 	@JsonIgnore
 	@NotBlank
 	private Seller seller;
-//	private SellerDto sellerDto;
 	@NotBlank
 	private String category;
 	@NotBlank
@@ -29,7 +28,7 @@ public class ProductDto {
 	private int percentage;
 	@NotBlank
 	private int week;
-	private int status; //있으면 제이슨에서 계속 받으려함
+	private int status;
 	@Size(max = 60, message = "상품 특이사항을 입력해주세요.")
 	private String detail;
 	private String productImgUrl;
