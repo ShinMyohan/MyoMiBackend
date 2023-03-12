@@ -1,6 +1,5 @@
 package com.myomi.board.repository;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +22,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     public List<Board> findByTitleContaining(String keyword, Pageable pageable);
 
     @EntityGraph(attributePaths = "user")
-    public List<Board> findByCategoryContainingAndTitleContaining(String category, String title, Pageable pageable);
+    public List<Board> findByCategoryContainingAndTitleContaining(String category, String title);
 
     @Query("select b from Board b where b.user.id=:username")
-    public List<Board> findAllByUser(@Param("username") String username, Pageable pageable);
+    public List<Board> findAllByUser(@Param("username") String username);
 
     @Modifying //update쿼리 쓰려면 있어야함!
     @Query("UPDATE Board b set b.hits = b.hits+1 where b.boardNum=:boardNum")
@@ -52,7 +51,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     		+ " AND category LIKE %:category% AND title LIKE %:title%", nativeQuery=true)
     public List<Object[]> findByCategoryAndTitle(@Param("startRow") int startRow, @Param("endRow") int endRow,
     		                                     @Param("category")String category,@Param("title") String title);
-    		
 
 }
  

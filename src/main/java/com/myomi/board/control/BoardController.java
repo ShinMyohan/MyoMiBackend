@@ -1,6 +1,7 @@
 package com.myomi.board.control;
 
 import java.io.IOException;
+import java.lang.module.FindException;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -20,11 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myomi.board.dto.BoardReadResponseDto;
 import com.myomi.board.dto.PageBean;
-import com.myomi.board.entity.Board;
 import com.myomi.board.service.BoardService;
-import com.myomi.exception.AddException;
-import com.myomi.exception.FindException;
-import com.myomi.exception.RemoveException;
+import com.myomi.common.status.AddException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -103,7 +101,7 @@ public class BoardController {
 
     @ApiOperation(value = "게시판 | 글 삭제 ")
     @DeleteMapping("/board/{boardNum}") //로그인필요
-    public ResponseEntity<?> boardDelete(@PathVariable Long boardNum, Authentication user) throws RemoveException {
+    public ResponseEntity<?> boardDelete(@PathVariable Long boardNum, Authentication user){
         service.deleteBoard(boardNum, user);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -111,9 +109,8 @@ public class BoardController {
 
     @ApiOperation(value = "마이페이지 | 내가 작성한 글 보기 ")
     @GetMapping("/mypage/boardList")
-    public ResponseEntity<?> myBoardList(Authentication user,
-                                         Pageable pageable) throws FindException {
-        List<BoardReadResponseDto> list = service.findBoardListByUser(user, pageable);
+    public ResponseEntity<?> myBoardList(Authentication user) throws FindException {
+        List<BoardReadResponseDto> list = service.findBoardListByUser(user);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 

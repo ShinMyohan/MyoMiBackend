@@ -31,7 +31,7 @@ public class PointDetailController {
 	@ApiOperation(value = "마이페이지 | 포인트 목록 보기 ")
 	@GetMapping("mypage/pointDetail")
 	public ResponseEntity<?> myPointList(Authentication user,
-			@PageableDefault(sort = "pointEmbedded.createdDate", size=10, direction = Direction.DESC)Pageable pageable) {
+			@PageableDefault(sort = "pointEmbedded.createdDate", direction = Direction.DESC)Pageable pageable) {
 		List<PointDetailDto> list = service.findMyPointList(user, pageable);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
@@ -51,7 +51,7 @@ public class PointDetailController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "마이페이지| 상단메뉴 정보")
+	@ApiOperation(value = "마이페이지 | 상단메뉴 정보")
 	@GetMapping("/headerinfo")
 	public MyPageDto mypageInfo (Authentication user) {
 		return service.getMyPageInfo(user);

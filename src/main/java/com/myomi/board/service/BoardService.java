@@ -3,12 +3,9 @@ package com.myomi.board.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,13 +13,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.myomi.board.dto.BoardDetailResponseDto;
 import com.myomi.board.dto.BoardReadResponseDto;
 import com.myomi.board.dto.PageBean;
 import com.myomi.board.entity.Board;
@@ -30,8 +24,11 @@ import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.dto.CommentDto;
 import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
-import com.myomi.exception.AddException;
-import com.myomi.exception.RemoveException;
+import com.myomi.common.status.AddException;
+import com.myomi.common.status.ErrorCode;
+import com.myomi.common.status.ExceedMaxUploadSizeException;
+import com.myomi.common.status.ResponseDetails;
+import com.myomi.common.status.TokenValidFailedException;
 import com.myomi.s3.FileUtils;
 import com.myomi.s3.S3UploaderBoard;
 import com.myomi.user.entity.User;
@@ -115,7 +112,8 @@ public class BoardService {
 					.build();
 			boardList.add(dto);
 		}
-		int totalCnt = (int) br.count();
+		List<Board> bList = br.findByCategoryContainingAndTitleContaining(category, title);
+		int totalCnt = bList.size();
 		PageBean<BoardReadResponseDto> pb = new PageBean(currentPage, boardList, totalCnt);
 		return pb;
 	}	
@@ -160,8 +158,10 @@ public class BoardService {
 
 	//글 작성
 	@Transactional
-	public ResponseEntity<BoardReadResponseDto> addBoard(BoardReadResponseDto addDto, Authentication user) throws IOException {
-
+	public ResponseDetails addBoard(BoardReadResponseDto addDto, Authentication user) throws IOException {
+		String path = "/api/board";
+		User u = ur.findById(user.getName())
+				.orElseThrow(() -> new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "로그인한 회원만 글 작성이 가능합니다."));
 		String username = user.getName();
 		Optional<User> optU = ur.findById(username);
 		MultipartFile file = addDto.getFile();
@@ -170,64 +170,73 @@ public class BoardService {
 			InputStream inputStream = file.getInputStream();
 			boolean isValid = FileUtils.validImgFile(inputStream);
 			if (!isValid) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				throw new ExceedMaxUploadSizeException(ErrorCode.BAD_REQUEST,"EXCEED_FILE_SIZE");
 			}
-
-			String fileUrl = s3Uploader.upload(file, "게시판이미지", user, addDto);
-			//log.info("서비스:" + file.getName() + "사이즈는: "+ file.getSize());
-			Board board = addDto.toEntity(optU.get(), fileUrl);
-			br.save(board);
-
+			Long maxSize = (long) (5 * 1024 * 1024);
+			if (file.getSize() > maxSize) {
+				log.info("첨부가능한 파일의 용량을 초과하였습니다.");
+				//return new ResponseDetails("파일은 5MB까지 첨부 가능합니다", 400, path);
+				throw new ExceedMaxUploadSizeException (ErrorCode.BAD_REQUEST,"EXCEED_FILE_SIZE");
+			}else {
+				String fileUrl = s3Uploader.upload(file, "게시판이미지", user, addDto);
+				//log.info("서비스:" + file.getName() + "사이즈는: "+ file.getSize());
+				Board board = addDto.toEntity(optU.get(), fileUrl);
+				br.save(board);
+			}
 		} else {
 			Board board = addDto.toEntity(optU.get(), null);
 			br.save(board);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseDetails (addDto, 200, path);
 	}
 
 	//글 수정
 	@Transactional
-	public ResponseEntity<BoardDetailResponseDto> modifyBoard(BoardReadResponseDto editDto, Long boardNum, Authentication user)
+	public ResponseDetails modifyBoard(BoardReadResponseDto editDto, Long boardNum, Authentication user)
 			throws AddException, IOException {
-
+		String path = "/api/board";
 		String username = user.getName();
 		Board board = br.findById(boardNum).get();
 		MultipartFile file = editDto.getFile();
 
 		if (!board.getUser().getId().equals(username)) {
-			throw new AddException("작성자만 수정 가능합니다.");
+			throw new AddException(ErrorCode.BAD_REQUEST, "작성자만 수정 가능합니다.");
 		} else {
 			board.update(editDto.getCategory(), editDto.getTitle(), editDto.getContent());
 
 			if (file!= null) {
-				String fileUrl = s3Uploader.upload(file, "게시판이미지", user, editDto);
-				board.update(fileUrl);
+				Long maxSize = (long) (5 * 1024 * 1024);
+				if (file.getSize() > maxSize) {
+					log.info("첨부가능한 파일의 용량을 초과하였습니다.");
+					throw new ExceedMaxUploadSizeException (ErrorCode.BAD_REQUEST,"EXCEED_FILE_SIZE");
+
+				}else {
+					String fileUrl = s3Uploader.upload(file, "게시판이미지", user, editDto);
+					board.update(fileUrl);
+				}
 			}
-
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseDetails (editDto, 200, path);
 	}
-
-
 
 	//글 삭제
 	@Transactional
-	public void deleteBoard(Long boardNum, Authentication user) throws RemoveException {
+	public void deleteBoard(Long boardNum, Authentication user) {
 		String username = user.getName();
 		Board board = br.findById(boardNum).get();
 		if (board.getUser().getId().equals(username)) {
 			br.delete(board);
-		} else {
-			throw new RemoveException("작성자만 삭제 가능합니다.");
-		}
+		} 
 	}
 
 	//마이페이지에서 내가 작성한 글 보기
 	@Transactional
-	public List<BoardReadResponseDto> findBoardListByUser(Authentication user,
-			Pageable pageable) {
+	public List<BoardReadResponseDto> findBoardListByUser(Authentication user) {
+		String path = "/api/myboardlist";
+		User u = ur.findById(user.getName())
+				.orElseThrow(() -> new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "로그인한 회원만 이용가능한 서비스입니다."));
 		String username = user.getName();
-		List<Board> list = br.findAllByUser(username, pageable);
+		List<Board> list = br.findAllByUser(username);
 		List<BoardReadResponseDto> boardList = new ArrayList<>();
 		for (Board board : list) {
 			BoardReadResponseDto dto = BoardReadResponseDto.builder()

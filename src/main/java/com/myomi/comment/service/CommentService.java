@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,8 +17,9 @@ import com.myomi.board.repository.BoardRepository;
 import com.myomi.comment.dto.CommentDto;
 import com.myomi.comment.entity.Comment;
 import com.myomi.comment.repository.CommentRepository;
-import com.myomi.exception.AddException;
-import com.myomi.exception.RemoveException;
+import com.myomi.common.status.AddException;
+import com.myomi.common.status.ErrorCode;
+import com.myomi.common.status.TokenValidFailedException;
 import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 
@@ -36,16 +36,19 @@ public class CommentService {
 	private final BoardRepository br; 
 	private final UserRepository ur;
 
-
 	//마이페이지에서 나의 댓글 목록 보기
 	@Transactional
-	public List<CommentDto> getMyCommentList(Authentication user, Pageable pageable) {
+	public List<CommentDto> getMyCommentList(Authentication user) {
+		String path = "/api/myboardlist";
+		User u = ur.findById(user.getName())
+				.orElseThrow(() -> new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "로그인한 회원만 이용가능한 서비스입니다."));
 		String username = user.getName();
-		List<Comment> list = cr.findAllByComments(username, pageable);
+		List<Comment> list = cr.findAllByComments(username);
+
 		List<CommentDto> commentList = new ArrayList<>();
 		for (Comment cmt : list) {
 			CommentDto cDto = CommentDto.builder()
-				    .userName(username)
+					.userName(username)
 					.boardNum(cmt.getBoard().getBoardNum())
 					.commentNum(cmt.getCommentNum())
 					.content(cmt.getContent())
@@ -66,8 +69,6 @@ public class CommentService {
 		Optional<Board> optB = br.findById(boardNum);
 		Optional<User> optU = ur.findById(username);
 		LocalDateTime date = LocalDateTime.now();
-		//System.out.println("서비스아이디222222222~~~~~~~: "+ optU.get());
-//		Comment comment = cDto.toEntity(optU.get(), optB.get());
 		Comment comment = Comment.builder()
 				.commentNum(cDto.getCommentNum())
 				.content(cDto.getContent())
@@ -79,8 +80,6 @@ public class CommentService {
 		cr.save(comment);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	
 
 	//댓글 수정
 	@Transactional
@@ -92,8 +91,7 @@ public class CommentService {
 		Comment comment = optC.get();
 		if (comment.getUser().getId().equals(username)) {
 			comment.update(cDto.getContent());
-		}else {
-			throw new AddException("작성자만 수정 가능합니다.");
+
 		}
 		return cDto;
 	}
@@ -101,15 +99,14 @@ public class CommentService {
 	//댓글 삭제
 	@Transactional
 	public void deleteComment (Authentication user, Long boardNum,
-			Long commentNum) throws RemoveException{
+			Long commentNum) {
 		String username = user.getName();
 		Optional<Board> optB = br.findById(boardNum);
 		Optional<Comment> optC = cr.findById(commentNum);
 		Comment comment = optC.get();
 		if (comment.getUser().getId().equals(username)) {
 			cr.delete(comment);
-		}else {
-			throw new RemoveException("작성자만 삭제 가능합니다.");
+
 		}
 	}
 }
