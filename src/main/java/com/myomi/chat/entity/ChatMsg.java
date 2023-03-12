@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @ToString
-//@DynamicInsert
 @Entity
 @Table(name = "chat_msg")
 public class ChatMsg {
@@ -35,12 +34,8 @@ public class ChatMsg {
         this.chatRoom = chatRoom;
     }
 
-    public void registerChatRoomAndMsg(ChatRoom chatRoom) {
-        chatRoom.registerChatMsg(this);
-    }
-
     @Builder
-    public ChatMsg(ChatMsgEmbedded id, ChatRoom chatRoom, String senderId, String content) {
+    public ChatMsg(ChatMsgEmbedded id, String senderId, String content) {
         this.id = id;
         this.senderId = senderId;
         this.content = content;

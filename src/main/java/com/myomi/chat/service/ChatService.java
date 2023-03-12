@@ -1,12 +1,16 @@
 package com.myomi.chat.service;
 
-import com.myomi.chat.dto.ChatMsgDTO;
-import com.myomi.chat.dto.ChatRoomDTO;
+import com.myomi.chat.dto.ChatMsgRequestDto;
+import com.myomi.chat.dto.ChatMsgResponseDto;
+import com.myomi.chat.dto.ChatRoomDto;
+import com.myomi.chat.dto.ChatRoomListDto;
 import com.myomi.chat.entity.ChatMsg;
 import com.myomi.chat.entity.ChatRoom;
 import com.myomi.chat.repository.ChatMsgRepository;
 import com.myomi.chat.repository.ChatRepository;
 import com.myomi.common.status.ResponseDetails;
+import com.myomi.user.entity.User;
+import com.myomi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,8 +28,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatService {
+
     private final ChatRepository chatRepository;
     private final ChatMsgRepository chatMsgRepository;
+    private final UserRepository userRepository;
 
     // 회원 id에 해당하는 채팅룸 찾기
     @Transactional
@@ -38,9 +44,9 @@ public class ChatService {
             log.info("채팅룸이 존재하지 않으므로 새로운 채팅룸을 생성합니다. [userId : {}, roomNum : {}]", user.getName(), chatRoom.getNum());
             return new ResponseDetails(chatRoom, 200, path);
         } else {
-            ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+            ChatRoomDto chatRoomDto = new ChatRoomDto();
             log.info("채팅룸이 존재합니다. [userId : {}, roomNum : {}]", user.getName(), roomOpt.get().getNum());
-            return new ResponseDetails(chatRoomDTO.toDto(roomOpt.get()), 200, path);
+            return new ResponseDetails(chatRoomDto.toDto(roomOpt.get()), 200, path);
         }
     }
 
@@ -49,7 +55,6 @@ public class ChatService {
     protected ChatRoom createChatRoom(Authentication user) {
         ChatRoom chatRoom = ChatRoom.builder()
                 .userId(user.getName())
-                .adminId("admin")
                 .build();
         chatRepository.save(chatRoom);
         return chatRoom;
@@ -57,31 +62,44 @@ public class ChatService {
 
     // 메시지 저장
     @Transactional
-    public ResponseDetails createMessage(ChatMsgDTO chatMsgDTO) {
+    public void createMessage(ChatMsgRequestDto chatMsgRequestDto) {
         String path = "/api/chat/message";
-        log.info("메시지를 저장합니다. [roomNum : {}, msg : {}]", chatMsgDTO.getNum(), chatMsgDTO.getContent());
-        ChatRoom room = new ChatRoom(chatMsgDTO.getNum());
-        ChatMsg m = chatMsgDTO.toEntity(chatMsgDTO);
+        log.info("메시지를 저장합니다. [roomNum : {}, msg : {}]", chatMsgRequestDto.getNum(), chatMsgRequestDto.getContent());
+        ChatRoom room = new ChatRoom(chatMsgRequestDto.getNum());
+        ChatMsg m = chatMsgRequestDto.toEntity(chatMsgRequestDto);
         m.registerChatRoom(room); // 연관관계
         chatMsgRepository.save(m);
-
-        return new ResponseDetails(m, 200, path);
     }
 
     // 관리자가 모든 채팅방 목록 보기
     @Transactional
     public ResponseDetails findAllRoom() {
         String path = "/api/chat/rooms";
-        log.info("채팅방 목록 조회를 시작합니다.");
+        log.info("채팅룸 목록 조회를 시작합니다.");
         List<ChatRoom> rooms = chatRepository.findAll();
-        if (rooms.isEmpty()) {
+        if (rooms.size() == 0) {
             return new ResponseDetails("채팅룸이 존재하지 않습니다.", 200, path);
+        } else {
+            List<ChatRoomListDto> list = new ArrayList<>();
+            for (ChatRoom room : rooms) {
+                log.info("채팅룸을 찾았습니다. [roomNum : {}, userId : {}]", room.getNum(), room.getUserId());
+                ChatRoomListDto chatRoomListDto = new ChatRoomListDto();
+                Optional<User> user = userRepository.findById(room.getUserId());
+                list.add(chatRoomListDto.toDto(room, user.get()));
+            }
+            return new ResponseDetails(list, 200, path);
         }
-        List<ChatRoomDTO> list = new ArrayList<>();
-        for (ChatRoom room : rooms) {
-            ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
-            chatRoomDTO.toDto(room);
-            list.add(chatRoomDTO);
+    }
+
+    // 채팅룸의 메시지를 모두 조회
+    @Transactional
+    public ResponseDetails findAllMsg(Long roomNum) {
+        String path = "/chat/room/" + roomNum + "/message";
+        log.info("채팅룸 메시지 조회를 시작합니다. [roomNum : {}]", roomNum);
+        List<ChatMsg> msgList = chatMsgRepository.findChatMsgById_RoomNumOrderByIdAsc(roomNum);
+        List<ChatMsgResponseDto> list = new ArrayList<>();
+        for(ChatMsg chatMsg : msgList) {
+            list.add(ChatMsgResponseDto.toDto(chatMsg));
         }
         return new ResponseDetails(list, 200, path);
     }
@@ -92,7 +110,7 @@ public class ChatService {
     public ResponseDetails deleteRoom() {
         String path = "/api/chat/room";
         log.info("메시지가 존재하지 않는 채팅룸 삭제를 시작합니다.");
-        List<ChatRoom> rooms = chatRepository.findAll();
+        List<ChatRoom> rooms = chatRepository.findAllByOrderByNumDesc();
         for (ChatRoom room : rooms) {
             if (room.getMsg().size() == 0) {
                 log.info("메시지가 존재하지 않는 채팅룸을 찾았습니다. 삭제합니다. [userId : {}, roomNum : {}]", room.getUserId(), room.getNum());

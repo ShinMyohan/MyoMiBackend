@@ -58,7 +58,6 @@ public class CartService {
         if (u.getRole() != 0) {
             log.info("판매자가 장바구니에 상품을 담으려고 시도함 [userId : {}, prodNum : {}]", u.getId(), requestDto.getProduct().getProdNum());
             throw new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "판매자는 상품을 장바구니에 담을 수 없습니다.");
-
         }
 
         if (requestDto.getProduct().getStatus() != 0) {
@@ -72,9 +71,10 @@ public class CartService {
             saveCart(user, requestDto);
             log.info("장바구니에 존재하는 상품입니다. 수량을 추가합니다. [회원 userId : {}, 상품 번호 prodNum : {}]",
                     user.getName(), requestDto.getProduct().getProdNum());
-            return new ResponseDetails(requestDto, 200, path); // TODO: requestDto 반환이 맞을까
+            return new ResponseDetails(requestDto, 200, path);
         } else {
-            Cart cart = requestDto.toEntity(user.getName(), requestDto);
+            Cart cart = requestDto.toEntity(requestDto);
+            cart.registerUser(u);
             log.info(cart.getUser().getId() + "님의 장바구니에 상품번호 " + cart.getProduct().getProdNum() + "번째 상품이 담겼습니다.");
             cartRepository.save(cart);
             return new ResponseDetails(cart, 200, path);

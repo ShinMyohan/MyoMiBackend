@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-
 @DynamicInsert
 @Entity
 @Table(name = "chat_room")
@@ -39,10 +38,10 @@ public class ChatRoom {
     private List<ChatMsg> msg;
 
     @Builder
-    public ChatRoom(Long num, String userId, String adminId) {
+    public ChatRoom(Long num, String userId) {
         this.num = num;
         this.userId = userId;
-        this.adminId = adminId;
+        this.adminId = "admin";
         this.createdDate = LocalDateTime.now();
     }
 

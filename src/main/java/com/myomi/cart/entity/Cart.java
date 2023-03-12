@@ -36,4 +36,9 @@ public class Cart {
         this.product = product;
         this.prodCnt = prodCnt;
     }
+
+    // 연관관계
+    public void registerUser(User user) {
+        this.user = user;
+    }
 }

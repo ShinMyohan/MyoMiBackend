@@ -30,13 +30,6 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getDetail());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
-    
-    @ExceptionHandler(PointValidFailedException.class)
-    public ResponseEntity<ErrorResponse> pointValidFailedException(PointValidFailedException ex) {
-        log.error("PointValidFailedException", ex);
-        ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getDetail());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(TokenValidFailedException.class)
     public ResponseEntity<ErrorResponse> accessDeniedException(TokenValidFailedException ex) {

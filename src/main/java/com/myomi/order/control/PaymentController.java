@@ -1,7 +1,6 @@
 package com.myomi.order.control;
 
 import com.myomi.common.status.ResponseDetails;
-import com.myomi.exception.FindException;
 import com.myomi.order.dto.PaymentRequestDto;
 import com.myomi.order.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class PaymentController {
 
     // 결제 완료 후 검증 & DB에 정보 저장
     @PutMapping("")
-    public ResponseEntity<?> paymentComplete(@RequestBody PaymentRequestDto requestDto, Authentication user) throws IOException, FindException {
+    public ResponseEntity<?> paymentComplete(@RequestBody PaymentRequestDto requestDto, Authentication user) throws IOException {
         ResponseDetails responseDetails = paymentService.payment(requestDto, user);
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }

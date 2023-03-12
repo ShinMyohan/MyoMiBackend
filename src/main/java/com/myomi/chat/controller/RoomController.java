@@ -4,7 +4,7 @@ package com.myomi.chat.controller;
 import com.myomi.chat.service.ChatService;
 import com.myomi.common.status.ResponseDetails;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/chat")
-@Log4j2
+@Slf4j
 public class RoomController {
     private final ChatService chatService;
 

@@ -43,7 +43,7 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 
 //    @Override
 //    public Page<OrderListResponseDto> searchPageComplex(String userId, Pageable pageable) {
-//        List<OrderListResponseDto> contents = jpaQueryFactory
+//        List<OrderListResponseDto> query = jpaQueryFactory
 //                .select(Projections.fields(OrderListResponseDto.class,
 //                        orderDetail.order.orderNum, product.prodNum, product.name.as("pName"), order.totalPrice, order.createdDate, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum")))
 //                .from(orderDetail)
@@ -56,10 +56,10 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 ////                .limit(pageable.getPageSize())
 //                .fetch();
 //
-//        JPQLQuery<BookPaginationDto> pagination = querydsl().applyPagination(pageable, query);
+//        JPQLQuery<OrderListResponseDto> pagination = querydsl().applyPagination(pageable, query);
 //
 //        if(useSearchBtn) { // 검색 버튼 사용시
-//            int fixedPageCount = 10 * pageable.getPageSize(); // 10개 페이지 고정
+//            int fixedPageCount = 10 * pageable.g.getPageSize(); // 10개 페이지 고정
 //            return new PageImpl<>(pagination.fetch(), pageable, fixedPageCount);
 //        }
 //

@@ -1,7 +1,6 @@
 package com.myomi.order.control;
 
 import com.myomi.common.status.ResponseDetails;
-import com.myomi.exception.FindException;
 import com.myomi.order.dto.OrderRequestDto;
 import com.myomi.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +33,14 @@ public class OrderController {
 
     // 마이페이지에서 주문 상세 확인
     @GetMapping("/{num}")
-    public ResponseEntity<?> orderDetails(Authentication user, @PathVariable Long num) throws FindException {
+    public ResponseEntity<?> orderDetails(Authentication user, @PathVariable Long num) {
         ResponseDetails responseDetails = orderService.getOrderByUserId(user, num);
+        return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<?> orderDelete() {
+        ResponseDetails responseDetails = orderService.deleteOrder();
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 }
