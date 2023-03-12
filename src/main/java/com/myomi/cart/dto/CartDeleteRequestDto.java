@@ -6,9 +6,4 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor
 public class CartDeleteRequestDto {
     private Long prodNum;
-
-//    @Builder
-//    public CartDeleteRequestDto(Long prodNum) {
-//        this.prodNum = prodNum;
-//    }
 }

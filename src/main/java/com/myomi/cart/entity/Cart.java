@@ -37,11 +37,8 @@ public class Cart {
         this.prodCnt = prodCnt;
     }
 
-//    public void updateProdCnt(Cart cart) { // 더티체킹
-//        this.user = cart.getUser();
-//        this.product = cart.getProduct();
-//        this.prodCnt = cart.getProdCnt();
-//    }
-
-    // 연관관계 편의 메서드
+    // 연관관계
+    public void registerUser(User user) {
+        this.user = user;
+    }
 }

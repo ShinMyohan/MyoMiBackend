@@ -3,9 +3,6 @@ package com.myomi.security;
 import com.myomi.jwt.filter.JwtAuthenticationFilter;
 import com.myomi.jwt.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Arrays;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -96,14 +93,13 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/product/list", "/product/list/*", "/product/{prodNum}", "list/seller/{seller}").permitAll()
                 .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
                 .antMatchers("/product/add", "/product/seller/{prodNum}").hasRole("SELLER")
-                .antMatchers("/order").hasRole("USER")
                 .antMatchers("/sellerpage").hasRole("SELLER")
                 .antMatchers("/notice", "/notice/title/{keyword}").permitAll()
                 .antMatchers("/notice/add", "/notice/{nNum}", "/adminpage/*").hasRole("ADMIN")
                 .antMatchers("/review/add", "/review/{reviewNum}", "/user/modify").hasRole("USER")
                 .antMatchers("/user/info", "/user/modify").hasAnyRole("USER", "SELLER")
                 .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll()
-                .antMatchers("/cart").hasRole("USER")
+                .antMatchers("/cart/**").hasRole("USER")
                 .antMatchers("/order/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()

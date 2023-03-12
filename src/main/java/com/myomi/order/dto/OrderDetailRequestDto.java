@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-//@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 public class OrderDetailRequestDto {
-//    private Product product;
     private Long prodNum;
     private int prodCnt;
 

@@ -4,7 +4,6 @@ import com.myomi.cart.dto.CartDeleteRequestDto;
 import com.myomi.cart.dto.CartReadResponseDto;
 import com.myomi.cart.dto.CartSaveRequestDto;
 import com.myomi.cart.service.CartService;
-import com.myomi.common.status.ProductSoldOutException;
 import com.myomi.common.status.ResponseDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +23,14 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("/cart/list")
-    public ResponseEntity<?> cartList(Authentication user){
+    public ResponseEntity<?> cartList(Authentication user) {
         List<CartReadResponseDto> result = cartService.getCartList(user);
         ResponseDetails responseDetails = ResponseDetails.success(result, "/api/cart/list");
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<?> cartSave(Authentication user, @RequestBody CartSaveRequestDto requestDto) throws ProductSoldOutException {
+    public ResponseEntity<?> cartSave(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
         ResponseDetails responseDetails = cartService.addCart(user, requestDto);
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }

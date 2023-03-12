@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-
 @DynamicInsert
 @Entity
 @Table(name = "chat_room")
@@ -38,12 +37,11 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMsg> msg;
 
-
-    @Builder // DTO로 받아온 정보를 엔티티객체로 만들어줌
-    public ChatRoom(Long num, String userId, String adminId) {
+    @Builder
+    public ChatRoom(Long num, String userId) {
         this.num = num;
         this.userId = userId;
-        this.adminId = adminId;
+        this.adminId = "admin";
         this.createdDate = LocalDateTime.now();
     }
 
@@ -53,7 +51,6 @@ public class ChatRoom {
 
     // 연관관계 편의 메서드
     public void registerChatMsg(ChatMsg chatMsg) {
-//        this.msg.add(chatMsg);
         chatMsg.registerChatRoom(this); // chatMsg에 chatRoom의 객체를 저장해줌
         msg.add(chatMsg); // chatRoom에도 chatMsg의 정보를 저장
     }

@@ -35,7 +35,7 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
                 .join(product).on(orderDetail.product.eq(product))
                 .leftJoin(review).on(orderDetail.eq(review.orderDetail))
                 .where(order.user.id.eq(userId))
-                .orderBy(order.orderNum.desc())
+                .orderBy(orderDetail.order.orderNum.desc())
                 .transform(groupBy(orderDetail.order.orderNum).as(list(Projections.fields(OrderListResponseDto.class,
                         orderDetail.order.orderNum, product.prodNum, product.name.as("pName"), order.totalPrice, order.createdDate, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum")))));
         return result;
@@ -43,7 +43,7 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 
 //    @Override
 //    public Page<OrderListResponseDto> searchPageComplex(String userId, Pageable pageable) {
-//        List<OrderListResponseDto> contents = jpaQueryFactory
+//        List<OrderListResponseDto> query = jpaQueryFactory
 //                .select(Projections.fields(OrderListResponseDto.class,
 //                        orderDetail.order.orderNum, product.prodNum, product.name.as("pName"), order.totalPrice, order.createdDate, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum")))
 //                .from(orderDetail)
@@ -56,10 +56,10 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 ////                .limit(pageable.getPageSize())
 //                .fetch();
 //
-//        JPQLQuery<BookPaginationDto> pagination = querydsl().applyPagination(pageable, query);
+//        JPQLQuery<OrderListResponseDto> pagination = querydsl().applyPagination(pageable, query);
 //
 //        if(useSearchBtn) { // 검색 버튼 사용시
-//            int fixedPageCount = 10 * pageable.getPageSize(); // 10개 페이지 고정
+//            int fixedPageCount = 10 * pageable.g.getPageSize(); // 10개 페이지 고정
 //            return new PageImpl<>(pagination.fetch(), pageable, fixedPageCount);
 //        }
 //
@@ -67,11 +67,6 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
 //        Pageable pageRequest = exchangePageRequest(pageable, totalCount); // 데이터 건수를 초과한 페이지 버튼 클릭시 보정
 //        return new PageImpl<>(querydsl().applyPagination(pageRequest, query).fetch(), pageRequest, totalCount);
 //    }
-
-
-
-
-
 
 
     // 멤버십, 회원 별 3개월간 결제 총합 조회

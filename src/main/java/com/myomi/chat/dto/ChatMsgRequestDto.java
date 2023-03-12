@@ -8,24 +8,24 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ChatMsgDTO {
+public class ChatMsgRequestDto {
     private Long num;
     private String senderId;
     private String content;
 
     @Builder
-    public ChatMsgDTO (Long num, String senderId, String content) {
+    public ChatMsgRequestDto(Long num, String senderId, String content) {
         this.num = num;
         this.senderId = senderId;
         this.content = content;
     }
 
-    public ChatMsg toEntity(ChatMsgDTO chatMsgDTO) {
-        ChatMsgEmbedded id = new ChatMsgEmbedded(chatMsgDTO.getNum(), LocalDateTime.now());
+    public ChatMsg toEntity(ChatMsgRequestDto chatMsgRequestDto) {
+        ChatMsgEmbedded id = new ChatMsgEmbedded(chatMsgRequestDto.getNum(), LocalDateTime.now());
         return ChatMsg.builder()
                 .id(id)
-                .senderId(chatMsgDTO.getSenderId())
-                .content(chatMsgDTO.getContent())
+                .senderId(chatMsgRequestDto.getSenderId())
+                .content(chatMsgRequestDto.getContent())
                 .build();
     }
 }

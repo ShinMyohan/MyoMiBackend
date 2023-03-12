@@ -15,19 +15,20 @@ import com.myomi.user.entity.User;
 import com.myomi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class OrderService {
+
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
@@ -36,15 +37,15 @@ public class OrderService {
     // 주문서 작성
     @Transactional
     public ResponseDetails addOrder(Authentication user, OrderRequestDto requestDto)
-                                throws TokenValidFailedException, NoResourceException, ProductSoldOutException {
+            throws TokenValidFailedException, NoResourceException, ProductSoldOutException {
         String path = "/api/order";
         log.info("주문 가능한 회원인지 확인합니다. [userId : {}]", user.getName());
         User u = userRepository.findById(user.getName())
                 .orElseThrow(() -> new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "로그인한 회원만 주문이 가능합니다."));
-        if(u.getSignoutDate() != null) {
+        if (u.getSignoutDate() != null) {
             log.info("탈퇴한 회원이 주문을 요청함. [userId : {}]", u.getId());
             throw new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "탈퇴한 회원은 주문이 불가능합니다.");
-        } else if(u.getRole() != 0) {
+        } else if (u.getRole() != 0) {
             log.info("주문이 불가능한 판매자가 주문을 요청함. [userId : {}]", u.getId());
             throw new TokenValidFailedException(ErrorCode.UNAUTHORIZED, "판매자는 주문이 불가능합니다.");
         }
@@ -55,7 +56,7 @@ public class OrderService {
         for (OrderDetailRequestDto od : requestDto.getOrderDetails()) {
             Product product = productRepository.findById(od.getProdNum())
                     .orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "해당 상품이 없습니다."));
-            if(product.getStatus() != 0) {
+            if (product.getStatus() != 0) {
                 log.info("품절된 상품은 주문할 수 없음. [상품번호 prodNum : {}]", product.getProdNum());
                 throw new ProductSoldOutException(ErrorCode.BAD_REQUEST, "PRODUCT_STATUS_ERROR");
             } else {
@@ -68,12 +69,12 @@ public class OrderService {
         // 사용 가능한 쿠폰인지 확인
         if (requestDto.getCouponNum() != 0) {
             Optional<Coupon> coupon = couponRepository.findByCouponNumAndUserId(requestDto.getCouponNum(), u.getId());
-            if(coupon.isEmpty()) {
+            if (coupon.isEmpty()) {
                 log.info("해당 유저가 사용 가능한 쿠폰이 아님. [userId : {}, couponNum : {}]" + u.getId(), requestDto.getCouponNum());
-                  return new ResponseDetails("사용가능한 쿠폰이 아닙니다.",400, path);
+                return new ResponseDetails("사용가능한 쿠폰이 아닙니다.", 400, path);
             } else if (coupon.get().getStatus() != 0) {
                 log.info("쿠폰이 사용됐거나 만료됐음. [userId : {}, couponNum : {}]" + u.getId(), requestDto.getCouponNum());
-                return new ResponseDetails("쿠폰이 사용가능한 상태인지 확인해주세요.",400, path);
+                return new ResponseDetails("쿠폰이 사용가능한 상태인지 확인해주세요.", 400, path);
             } else {
                 // 쿠폰을 적용한 총 금액
                 realPrice *= (1 - coupon.get().getPercentage() * 0.01);
@@ -83,8 +84,8 @@ public class OrderService {
         // 사용포인트가 본인 가진 것 보다 적은지 확인
         if (u.getPoint().getTotalPoint() < requestDto.getUsedPoint()) {
             log.info("보유포인트 잔액을 초과했음. [userId : {}, userPoint : {}, requestPoint : {}]",
-                                                u.getId(), u.getPoint().getTotalPoint(), requestDto.getUsedPoint());
-            return new ResponseDetails("보유포인트 잔액을 초과했습니다. 400 에러를 응답합니다.",400, path);
+                    u.getId(), u.getPoint().getTotalPoint(), requestDto.getUsedPoint());
+            return new ResponseDetails("보유포인트 잔액을 초과했습니다. 400 에러를 응답합니다.", 400, path);
         } else {
             // 사용한 포인트를 제외한 총 금액
             realPrice -= requestDto.getUsedPoint();
@@ -133,10 +134,10 @@ public class OrderService {
     // 회원 정보로 주문 상세 조회 (마이페이지)
     @Transactional
     public ResponseDetails getOrderByUserId(Authentication user, Long orderNum) throws NoResourceException {
-        String path ="/api/order/" + orderNum;
+        String path = "/api/order/" + orderNum;
         log.info("회원이 주문번호로 주문상세를 조회합니다. [userId: {}, orderNum :{}]", user.getName(), orderNum);
         Order order = orderRepository.findByUserIdAndOrderNum(user.getName(), orderNum)
-                                        .orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "해당 주문번호가 없습니다."));
+                .orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "해당 주문번호가 없습니다."));
 
         List<Object> orderProdList = new ArrayList<>();
         for (int i = 0; i <= order.getOrderDetails().size() - 1; i++) {
@@ -153,5 +154,24 @@ public class OrderService {
         OrderDetailResponseDto dto = new OrderDetailResponseDto();
         dto = dto.toDto(order, orderProdList);
         return new ResponseDetails(dto, 200, path);
+    }
+
+    // 결제하지 않은 주문들 삭제
+    @Scheduled(cron = "0 0 1 * * *") // 매일 새벽 1시
+    @Transactional
+    public ResponseDetails deleteOrder() {
+        String path = "/api/order";
+        log.info("결제하지 않은 주문들의 삭제를 시작합니다.");
+        LocalDateTime today = LocalDateTime.now();
+        List<Order> orders = orderRepository.findAllByPayCreatedDateIsNullAndCreatedDateBefore(today); // 전날 주문저장을 했으나 결제하지 않은 주문들
+        for (Order order : orders) {
+            log.info("결제되지 않은 주문을 찾았습니다. 삭제합니다. [userId : {}, orderNum : {}]", order.getUser().getId(), order.getOrderNum());
+            orderRepository.deleteById(order.getOrderNum());
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date now = new Date();
+        String strDate = sdf.format(now);
+        log.info("주문 삭제를 완료했습니다. [finishDate : {}]", strDate);
+        return new ResponseDetails("주문 삭제를 완료했습니다.", 200, path);
     }
 }

@@ -86,13 +86,6 @@ public class Order {
     // 연관관계 편의 메소드
     public void addOrderDetail(OrderDetail orderDetail) {
         this.orderDetails.add(orderDetail);
-//        if (orderDetail.getOrder() != this) {
-//            orderDetail.setOrder(this);
-//        }
-    }
-
-    public void addDelivery(Delivery delivery) {
-        this.delivery = delivery;
     }
 
     // 결제일 업데이트
