@@ -15,6 +15,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.myomi.product.dto.ProductSaveDto;
 import com.myomi.qna.dto.QnaAddRequestDto;
+import com.myomi.qna.dto.QnaEditRequestDto;
 import com.myomi.seller.entity.Seller;
 import com.myomi.seller.repository.SellerRepository;
 
@@ -44,7 +45,7 @@ public class S3UploaderQna {
     private String upload(File uploadFile, String dirName, Authentication user
     		, QnaAddRequestDto addDto,Long prodNum
     		) {
-    	String fileName = dirName + "/" + prodNum + "/" + user.getName();
+    	String fileName = dirName + "/" + prodNum + "/" + user.getName() + "/" + uploadFile.getPath();
 
         String uploadImageUrl = putS3(uploadFile, fileName);
 
@@ -52,7 +53,7 @@ public class S3UploaderQna {
 
         return uploadImageUrl;      // 업로드된 파일의 S3 URL 주소 반환
     }
-
+    
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(
                 new PutObjectRequest(bucket, fileName, uploadFile)

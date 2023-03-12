@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,10 +73,10 @@ public class SellerController {
 	
 	//판매자 주문현황 조회
 	@GetMapping("sellerpage/orderlist")
-	public List<SellerOrderDetailDto> sellerOrderList(Authentication user,@PageableDefault(size=5) Pageable pageable){
-		return sellerService.getAllSellerOrderList(user,pageable);
+	public List<SellerOrderDetailDto> sellerOrderList(Authentication user){
+		return sellerService.getAllSellerOrderList(user);
 	}
-	
+		
 	//판매자 주문현황 상세조회
 	@GetMapping("sellerpage/order/detail/{orderNum}/{prodNum}")
 	public SellerOrderDetailDto sellerOrderDetail(@PathVariable Long orderNum,@PathVariable Long prodNum) {

@@ -66,5 +66,4 @@ public class QnaPReadResponseDto {
 				.ansCreatedDate(qna.getAnsCreatedDate())
 				.build();
 	}
-	
 }

@@ -1,5 +1,6 @@
 package com.myomi.qna.service;
 
+import com.myomi.exception.AddException;
 import com.myomi.product.entity.Product;import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -88,12 +89,29 @@ public class QnaService {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+		
+	//회원이 나의상품문의 수정
+	@Transactional
+	public QnaUReadResponseDto modifyQna(QnaEditRequestDto editDto, Long qnaNum, Authentication user) {
+		String username = user.getName();
+		Qna qna = qr.findById(qnaNum).get();
 
+		if (qna.getUserId().getId().equals(username)) {
+			if (qna.getAnsCreatedDate() == null) {
+				qna.update(editDto.getQueTitle(), editDto.getQueContent());
+			} else {
+				log.info("수정이 불가능합니다.");
+			}
+		} else {
+			log.info("수정권한이 없습니다");
+		}
+		return new QnaUReadResponseDto(qna);
+	}
 
 	//회원의 나의상품문의 조회
 	@Transactional
 	public PageBean<QnaUReadResponseDto> getAllUserQnaList(Authentication user,int currentPage) {
-		int startRow = (currentPage-1)*PageBean.CNT_PER_PAGE +1;
+		int startRow = (currentPage-1)*PageBean.CNT_PER_PAGE+1;
 		int endRow = currentPage*PageBean.CNT_PER_PAGE;
 		String username = user.getName();
 		List<Object[]> list = qr.findAllByUserId(username, startRow, endRow);
@@ -110,13 +128,11 @@ public class QnaService {
 						.ansContent((String)arr[5])
 						.build();
 				qnaList.add(dto);
-				
 			}
 		}
-		System.out.println("리스트목록*************"+qnaList);
 
-		int totalCnt = (int) qr.count();
-		System.out.println("총갯수********"+totalCnt);
+		List<Qna> qList = qr.findByUserId(username);
+		int totalCnt = qList.size();
 		PageBean<QnaUReadResponseDto> pb = new PageBean(currentPage,qnaList,totalCnt);
 		return pb;
 	}
@@ -142,6 +158,7 @@ public class QnaService {
 				.ansCreatedDate(qna.get().getAnsCreatedDate())
 				.companyName(qna.get().getProdNum().getSeller().getCompanyName())
 				.file(qna.get().getQnaImgUrl())
+				.prodImg(qna.get().getProdNum().getProductImgUrl())
 				.build();
 		return dto;
 	}
@@ -149,7 +166,7 @@ public class QnaService {
 	//상품별 상품문의 조회하기
 	@Transactional
 	public List<QnaPReadResponseDto> getAllQnaProductList(Product prodNum) {
-		Long pd = prodNum.getProdNum();  //id
+		Long pd = prodNum.getProdNum();
 		List<Qna> qnas = qr.findAllByProdNum(pd);
 		List<QnaPReadResponseDto> list = new ArrayList<>();
 
@@ -175,24 +192,6 @@ public class QnaService {
 		return list;
 	}
 
-	//회원이 나의상품문의 수정
-	@Transactional
-	public QnaUReadResponseDto modifyQna(QnaEditRequestDto editDto, Long qnaNum, Authentication user) {
-		String username = user.getName();
-		Qna qna = qr.findById(qnaNum).get();
-
-		if (qna.getUserId().getId().equals(username)) {
-			if (qna.getAnsCreatedDate() == null) {
-				qna.update(editDto.getQueTitle(), editDto.getQueContent());
-			} else {
-				log.info("수정이 불가능합니다.");
-			}
-		} else {
-			log.info("수정권한이 없습니다");
-		}
-		return new QnaUReadResponseDto(qna);
-	}
-
 	//회원이 나의상품문의 삭제
 	@Transactional
 	public void removeQna(Long qnaNum, Authentication user) {
@@ -209,36 +208,6 @@ public class QnaService {
 			log.info("삭제권한이 없습니다");
 		}
 	}
-
-	//셀러가 나의스토어 상품문의 조회
-	//    @Transactional
-	//    public List<QnaUReadResponseDto> getAllSellerQnaList(Authentication user, Pageable pageable) {
-	//        String username = user.getName();
-	//        List<Qna> qnas = qr.findAllBySellerId(username, pageable);
-	//        List<QnaUReadResponseDto> list = new ArrayList<>();
-	//        if (qnas.size() == 0) {
-	//            log.info("상품문의가 없습니다");
-	//        } else {
-	//            for (Qna qna : qnas) {
-	//                QnaUReadResponseDto dto = QnaUReadResponseDto.builder()
-	//                        .qnaNum(qna.getQnaNum())
-	//                        .id(qna.getUserId().getId())
-	//                        .userName(qna.getUserId().getName())
-	//                        .pName(qna.getProdNum().getName())
-	//                        .category(qna.getProdNum().getCategory())
-	//                        .detail(qna.getProdNum().getDetail())
-	//                        .week(qna.getProdNum().getWeek())
-	//                        .queTitle(qna.getQueTitle())
-	//                        .queContent(qna.getQueContent())
-	//                        .queCreatedDate(qna.getQueCreatedDate())
-	//                        .ansContent(qna.getAnsContent())
-	//                        .ansCreatedDate(qna.getAnsCreatedDate())
-	//                        .build();
-	//                list.add(dto);
-	//            }
-	//        }
-	//        return list;
-	//    }
 
 	//셀러가 나의스토어 상품문의 조회 SQL
 	@Transactional
@@ -269,7 +238,7 @@ public class QnaService {
 		}
 		return list;
 	}
-
+	
 	//셀러가 나의스토어 상품문의상세 조회
 	@Transactional
 	public QnaUReadResponseDto getSellerQna(Authentication user, Long qnaNum) {
@@ -286,6 +255,7 @@ public class QnaService {
 				.ansContent(optQ.get().getAnsContent())
 				.ansCreatedDate(optQ.get().getAnsCreatedDate())
 				.file(optQ.get().getQnaImgUrl())
+                .prodImg(optQ.get().getProdNum().getProductImgUrl())
 				.build();
 		return dto;
 	}
