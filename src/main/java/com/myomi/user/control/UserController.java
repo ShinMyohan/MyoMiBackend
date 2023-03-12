@@ -1,6 +1,7 @@
 package com.myomi.user.control;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myomi.user.dto.UserDto;
 import com.myomi.user.dto.UserLoginRequestDto;
 import com.myomi.user.dto.UserSignUpReqeustDto;
+import com.myomi.user.service.CertificationSevice;
 import com.myomi.user.service.UserService;
 
 import io.swagger.annotations.Api;
@@ -31,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	@Autowired
 	private final UserService userService;
+	@Autowired
+	private final CertificationSevice certificationSevice;
 	
 	@ApiOperation(value = "회원| 일반 로그인")
     @PostMapping("/login")
@@ -40,12 +44,7 @@ public class UserController {
         Map<String, Object> map = userService.login(userId, password);
         return map;
     }
-    
-    @PostMapping("/test")
-    public String test() {
-    	return "sucess";
-    }
-    
+
     @ApiOperation(value = "사용자| 일반 회원가입")
     @PostMapping("/signup")
     public String signup(@RequestBody UserSignUpReqeustDto userSignUpReqeustDto) {
@@ -75,5 +74,19 @@ public class UserController {
     public ResponseEntity<UserDto> userUpdate(UserDto userDto, Authentication user) {
     	return userService.updateUserInfo(userDto, user);
     }
+    
+    @ApiOperation(value = "사용자| 휴대폰번호 본인인증")
+    @PostMapping("/check/sendSMS")
+	public String sendSMS(String phoneNumber) {
+		Random rand = new Random();
+		String numStr = "";
+		for(int i=0; i<4; i++) {
+			String ran = Integer.toString(rand.nextInt(10));
+			numStr+=ran;
+		}
+		log.info("수신자번호: "+phoneNumber);
+		log.info("인증번호: "+numStr);
+		certificationSevice.certifiedPhoneNumber(phoneNumber, numStr);
+		return numStr;
+	}
 }
-

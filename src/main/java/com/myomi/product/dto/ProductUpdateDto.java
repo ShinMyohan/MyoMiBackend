@@ -19,9 +19,7 @@ public class ProductUpdateDto {
 	private int status;
 	
 	//상품 업데이트시 사용
-	public Product toEntity(Long prodNum, 
-			ProductUpdateDto productUpdateDto
-			, Seller seller, LocalDateTime date) {
+	public Product toEntity(Long prodNum, ProductUpdateDto productUpdateDto, Seller seller, LocalDateTime date) {
 		return Product.builder()
 				.prodNum(prodNum)
 				.seller(seller)
