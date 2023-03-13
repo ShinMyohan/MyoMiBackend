@@ -38,12 +38,11 @@ public class NoticeService {
 	
 	
 	@Transactional
-	public List<NoticeDto> getAllList()throws NoResourceException{
+	public List<NoticeDto> getAllList(){
 		List<Notice>notices = noticeRepository.findAll();
 		List<NoticeDto>list = new ArrayList<>();
 		if(notices.size()==0) {
 			log.info("공지사항이 없습니다.");
-			throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOTICE_NOT_FOUND");
 		}else {
 			for(Notice notice:notices) {
 				NoticeDto dto = NoticeDto.builder()
@@ -113,12 +112,11 @@ public class NoticeService {
 	
 	//제목으로 검색
 	@Transactional
-	public List<NoticeDto> getAllNoticeByTitle(String keyword)throws NoResourceException {
+	public List<NoticeDto> getAllNoticeByTitle(String keyword) {
 		List<Notice> notices = noticeRepository.findByTitleContaining(keyword);
 		List<NoticeDto> list = new ArrayList<>();
 		if (notices.size() == 0) {
 			log.info("검색된 공지사항이 없습니다.");
-			throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOTICE_NOT_FOUND");
 		} else {
 			for (Notice notice : notices) {
 				NoticeDto dto = NoticeDto.builder().adminId(notice.getAdmin().getAdminId())

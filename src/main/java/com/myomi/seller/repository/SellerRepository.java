@@ -38,9 +38,10 @@ public interface SellerRepository extends CrudRepository<Seller, String>{
 
 	//특정 셀러 찾기
 	Optional<Seller> findById(String sellerId);
-	
 	//판매자 상품조회
 	@Query("SELECT p FROM Product p WHERE p.seller.sellerId.id =:userId")
 	List<Product> findProductBySellerId(@Param("userId")String userId);	
+	//status로 판매자 승인상태 조회
+	public List<Seller> findAllByStatus(@Param(value="status")int status);
 }
 

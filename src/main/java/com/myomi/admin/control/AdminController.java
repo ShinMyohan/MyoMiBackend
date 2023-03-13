@@ -5,6 +5,8 @@ import com.myomi.seller.dto.SellerDetailDto;
 import com.myomi.seller.dto.SellerResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class AdminController {
     }
 
     //판매자 신청상태 status로 조회
-    @GetMapping("seller/{status}")
+    @GetMapping(value="seller/{status}",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<SellerResponseDto> sellerListByStatus(@PathVariable int status) {
         return service.getAllSellerByStatus(status);
     }
