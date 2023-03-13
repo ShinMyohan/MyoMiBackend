@@ -6,7 +6,6 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myomi.seller.entity.Seller;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +28,7 @@ public class SellerDetailDto {
    private String email;
    private String companyImgUrl;
    private String internetImgUrl;
+   private String phoneNum;
 
    public SellerDetailDto(Seller entity) {
       this.sellerName = entity.getSellerId().getName();
@@ -45,5 +45,6 @@ public class SellerDetailDto {
       this.email=entity.getSellerId().getEmail();
       this.internetImgUrl=entity.getInternetImgUrl();
       this.companyImgUrl=entity.getCompanyImgUrl();
+      this.phoneNum = entity.getSellerId().getTel();
    }
 }
