@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.myomi.product.entity.Product;
 import com.myomi.qna.dto.QnaPReadResponseDto;
+import com.myomi.review.dto.ReviewDetailResponseDto;
 import com.myomi.review.dto.ReviewReadResponseDto;
 
 import lombok.Builder;
@@ -23,12 +24,13 @@ public class ProductReadOneDto {
 	private int week;
 	private String detail;
 	private List<ReviewReadResponseDto> reviews;
+	private List<ReviewDetailResponseDto>bestReviews;
 	private List<QnaPReadResponseDto> qnas;
 	private String productImgUrl;
 	
 	@Builder
 	public ProductReadOneDto(Long prodNum, String sellerName, String sellerId,String category, String name, Long originPrice, 
-			int percentage, int week, String detail, List<ReviewReadResponseDto> reviews,  List<QnaPReadResponseDto> qnas, String productImgUrl) {
+			int percentage, int week, String detail, List<ReviewReadResponseDto> reviews,  List<QnaPReadResponseDto> qnas, List<ReviewDetailResponseDto>bestReviews,String productImgUrl) {
 		this.prodNum = prodNum;
 		this.sellerName = sellerName;
 		this.sellerId = sellerId;
@@ -40,10 +42,11 @@ public class ProductReadOneDto {
 		this.detail = detail;
 		this.reviews = reviews;
 		this.qnas = qnas;
+		this.bestReviews = bestReviews;
 		this.productImgUrl = productImgUrl;
 	}
 	
-	public ProductReadOneDto toDto(Product product, List<ReviewReadResponseDto> review, List<QnaPReadResponseDto> qnas) {
+	public ProductReadOneDto toDto(Product product, List<ReviewReadResponseDto> review, List<QnaPReadResponseDto> qnas,List<ReviewDetailResponseDto>bestReviews) {
 		return ProductReadOneDto.builder()
 			.prodNum(product.getProdNum())
 			.sellerName(product.getSeller().getCompanyName())
@@ -57,6 +60,7 @@ public class ProductReadOneDto {
 			.reviews(review)
 			.qnas(qnas)
 			.productImgUrl(product.getProductImgUrl())
+			.bestReviews(bestReviews)
 			.build();
 	}
 }

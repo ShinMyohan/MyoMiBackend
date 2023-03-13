@@ -30,8 +30,10 @@ public class AdminService {
 		} else {
 
 			for (Seller seller : sellers) {
-				SellerResponseDto dto = SellerResponseDto.builder().sellerId(seller.getId())
-						.companyName(seller.getCompanyName()).status(seller.getStatus())
+				SellerResponseDto dto = SellerResponseDto.builder()
+						.sellerId(seller.getId())
+						.companyName(seller.getCompanyName())
+						.status(seller.getStatus())
 						.signoutDate(seller.getSellerId().getSignoutDate())
 						.build();
 				list.add(dto);

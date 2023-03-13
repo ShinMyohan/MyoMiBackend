@@ -46,7 +46,7 @@ public class S3UploaderReview {
     private String upload(File uploadFile, String dirName, Authentication user
     		, ReviewSaveRequestDto reviewSaveDto
     		) {
-    	String fileName = dirName + "/"+reviewSaveDto.getFile().getName()+"/"+user.getName();
+    	String fileName = dirName + "/"+user.getName()+"/"+uploadFile.getPath();
  
     	String uploadImageUrl = putS3(uploadFile, fileName);
 

@@ -113,7 +113,7 @@ public class NoticeService {
 	//제목으로 검색
 	@Transactional
 	public List<NoticeDto> getAllNoticeByTitle(String keyword) {
-		List<Notice> notices = noticeRepository.findByTitleContaining(keyword);
+		List<Notice> notices = noticeRepository.findByTitleContainingOrderByNoticeNumDesc(keyword);
 		List<NoticeDto> list = new ArrayList<>();
 		if (notices.size() == 0) {
 			log.info("검색된 공지사항이 없습니다.");

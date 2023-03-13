@@ -29,6 +29,7 @@ import com.myomi.product.repository.ProductRepository;
 import com.myomi.qna.dto.QnaPReadResponseDto;
 import com.myomi.qna.entity.Qna;
 import com.myomi.qna.repository.QnaRepository;
+import com.myomi.review.dto.ReviewDetailResponseDto;
 import com.myomi.review.dto.ReviewReadResponseDto;
 import com.myomi.review.entity.Review;
 import com.myomi.review.repository.ReviewRepository;
@@ -125,13 +126,16 @@ public class ProductService {
 		List<Qna> qnas = qnaRepository.findByProdNumOrderByQnaNumDesc(product);
 		//리뷰 DTO 받으면 태리님 방식처럼 해보기 
 		List<Review> reviews = reviewRepository.findAllReviewByProd(prodNum);
-		
+		List<Review> bestReviews = reviewRepository.findAllBestReviewByProd(prodNum);
 		if(product.getQnas().size() == 0) {	
 			log.info("상품관련 문의가 없습니다.");
 		}
 		
 		if(reviews.size() == 0) {	
 			log.info("상품에 대한리뷰가 없습니다.");
+		}
+		if(bestReviews.size()==0) {
+			log.info("상품에 대한 베스트리뷰가 없습니다.");
 		}
 		
 		List<QnaPReadResponseDto> qDto = new ArrayList<>();
@@ -145,8 +149,15 @@ public class ProductService {
 			ReviewReadResponseDto reviewDto = new ReviewReadResponseDto();
 			rDto.add(reviewDto.toDto(r));
 		}
+		
+		List<ReviewDetailResponseDto> bDto = new ArrayList<>();
+		for(Review b : bestReviews) {
+			ReviewDetailResponseDto bestReviewDto = new ReviewDetailResponseDto();
+			bDto.add(bestReviewDto.toDto(b));
+		}
+		
 		ProductReadOneDto dto = new ProductReadOneDto();
-		return new ResponseEntity<>(dto.toDto(product, rDto, qDto) , HttpStatus.OK);
+		return new ResponseEntity<>(dto.toDto(product, rDto, qDto,bDto) , HttpStatus.OK);
 	}
 	
 	@Transactional //성공

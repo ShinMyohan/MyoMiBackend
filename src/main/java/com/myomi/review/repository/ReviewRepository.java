@@ -19,8 +19,8 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query("select r from Review r join r.orderDetail.order join r.orderDetail.product where r.reviewNum=:reviewNum")
     public Review findReviewByUserId(@Param("reviewNum") Long reviewNum);
 
-    @Query("select r from Review r join r.orderDetail.order join r.orderDetail.product join r.user where r.user.id=:id")
-    public List<Review> findAllByUserId(@Param("id") String userId);
+    @Query("select r from Review r join r.orderDetail.order join r.orderDetail.product join r.user where r.user.id=:id ORDER BY r.reviewNum DESC")
+    public List<Review> findAllByUserIdOrderByReviewNumDesc(@Param("id") String userId);
 
     @Query("select r from Review r join r.orderDetail.order join r.orderDetail.product join r.user where r.reviewNum=:reviewNum and r.user.id=:id")
     public Review findReviewByReviewNumAndUserId(@Param("reviewNum") Long reviewNum, @Param("id") String userId);
@@ -32,4 +32,8 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
     @Query(value = "select distinct r.* from review r, orders_detail od where r.prod_num = od.prod_num\n"
             + "and r.prod_num = ?", nativeQuery = true)
     public List<Review> findAllReviewByProd(Long prodNum);
+    
+    @Query(value = "select distinct r.* from review r, orders_detail od,best_review b where r.prod_num = od.prod_num\n"
+            + " and r.num=b.review_num and r.prod_num = ?", nativeQuery = true)
+    public List<Review>findAllBestReviewByProd(Long prodNum);
 }
