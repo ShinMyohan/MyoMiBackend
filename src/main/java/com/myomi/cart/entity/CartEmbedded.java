@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode

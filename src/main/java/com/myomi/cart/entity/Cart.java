@@ -5,13 +5,11 @@ import com.myomi.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
-@ToString
 @Entity
 public class Cart {
     @EmbeddedId
