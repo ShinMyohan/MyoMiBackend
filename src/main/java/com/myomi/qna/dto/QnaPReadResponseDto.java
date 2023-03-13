@@ -26,6 +26,7 @@ public class QnaPReadResponseDto {
 	private String queContent;
 	private String pName;
 	private String companyName;
+	private String qnaImgUrl;
 
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -40,7 +41,7 @@ public class QnaPReadResponseDto {
 	
 	@Builder
 	public QnaPReadResponseDto(Long qnaNum, User sellerId,String userId, Product product,String queTitle, String queContent, LocalDateTime queCreatedDate,
-			String ansContent, LocalDateTime ansCreatedDate, String pName, String companyName) {
+			String ansContent, LocalDateTime ansCreatedDate, String pName, String companyName, String qnaImgUrl) {
 		this.sellerId = sellerId;
 		this.qnaNum = qnaNum;
 		this.userId = userId;
@@ -52,6 +53,7 @@ public class QnaPReadResponseDto {
 		this.ansCreatedDate = ansCreatedDate;
 		this.pName = pName;
 		this.companyName = companyName;
+		this.qnaImgUrl = qnaImgUrl;
 	}
 	
 	//상품 상세 조회시
@@ -64,6 +66,7 @@ public class QnaPReadResponseDto {
 				.queCreatedDate(qna.getQueCreatedDate())
 				.ansContent(qna.getAnsContent())
 				.ansCreatedDate(qna.getAnsCreatedDate())
+				.qnaImgUrl(qna.getQnaImgUrl())
 				.build();
 	}
 }
