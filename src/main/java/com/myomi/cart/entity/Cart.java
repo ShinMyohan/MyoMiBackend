@@ -41,4 +41,7 @@ public class Cart {
     public void registerUser(User user) {
         this.user = user;
     }
+    public void registerProduct(Product product) {
+        this.product = product;
+    }
 }
