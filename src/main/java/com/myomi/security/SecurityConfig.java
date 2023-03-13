@@ -1,8 +1,7 @@
 package com.myomi.security;
 
-import com.myomi.jwt.filter.JwtAuthenticationFilter;
-import com.myomi.jwt.provider.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,7 +16,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import com.myomi.jwt.filter.JwtAuthenticationFilter;
+import com.myomi.jwt.provider.JwtTokenProvider;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * SecurityConfig는 Spring Security 설정을 위한 클래스.
@@ -39,8 +41,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://{본인IP}:5500");
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
+        configuration.addAllowedOrigin("http://{ip주소}:5500");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -65,18 +67,16 @@ public class SecurityConfig {
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .cors().configurationSource(corsConfigurationSource()).and()
 //                .formLogin().disable()
-
                 // 시큐리티는 기본적으로 세션을 사용
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .oauth2Login()
-//                .userInfoEndpoint()
+//              .userInfoEndpoint()
 //	            .userService(customOAuth2UserService)
 //	        	.and()
                 .and()
                 .authorizeRequests()
-
                 .antMatchers("/", "/**").permitAll()
                 .antMatchers("/health/**",
                         "/v1/user/**",
@@ -84,22 +84,26 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v2/api-docs/**").permitAll()
-
                 .antMatchers("/api/v1/**").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, "/product/{prodNum}").hasRole("SELLER")
                 .antMatchers(HttpMethod.DELETE, "/product/{prodNum}").hasRole("SELLER")
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
                 .antMatchers(HttpMethod.POST, "/signup/check/id").permitAll()
-                .antMatchers(HttpMethod.GET, "/product/list", "/product/list/*", "/product/{prodNum}", "list/seller/{seller}").permitAll()
-                .antMatchers("/user/login", "/user/signup", "/auth/**", "/oauth2/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/product/list", "/product/list/*", "/product/{prodNum}", "list/seller/{seller}","notice/{noticeNum}").permitAll()
+                .antMatchers("/board/add").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE,"/board/{boardNum}","/board/{boardNum}/{commentNum}").hasRole("USER")
+                .antMatchers(HttpMethod.PUT,"/board/{boardNum}","/board/{boardNum}/{commentNum}").hasRole("USER")
+                .antMatchers("/mypage/*").hasRole("USER")
+                .antMatchers("/board/*","/user/login", "/user/signup", "/auth/**", "/oauth2/**","/user/check/sendSMS").permitAll()
                 .antMatchers("/product/add", "/product/seller/{prodNum}").hasRole("SELLER")
                 .antMatchers("/sellerpage").hasRole("SELLER")
-                .antMatchers("/notice", "/notice/title/{keyword}").permitAll()
-                .antMatchers("/notice/add", "/notice/{nNum}", "/adminpage/*").hasRole("ADMIN")
-                .antMatchers("/review/add", "/review/{reviewNum}", "/user/modify").hasRole("USER")
-                .antMatchers("/user/info", "/user/modify").hasAnyRole("USER", "SELLER")
+                .antMatchers("/notice/list", "/notice/title/{keyword}").permitAll()
+                .antMatchers("/notice/add", "/notice/{noticeNum}", "/adminpage/*", "user/seller/sendSMS").hasRole("ADMIN")
+                .antMatchers("/mypage/review/add", "/mypage/review/{reviewNum}", "/user/modify").hasRole("USER")
+                .antMatchers("/user/info", "/user/modify","/store/**").hasAnyRole("USER", "SELLER")
                 .antMatchers("/api/**", "/login/**", "/oauth2/**").permitAll()
                 .antMatchers("/cart/**").hasRole("USER")
+                
                 .antMatchers("/order/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()

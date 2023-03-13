@@ -51,12 +51,11 @@ public class ReviewService {
     private final BestReviewRepository bestreviewRepsitory;
     private final OrderDetailRepository orderdetailRepository;
 
-    public List<ReviewDetailResponseDto> getProdReviewList(Long prodNum, Authentication seller) throws NoResourceException {
+    public List<ReviewDetailResponseDto> getProdReviewList(Long prodNum, Authentication seller) {
         List<Review> reviews = reviewRepository.findAllByProdNum(prodNum);
         List<ReviewDetailResponseDto> list = new ArrayList<>();
         if (reviews.size() == 0) {
         	log.info("리뷰가 없습니다.");
-        	throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "REVIEW_NOT_FOUND");
         } else {
             for (Review review : reviews) {
                 ReviewDetailResponseDto dto = ReviewDetailResponseDto.builder()
@@ -78,13 +77,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public List<ReviewDetailResponseDto> getMyReviewList(Authentication user)throws NoResourceException {
+    public List<ReviewDetailResponseDto> getMyReviewList(Authentication user) {
         String username = user.getName();
         List<Review> reviews = reviewRepository.findAllByUserId(username);
         List<ReviewDetailResponseDto> list = new ArrayList<>();
         if (reviews.size() == 0) {
             log.info("리뷰가 없습니다.");
-            throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "REVIEW_NOT_FOUND");
         } else {
             for (Review review : reviews) {
                 ReviewDetailResponseDto dto = ReviewDetailResponseDto.builder()
