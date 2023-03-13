@@ -89,4 +89,12 @@ public class UserController {
 		certificationSevice.certifiedPhoneNumber(phoneNumber, numStr);
 		return numStr;
 	}
+    
+    @ApiOperation(value = "관리자| 셀러 승인")
+    @GetMapping("/seller/sendSMS")
+	public void sendSMSToSeller(String phoneNumber) {
+		log.info("수신자번호: "+phoneNumber);
+//		log.info("인증번호: "+numStr);
+		certificationSevice.certifiedSeller(phoneNumber);
+	}
 }
