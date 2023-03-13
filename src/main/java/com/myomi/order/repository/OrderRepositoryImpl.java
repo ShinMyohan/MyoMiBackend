@@ -29,8 +29,7 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
     @Override
     public Map<Long, List<OrderListResponseDto>> findAllByUserId(String userId) {
         Map<Long, List<OrderListResponseDto>> result = jpaQueryFactory
-                .selectFrom(order)
-                .from(orderDetail)
+                .selectFrom(orderDetail)
                 .join(order).on(order.eq(orderDetail.order))
                 .join(product).on(orderDetail.product.eq(product))
                 .leftJoin(review).on(orderDetail.eq(review.orderDetail))
@@ -40,33 +39,6 @@ public class OrderRepositoryImpl implements OrderCustomRepository {
                         orderDetail.order.orderNum, product.prodNum, product.name.as("pName"), order.totalPrice, order.createdDate, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum")))));
         return result;
     }
-
-//    @Override
-//    public Page<OrderListResponseDto> searchPageComplex(String userId, Pageable pageable) {
-//        List<OrderListResponseDto> query = jpaQueryFactory
-//                .select(Projections.fields(OrderListResponseDto.class,
-//                        orderDetail.order.orderNum, product.prodNum, product.name.as("pName"), order.totalPrice, order.createdDate, order.payCreatedDate, order.canceledDate, review.reviewNum.as("reviewNum")))
-//                .from(orderDetail)
-//                .join(order).on(order.eq(orderDetail.order))
-//                .join(product).on(orderDetail.product.eq(product))
-//                .leftJoin(review).on(orderDetail.eq(review.orderDetail))
-//                .where(order.user.id.eq(userId))
-//                .orderBy(order.orderNum.desc())
-////                .offset(pageable.get)
-////                .limit(pageable.getPageSize())
-//                .fetch();
-//
-//        JPQLQuery<OrderListResponseDto> pagination = querydsl().applyPagination(pageable, query);
-//
-//        if(useSearchBtn) { // 검색 버튼 사용시
-//            int fixedPageCount = 10 * pageable.g.getPageSize(); // 10개 페이지 고정
-//            return new PageImpl<>(pagination.fetch(), pageable, fixedPageCount);
-//        }
-//
-//        long totalCount = pagination.fetchCount();
-//        Pageable pageRequest = exchangePageRequest(pageable, totalCount); // 데이터 건수를 초과한 페이지 버튼 클릭시 보정
-//        return new PageImpl<>(querydsl().applyPagination(pageRequest, query).fetch(), pageRequest, totalCount);
-//    }
 
 
     // 멤버십, 회원 별 3개월간 결제 총합 조회
