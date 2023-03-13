@@ -3,14 +3,12 @@ package com.myomi.chat.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 
 @Getter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "chat_msg")
 public class ChatMsg {

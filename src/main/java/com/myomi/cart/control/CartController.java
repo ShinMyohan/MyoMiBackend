@@ -15,33 +15,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/cart")
+@RequestMapping("/cart")
 @RequiredArgsConstructor
 @Slf4j
 public class CartController {
 
     private final CartService cartService;
 
-    @GetMapping("/cart/list")
+    @GetMapping("/list")
     public ResponseEntity<?> cartList(Authentication user) {
         List<CartReadResponseDto> result = cartService.getCartList(user);
         ResponseDetails responseDetails = ResponseDetails.success(result, "/api/cart/list");
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
-    @PostMapping("/cart")
+    @PostMapping("")
     public ResponseEntity<?> cartSave(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
         ResponseDetails responseDetails = cartService.addCart(user, requestDto);
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
-    @PutMapping("/cart")
+    @PutMapping("")
     public ResponseEntity<?> cartModify(Authentication user, @RequestBody CartSaveRequestDto requestDto) {
         ResponseDetails responseDetails = cartService.saveCart(user, requestDto);
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
     }
 
-    @DeleteMapping("/cart")
+    @DeleteMapping("")
     public ResponseEntity<?> cartRemove(Authentication user, @RequestBody List<CartDeleteRequestDto> requestDto) {
         ResponseDetails responseDetails = cartService.removeCart(user, requestDto);
         return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
