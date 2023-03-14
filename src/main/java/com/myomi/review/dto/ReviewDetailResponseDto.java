@@ -1,12 +1,15 @@
 package com.myomi.review.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.myomi.review.entity.Review;
-import lombok.Builder;
-import lombok.Getter;
 import java.time.LocalDateTime;
 
-@Getter
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.myomi.review.entity.Review;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter @NoArgsConstructor
 public class ReviewDetailResponseDto {
 
     private String prodName;
@@ -43,6 +46,18 @@ public class ReviewDetailResponseDto {
         this.createdDate = entity.getCreatedDate();
         this.stars = entity.getStars();
         this.file = entity.getReviewImgUrl();
+    }
+    public ReviewDetailResponseDto toDto(Review review) {
+        return ReviewDetailResponseDto.builder()
+        		.prodName(review.getOrderDetail().getProduct().getName())
+                .reviewNum(review.getReviewNum())
+                .userName(review.getUser().getName())
+                .title(review.getTitle())
+                .content(review.getContent())
+                .createdDate(review.getCreatedDate())
+                .stars(review.getStars())
+                .file(review.getReviewImgUrl())
+                .build();
     }
 
 

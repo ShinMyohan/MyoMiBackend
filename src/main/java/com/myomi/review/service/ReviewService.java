@@ -79,7 +79,7 @@ public class ReviewService {
     @Transactional
     public List<ReviewDetailResponseDto> getMyReviewList(Authentication user) {
         String username = user.getName();
-        List<Review> reviews = reviewRepository.findAllByUserId(username);
+        List<Review> reviews = reviewRepository.findAllByUserIdOrderByReviewNumDesc(username);
         List<ReviewDetailResponseDto> list = new ArrayList<>();
         if (reviews.size() == 0) {
             log.info("리뷰가 없습니다.");
