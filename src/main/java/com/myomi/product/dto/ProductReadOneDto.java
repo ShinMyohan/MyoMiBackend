@@ -27,11 +27,12 @@ public class ProductReadOneDto {
     private List<QnaPReadResponseDto> qnas;
     private String productImgUrl;
     private int status;
+    private float stars;
 
     @Builder
     public ProductReadOneDto(Long prodNum, String sellerName, String sellerId, String category, String name, Long originPrice,
                              int percentage, int week, String detail, List<ReviewReadResponseDto> reviews,
-                             List<QnaPReadResponseDto> qnas, List<ReviewDetailResponseDto> bestReviews, String productImgUrl, int status) {
+                             List<QnaPReadResponseDto> qnas, List<ReviewDetailResponseDto> bestReviews, String productImgUrl, int status,float stars) {
         this.prodNum = prodNum;
         this.sellerName = sellerName;
         this.sellerId = sellerId;
