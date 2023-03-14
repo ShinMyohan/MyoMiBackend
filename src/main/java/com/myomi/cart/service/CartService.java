@@ -96,9 +96,15 @@ public class CartService {
             log.info("품절된 상품은 장바구니에 담을 수 없습니다. [상품번호 prodNum : {}]", product.getProdNum());
             throw new ProductSoldOutException(ErrorCode.BAD_REQUEST, "PRODUCT_STATUS_ERROR");
         }
-        cartRepository.updateCart(user.getName(), product.getProdNum(), requestDto.getProdCnt());
-        log.info(user.getName() + "님의 장바구니에 상품번호 " + product.getProdNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 수정되었습니다.");
-        return new ResponseDetails(requestDto, 200, path);
+        Optional<Cart> cart = cartRepository.findByUserIdAndProduct(user.getName(), product);
+        if(cart.get().getProdCnt() == 1 && requestDto.getProdCnt() < 0) {
+            log.info("장바구니에 상품을 1개 이하로 담을 수 없습니다.");
+            throw new IllegalArgumentException("최소 수량은 1개 입니다.");
+        } else {
+            cartRepository.updateCart(user.getName(), product.getProdNum(), requestDto.getProdCnt());
+            log.info(user.getName() + "님의 장바구니에 상품번호 " + product.getProdNum() + "번째 상품이 " + requestDto.getProdCnt() + "개 수정되었습니다.");
+            return new ResponseDetails(requestDto, 200, path);
+        }
     }
 
     @Transactional
