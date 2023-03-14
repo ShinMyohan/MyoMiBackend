@@ -47,6 +47,7 @@ public class ProductReadOneDto {
         this.bestReviews = bestReviews;
         this.productImgUrl = productImgUrl;
 		this.status = status;
+		this.stars = stars;
     }
 
     public ProductReadOneDto toDto(Product product, List<ReviewReadResponseDto> review, List<QnaPReadResponseDto> qnas, List<ReviewDetailResponseDto> bestReviews) {
@@ -65,6 +66,7 @@ public class ProductReadOneDto {
                 .productImgUrl(product.getProductImgUrl())
                 .bestReviews(bestReviews)
 				.status(product.getStatus())
+				.stars(product.getStars())
                 .build();
     }
 }
