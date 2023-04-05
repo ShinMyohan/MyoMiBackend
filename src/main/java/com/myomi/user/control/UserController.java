@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,8 +48,8 @@ public class UserController {
 
     @ApiOperation(value = "사용자| 일반 회원가입")
     @PostMapping("/signup")
-    public String signup(@RequestBody UserSignUpReqeustDto userSignUpReqeustDto) {
-    	return userService.signup(userSignUpReqeustDto);
+    public ResponseEntity<?> signup(@RequestBody UserSignUpReqeustDto userSignUpReqeustDto) {
+    	return new ResponseEntity<>(userService.signup(userSignUpReqeustDto),HttpStatus.OK);
     }
     
     @ApiOperation(value = "사용자| 등록된 아이디 중복 체크")
@@ -71,8 +72,8 @@ public class UserController {
     
     @ApiOperation(value = "회원| 내 정보 수정")
     @PutMapping("/modify")
-    public ResponseEntity<UserDto> userUpdate(UserDto userDto, Authentication user) {
-    	return userService.updateUserInfo(userDto, user);
+    public ResponseEntity<?> userUpdate(UserDto userDto, Authentication user) {
+    	return new ResponseEntity<>(userService.updateUserInfo(userDto, user),HttpStatus.OK);
     }
     
     @ApiOperation(value = "사용자| 휴대폰번호 본인인증")
@@ -94,7 +95,6 @@ public class UserController {
     @GetMapping("/seller/sendSMS")
 	public void sendSMSToSeller(String phoneNumber) {
 		log.info("수신자번호: "+phoneNumber);
-//		log.info("인증번호: "+numStr);
 		certificationSevice.certifiedSeller(phoneNumber);
 	}
 }

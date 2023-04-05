@@ -1,7 +1,6 @@
 package com.myomi.product.control;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myomi.common.status.ExceedMaxUploadSizeException;
 import com.myomi.common.status.NoResourceException;
+import com.myomi.common.status.ResponseDetails;
 import com.myomi.common.status.UnqualifiedException;
-import com.myomi.product.dto.ProductDto;
 import com.myomi.product.dto.ProductSaveDto;
 import com.myomi.product.dto.ProductUpdateDto;
 import com.myomi.product.service.ProductService;
@@ -36,13 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/product/*")
+@RequestMapping("/product")
 public class ProductController {
 	@Autowired
 	private final ProductService productService;
 	
 	@ApiOperation(value = "셀러| 상품등록")
-	@PostMapping(value = "add")
+	@PostMapping(value = "/add")
 	public ResponseEntity<?> productSave(String name, String category, int week, int percentage, Long originPrice,
 			String detail, Authentication seller, MultipartFile file) throws NoResourceException,IOException,UnqualifiedException,ExceedMaxUploadSizeException {
 		if(name.length() > 30) {
@@ -61,22 +60,24 @@ public class ProductController {
 			.file(file)
 			.build();
 
-		productService.addProduct(dto, seller); 
-		return new ResponseEntity<>("상품등록완료",HttpStatus.OK);
+		ResponseDetails responseDetails = productService.addProduct(dto, seller); 
+		return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
 	}
 	
 	@ApiOperation(value = "사용자| 판매자 상품 리스트 조회")
 	@ResponseBody
 	@GetMapping(value = "list/seller/{seller}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProductDto> productList(@PathVariable String seller){
-		return productService.getProductBySellerId(seller);
+	public ResponseEntity<?> productList(@PathVariable String seller){
+		ResponseDetails responseDetails = productService.getProductBySellerId(seller);
+		return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
 	}
 	
 	@ApiOperation(value = "사용자| 특정 상품 정보+리뷰+문의 조회")
 	@ResponseBody
 	@GetMapping(value = "{prodNum}")
 	public ResponseEntity<?> prodDetails(@PathVariable Long prodNum) {
-		return new ResponseEntity<>(productService.getOneProd(prodNum),HttpStatus.OK);
+		ResponseDetails responseDetails = productService.getOneProd(prodNum);
+		return new ResponseEntity<>(responseDetails, HttpStatus.valueOf(responseDetails.getHttpStatus()));
 	}
 	
 	@ApiOperation(value = "셀러| 특정 상품 정보 수정")
