@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.myomi.common.status.DupUserInfoException;
 import com.myomi.common.status.ErrorCode;
 import com.myomi.common.status.NoResourceException;
+import com.myomi.common.status.ResponseDetails;
 import com.myomi.jwt.dto.TokenDto;
 import com.myomi.jwt.provider.JwtTokenProvider;
 import com.myomi.membership.entity.MembershipLevel;
@@ -50,8 +52,6 @@ public class UserService {
     public Map<String, Object> login(String userId, String password) {
     	User optU = userRepository.findById(userId)
     			.orElseThrow(()-> new NoResourceException(ErrorCode.BAD_REQUEST, "NOT_FOUND_USER"));
-//    	log.info("입력한 id:" + userId + " 디비아이디: " + optU.getId());
-//    	log.info("입력한 비번:" + password + " 디비비번: " + optU.getPwd());
     	
     	if(!passwordEncoder.matches(password, optU.getPwd())) {
     		log.error("비밀번호 오류");
@@ -79,17 +79,15 @@ public class UserService {
     }
     
     //회원가입
-    public String signup(UserSignUpReqeustDto userSignUpReqeustDto) {
+    public ResponseDetails signup(UserSignUpReqeustDto userSignUpReqeustDto) throws DupUserInfoException, ResponseStatusException {
+    	String path = "/api/user";
     	//휴대폰 번호가 이미 등록된 번호인지 확인 (이 메서드는 아래에 있습니다.)
     	boolean checkTel = checkTelExists(userSignUpReqeustDto.getTel());
     	if(checkTel) { //번호가 이미 등록된 번호면 예외발생
-    		throw new IllegalArgumentException("이미 사용중인 번호입니다.");
+    		throw new DupUserInfoException(ErrorCode.BAD_REQUEST, "DUPLICATED_PHONE_NUMBER");
     	}
     	
     	boolean checkId = checkIdExists(userSignUpReqeustDto.getId());
-    	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
-    		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
-    	}
     	
     	String encPwd = passwordEncoder.encode(userSignUpReqeustDto.getPwd());
 
@@ -107,7 +105,7 @@ public class UserService {
 
     	userRepository.save(user);
     	if(user != null) { //유저가 Null이 아니면 유저 id 반환
-    		return user.getId();
+    		return new ResponseDetails(user.getName(), 200, path);
     	}
     	throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
@@ -115,13 +113,13 @@ public class UserService {
     public ResponseEntity<?> checkIdDup(String id) {
     	boolean checkId = checkIdExists(id);
     	if(checkId) { //아이디가 이미 등록된 아이디면 예외발생
-    		throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+    		throw new DupUserInfoException(ErrorCode.BAD_REQUEST, "DUPLICATED_USER_ID");
     	}
     	return new ResponseEntity<>(HttpStatus.OK);
     }
     
     // 회원정보 검색
-    public ResponseEntity<UserDto> getUserInfo(Authentication user) {
+    public ResponseEntity<UserDto> getUserInfo(Authentication user) throws NoResourceException {
     	String username = user.getName();
     	User u = userRepository.findById(username)
     			.orElseThrow(()->new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_FOUND_USER"));
@@ -142,7 +140,8 @@ public class UserService {
     };
     
     //회원 정보 수정
-    public ResponseEntity<UserDto> updateUserInfo(UserDto userDto, Authentication user) {
+    public ResponseDetails updateUserInfo(UserDto userDto, Authentication user) {
+    	String path = "/api/user";
     	User u = User.builder()
 				.id(user.getName())
 				.pwd(userDto.getPwd())
@@ -153,7 +152,7 @@ public class UserService {
     			.build();
     	
     	userRepository.save(u);
-    	return new ResponseEntity<>(HttpStatus.OK);
+    	return new ResponseDetails(user.getName(), 200, path);
     }
     
     //----- 중복 방지를 위한 메서드 ----
