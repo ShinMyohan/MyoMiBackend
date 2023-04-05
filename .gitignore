@@ -1,8 +1,27 @@
+# OS Caches
+**/.DS_Store
+
+MANIFEST.MF
+target
+
+# STS
+.metadata
+.settings
+.classpath
+.project
+.idea/
+
+# Java annotation processor (APT)
+.factorypath
+
+.target
+
 # Compiled class file
 *.class
 
 # Log file
-*.log
+*.log/
+log/
 
 # BlueJ files
 *.ctxt
@@ -19,5 +38,16 @@
 *.tar.gz
 *.rar
 
+##applicaton.properties
+#src/main/resources/application.properties
+
+application-security.properties
+application-oauth.properties
+application-payment.properties
+application-aws.properties
+application-sms.properties
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/build/
+/bin/
