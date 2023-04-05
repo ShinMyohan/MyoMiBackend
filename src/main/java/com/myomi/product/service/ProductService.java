@@ -119,37 +119,11 @@ public class ProductService {
 	@Transactional
 	public ResponseDetails getOneProd(Long prodNum) throws NoResourceException {
 		String path = "/api/product";
-//		Product product = productRepository.findProdInfo(prodNum)
-//				.orElseThrow(() -> new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "PRODUCT_NOT_FOUND"));
-//		
-////		List<Qna> qnas = qnaRepository.findByProdNumOrderByQnaNumDesc(product);
-//		//리뷰 DTO 받으면 태리님 방식처럼 해보기 
-//		List<Review> reviews = reviewRepository.findAllReviewByProd(prodNum);
-//		List<Review> bestReviews = reviewRepository.findAllBestReviewByProd(prodNum);
-//		
-//		
-//		List<QnaPReadResponseDto> qDto = new ArrayList<>();
-//		for(Qna q : product.getQnas()) {
-//			QnaPReadResponseDto qnaDto = new QnaPReadResponseDto();
-//			qDto.add(qnaDto.toDto(q));
-//		}
-//
-//		List<ReviewReadResponseDto> rDto = new ArrayList<>();
-//		for(Review r : reviews) {
-//			ReviewReadResponseDto reviewDto = new ReviewReadResponseDto();
-//			rDto.add(reviewDto.toDto(r));
-//		}
-//		
-//		List<ReviewDetailResponseDto> bDto = new ArrayList<>();
-//		for(Review b : bestReviews) {
-//			ReviewDetailResponseDto bestReviewDto = new ReviewDetailResponseDto();
-//			bDto.add(bestReviewDto.toDto(b));
-//		}
-//		
-//		ProductReadOneDto dto = new ProductReadOneDto();
-			
-		List<ProductReadOneDto> result = productRepository.findProdInfo(prodNum);
-		return new ResponseDetails(result, 200, path);
+		List<ProductReadOneDto> product = productRepository.findProdInfo(prodNum);
+		if(product == null) {
+			throw new NoResourceException(ErrorCode.RESOURCE_NOT_FOUND, "NOT_EXIST_PRODUCT");
+		}
+		return new ResponseDetails(product, 200, path);
 	}
 	
 	//상품 정보 수정
