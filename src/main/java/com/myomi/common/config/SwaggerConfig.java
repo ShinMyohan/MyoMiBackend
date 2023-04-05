@@ -45,7 +45,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .securitySchemes(Arrays.asList(apiKey())) // swagger에서 jwt 토큰값 넣기위한 설정
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.myomi")) // Swagger를 적용할 package명 작성
-//                .apis(RequestHandlerSelectors.any())
                 .paths(
                 		PathSelectors.any()
                 		) // PathSelectors.any() 해당패키지 하위에 있는 모든 url에 적용, 특정 url만 선택 가능
@@ -58,8 +57,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .title(API_NAME) // API 이름지정
                 .version(API_VERSION) // API 버전
                 .description(API_DESCRIPTION) // API 설명
-                //.license("라이센스 작성")
-                //.licenseUrl("라이센스 URL 작성")
                 .build();
     }
 

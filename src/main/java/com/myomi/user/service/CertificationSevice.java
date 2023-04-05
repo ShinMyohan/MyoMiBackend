@@ -27,7 +27,7 @@ public class CertificationSevice {
         // to, from, type, text은 필수 필요한 값입니다!
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("to", phoneNumber);    // 수신전화번호
-        params.put("from", "01077428168");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+        params.put("from", "{보내는사람번호넣어주기}");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
         params.put("type", "SMS");
         params.put("text", "[묘미] 휴대폰인증 메시지 : 인증번호는" + "["+cerNum+"]" + "입니다.");
         params.put("app_version", "myomi web 1.0.0"); // application 이름이랑 version
